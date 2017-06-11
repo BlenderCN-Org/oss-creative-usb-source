@@ -10,9 +10,6 @@
 [submodule "inkscape"]
 	path = inkscape
 	url = https://github.com/inkscape/inkscape.git
-[submodule "ardour"]
-	path = ardour
-	url = https://github.com/Ardour/ardour.git
 [submodule "scribus"]
 	path = scribus
 	url = https://github.com/scribusproject/scribus.git
