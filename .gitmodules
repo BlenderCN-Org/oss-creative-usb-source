@@ -22,3 +22,6 @@
 [submodule "ardour"]
 	path = ardour
 	url = https://github.com/Ardour/ardour.git
+[submodule "csound"]
+	path = csound
+	url = https://github.com/csound/csound.git
