@@ -1,0 +1,1784 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="profile" href="http://gmpg.org/xfn/11">
+<link rel="pingback" href="https://guysherman.com/xmlrpc.php">
+
+<title>Building Ardour on Windows with MSYS2 – guysherman.com</title>
+<meta name="google-site-verification" content="m48_1uBd56gYQBxdAgcjlv8ZdyOOHfF3f5NiSOSWBcM">
+		<script defer="defer" src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/beacon.js"></script><script type="text/javascript" async="" src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/platform.js"></script><script src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/remote-login.php" type="text/javascript"></script>
+		<script type="text/javascript">
+		/* <![CDATA[ */
+			if ( 'function' === typeof WPRemoteLogin ) {
+				document.cookie = "wordpress_test_cookie=test; path=/";
+				if ( document.cookie.match( /(;|^)\s*wordpress_test_cookie\=/ ) ) {
+					WPRemoteLogin();
+				}
+			}
+		/* ]]> */
+		</script>
+		<link rel="dns-prefetch" href="https://s2.wp.com/">
+<link rel="dns-prefetch" href="https://s1.wp.com/">
+<link rel="dns-prefetch" href="https://s0.wp.com/">
+<link rel="dns-prefetch" href="https://guysherman.wordpress.com/">
+<link rel="dns-prefetch" href="https://fonts.googleapis.com/">
+<link rel="alternate" type="application/rss+xml" title="guysherman.com » Feed" href="https://guysherman.com/feed/">
+<link rel="alternate" type="application/rss+xml" title="guysherman.com » Comments Feed" href="https://guysherman.com/comments/feed/">
+<link rel="alternate" type="application/rss+xml" title="guysherman.com » Building Ardour on Windows with&nbsp;MSYS2 Comments Feed" href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/feed/">
+	<script type="text/javascript">
+		/* <![CDATA[ */
+		function addLoadEvent(func) {
+			var oldonload = window.onload;
+			if (typeof window.onload != 'function') {
+				window.onload = func;
+			} else {
+				window.onload = function () {
+					oldonload();
+					func();
+				}
+			}
+		}
+		/* ]]> */
+	</script>
+			<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s0.wp.com\/wp-content\/mu-plugins\/wpcom-smileys\/twemoji\/2\/72x72\/","ext":".png","svgUrl":"https:\/\/s0.wp.com\/wp-content\/mu-plugins\/wpcom-smileys\/twemoji\/2\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/s1.wp.com\/wp-includes\/js\/wp-emoji-release.min.js?m=1496863874h&ver=4.8-RC2-40878"}};
+			!function(a,b,c){function d(a){var b,c,d,e,f=String.fromCharCode;if(!k||!k.fillText)return!1;switch(k.clearRect(0,0,j.width,j.height),k.textBaseline="top",k.font="600 32px Arial",a){case"flag":return k.fillText(f(55356,56826,55356,56819),0,0),b=j.toDataURL(),k.clearRect(0,0,j.width,j.height),k.fillText(f(55356,56826,8203,55356,56819),0,0),c=j.toDataURL(),b===c&&(k.clearRect(0,0,j.width,j.height),k.fillText(f(55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447),0,0),b=j.toDataURL(),k.clearRect(0,0,j.width,j.height),k.fillText(f(55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447),0,0),c=j.toDataURL(),b!==c);case"emoji4":return k.fillText(f(55358,56794,8205,9794,65039),0,0),d=j.toDataURL(),k.clearRect(0,0,j.width,j.height),k.fillText(f(55358,56794,8203,9794,65039),0,0),e=j.toDataURL(),d!==e}return!1}function e(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var f,g,h,i,j=b.createElement("canvas"),k=j.getContext&&j.getContext("2d");for(i=Array("flag","emoji4"),c.supports={everything:!0,everythingExceptFlag:!0},h=0;h<i.length;h++)c.supports[i[h]]=d(i[h]),c.supports.everything=c.supports.everything&&c.supports[i[h]],"flag"!==i[h]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[i[h]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(g=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",g,!1),a.addEventListener("load",g,!1)):(a.attachEvent("onload",g),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),f=c.source||{},f.concatemoji?e(f.concatemoji):f.wpemoji&&f.twemoji&&(e(f.twemoji),e(f.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script><script src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/wp-emoji-release.js" type="text/javascript" defer="defer"></script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel="stylesheet" id="all-css-0-1" href="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/a_002.css" type="text/css" media="all">
+<link rel="stylesheet" id="libre-libre-css" href="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/css.css" type="text/css" media="all">
+<link rel="stylesheet" id="all-css-2-1" href="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/a.css" type="text/css" media="all">
+<link rel="stylesheet" id="print-css-3-1" href="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/global-print.css" type="text/css" media="print">
+<link rel="stylesheet" id="all-css-4-1" href="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/a_003.css" type="text/css" media="all">
+<script type="text/javascript">
+/* <![CDATA[ */
+var related_posts_js_options = {"post_heading":"h4"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/a_002.js"></script>
+<link rel="stylesheet" id="all-css-0-2" href="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/style.css" type="text/css" media="all">
+<!--[if lt IE 8]>
+<link rel='stylesheet' id='highlander-comments-ie7-css'  href='https://s1.wp.com/wp-content/mu-plugins/highlander-comments/style-ie7.css?m=1351637563h&#038;ver=20110606' type='text/css' media='all' />
+<![endif]-->
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://guysherman.wordpress.com/xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://s1.wp.com/wp-includes/wlwmanifest.xml"> 
+<link rel="prev" title="Building Ardour on&nbsp;Ubuntu" href="https://guysherman.com/2015/08/12/building-ardour-on-ubuntu/">
+<link rel="next" title="Towards a cross-platform C/C++ dev&nbsp;environment" href="https://guysherman.com/2015/08/22/towards-a-cross-platform-cc-dev-environment/">
+<meta name="generator" content="WordPress.com">
+<link rel="canonical" href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/">
+<link rel="shortlink" href="http://wp.me/p2BX5e-ky6">
+<link rel="alternate" type="application/json+oembed" href="https://public-api.wordpress.com/oembed/1.0/?format=json&amp;url=https%3A%2F%2Fguysherman.com%2F2015%2F08%2F16%2Fbuilding-ardour-on-windows-with-msys2%2F&amp;for=wpcom-auto-discovery"><link rel="alternate" type="application/xml+oembed" href="https://public-api.wordpress.com/oembed/1.0/?format=xml&amp;url=https%3A%2F%2Fguysherman.com%2F2015%2F08%2F16%2Fbuilding-ardour-on-windows-with-msys2%2F&amp;for=wpcom-auto-discovery">
+<!-- Jetpack Open Graph Tags -->
+<meta property="og:type" content="article">
+<meta property="og:title" content="Building Ardour on Windows with MSYS2">
+<meta property="og:url" content="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/">
+<meta property="og:description" content="NOTE: This post was written for Ardour 4. There is at least one more dependency (liblua, possibly more). Since I wrote this article, I’ve mostly shifted my development environment to linux, h…">
+<meta property="article:published_time" content="2015-08-16T15:33:48+00:00">
+<meta property="article:modified_time" content="2016-11-05T22:05:20+00:00">
+<meta property="og:site_name" content="guysherman.com">
+<meta property="og:image" content="https://s0.wp.com/i/blank.jpg">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:site" content="@guysherman">
+<meta name="twitter:text:title" content="Building Ardour on Windows with&nbsp;MSYS2">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:creator" content="@guysherman">
+<meta property="article:publisher" content="https://www.facebook.com/WordPresscom">
+<link rel="shortcut icon" type="image/x-icon" href="https://s2.wp.com/i/favicon.ico" sizes="16x16 24x24 32x32 48x48">
+<link rel="icon" type="image/x-icon" href="https://s2.wp.com/i/favicon.ico" sizes="16x16 24x24 32x32 48x48">
+<link rel="apple-touch-icon-precomposed" href="https://s0.wp.com/i/webclip.png">
+<link rel="openid.server" href="https://guysherman.wordpress.com/?openidserver=1">
+<link rel="openid.delegate" href="https://guysherman.wordpress.com/">
+<link rel="search" type="application/opensearchdescription+xml" href="https://guysherman.com/osd.xml" title="guysherman.com">
+<link rel="search" type="application/opensearchdescription+xml" href="https://s1.wp.com/opensearch.xml" title="WordPress.com">
+<meta name="theme-color" content="#ffffff">
+		<style type="text/css">
+			.recentcomments a {
+				display: inline !important;
+				padding: 0 !important;
+				margin: 0 !important;
+			}
+
+			table.recentcommentsavatartop img.avatar, table.recentcommentsavatarend img.avatar {
+				border: 0px;
+				margin: 0;
+			}
+
+			table.recentcommentsavatartop a, table.recentcommentsavatarend a {
+				border: 0px !important;
+				background-color: transparent !important;
+			}
+
+			td.recentcommentsavatarend, td.recentcommentsavatartop {
+				padding: 0px 0px 1px 0px;
+				margin: 0px;
+			}
+
+			td.recentcommentstextend {
+				border: none !important;
+				padding: 0px 0px 2px 10px;
+			}
+
+			.rtl td.recentcommentstextend {
+				padding: 0px 10px 2px 0px;
+			}
+
+			td.recentcommentstexttop {
+				border: none;
+				padding: 0px 0px 0px 10px;
+			}
+
+			.rtl td.recentcommentstexttop {
+				padding: 0px 10px 0px 0px;
+			}
+		</style>
+		<style type="text/css">
+.widget_twitter li {
+	word-wrap: break-word;
+}
+</style>
+<meta name="application-name" content="guysherman.com"><meta name="msapplication-window" content="width=device-width;height=device-height"><meta name="msapplication-tooltip" content="Thoughts and lessons in Software"><meta name="msapplication-task" content="name=Subscribe;action-uri=https://guysherman.com/feed/;icon-uri=https://s2.wp.com/i/favicon.ico"><meta name="msapplication-task" content="name=Sign up for a free blog;action-uri=http://wordpress.com/signup/;icon-uri=https://s2.wp.com/i/favicon.ico"><meta name="msapplication-task" content="name=WordPress.com Support;action-uri=http://support.wordpress.com/;icon-uri=https://s2.wp.com/i/favicon.ico"><meta name="msapplication-task" content="name=WordPress.com Forums;action-uri=http://forums.wordpress.com/;icon-uri=https://s2.wp.com/i/favicon.ico"><meta name="title" content="Building Ardour on Windows with&nbsp;MSYS2 | guysherman.com on WordPress.com">
+<meta name="description" content="NOTE: This post was written for Ardour 4. There is at least one more dependency (liblua, possibly more). Since I wrote this article, I've mostly shifted my development environment to linux, hence I haven't kept this post up to date. So, caveat emptor, YMMV, and other suitable disclaimers. If you just want to use Ardour…">
+<link rel="amphtml" href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/amp/"><style type="text/css" id="syntaxhighlighteranchor"></style>
+<style type="text/css" id="custom-colors-css">body,.sticking .site-header,.main-navigation ul ul,.widget_archive a,.widget_categories a,.widget .post-count{background-color:#fff}.custom-background .site{background-color:#fff}input[type="text"],input[type="email"],input[type="url"],input[type="password"],input[type="search"]{background-color:#fff}.sd-social-icon .sd-content ul li[class*="share-"] a:hover,.sd-social-icon .sd-content ul li[class*="share-"] div.option a:hover,.sd-social-icon .sd-content ul li[class*="share-"] a.sd-button.no-text:hover{color:#282828}.sd-social-icon .sd-content ul li[class*="share-"] a.sd-button.no-text{color:#282828}.sd-social-icon .sd-content ul li a.sd-button,.sd-social-text .sd-content ul li a.sd-button,.sd-content ul li a.sd-button,.sd-content ul li .option a.share-ustom,.sd-content ul li.preview-item div.option.option-smart-off a,.sd-content ul li.advanced a.share-more,.sd-social-icon-text .sd-content ul li a.sd-button,#sharing_email .sharing_send{color:#282828}.sd-social-icon .sd-content ul li a.sd-button:hover,.sd-social-icon .sd-content ul li a.sd-button:active,.sd-social-text .sd-content ul li a.sd-button:hover,.sd-social-text .sd-content ul li a.sd-button:active,.sd-social-icon-text .sd-content ul li a.sd-button:hover,.sd-social-icon-text .sd-content ul li a.sd-button:active{color:#282828}body,a,a:visited,a:hover,a:active,a:focus{color:#6d6d6d}#infinite-footer .blog-info a,#infinite-footer .blog-credits a{color:#6d6d6d}hr{background-color:#6d6d6d}.site *{border-color:#6d6d6d}button,input[type="button"],input[type="reset"],input[type="submit"],#infinite-handle span{color:#6d6d6d}input[type="text"],input[type="email"],input[type="url"],input[type="password"],input[type="search"]{color:#6d6d6d}body.highlander-light h3.sd-title:before{border-color:#6d6d6d}.sd-social-icon .sd-content ul li[class*="share-"] a.sd-button.no-text{background-color:#999}.sd-social-icon .sd-content ul li[class*="share-"] a:hover,.sd-social-icon .sd-content ul li[class*="share-"] div.option a:hover,.sd-social-icon .sd-content ul li[class*="share-"] a.sd-button.no-text:hover{background-color:#999}.sd-social-icon .sd-content ul li a.sd-button,.sd-social-text .sd-content ul li a.sd-button,.sd-content ul li a.sd-button,.sd-content ul li .option a.share-ustom,.sd-content ul li.preview-item div.option.option-smart-off a,.sd-content ul li.advanced a.share-more,.sd-social-icon-text .sd-content ul li a.sd-button,#sharing_email .sharing_send{background-color:#999}.sd-social-icon .sd-content ul li a.sd-button:hover,.sd-social-icon .sd-content ul li a.sd-button:active,.sd-social-text .sd-content ul li a.sd-button:hover,.sd-social-text .sd-content ul li a.sd-button:active,.sd-social-icon-text .sd-content ul li a.sd-button:hover,.sd-social-icon-text .sd-content ul li a.sd-button:active{background-color:#999}.site-title a,.site-title a:hover,.site-title a:visited{color:#ec6d69}h1,h2,h3,h4,h5,h6,.entry-title,.entry-title a:visited,.entry-title a,.page-title,.entry-title a:hover{color:#ec6d69}</style>
+<link rel="stylesheet" type="text/css" id="gravatar-card-css" href="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/hovercard.css"><link rel="stylesheet" type="text/css" id="gravatar-card-services-css" href="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/services.css"><script type="text/javascript" charset="utf-8" async="" src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/button.js"></script></head>
+
+<body class="post-template-default single single-post postid-78994 single-format-standard mp6 customizer-styles-applied singular highlander-enabled highlander-light sticking">
+<div id="page" class="hfeed site">
+	<a class="skip-link screen-reader-text" href="#content">Skip to content</a>
+		<header id="masthead" class="site-header" role="banner">
+		<div class="site-branding">
+																	<p class="site-title"><a href="https://guysherman.com/" rel="home">guysherman.com</a></p>
+								<p class="site-description">Thoughts and lessons in Software</p>
+					</div><!-- .site-branding -->
+
+		<nav id="site-navigation" class="main-navigation" role="navigation">
+			<button class="menu-toggle" aria-controls="primary-menu" aria-expanded="false">Menu</button>
+			<div id="primary-menu" class="menu"><ul aria-expanded="false" class=" nav-menu">
+<li class="page_item page-item-79269"><a href="https://guysherman.com/archive/">Archive</a></li>
+<li class="page_item page-item-79240"><a href="https://guysherman.com/privacy-policy/">Privacy Policy</a></li>
+<li class="page_item page-item-184"><a href="https://guysherman.com/about-2/">About Me</a></li>
+<li class="page_item page-item-483"><a href="https://guysherman.com/bitlywin8-support/">BitlyWin8 Support</a></li>
+</ul></div>
+		</nav><!-- #site-navigation -->
+
+	</header><!-- #masthead -->
+
+	<div id="content" class="site-content">
+
+	<div id="primary" class="content-area">
+		<main id="main" class="site-main" role="main">
+
+		
+			
+<article id="post-78994" class="post-78994 post type-post status-publish format-standard hentry category-uncategorized tag-ardour tag-audio tag-msys2 tag-windows">
+	<header class="entry-header">
+		<h1 class="entry-title">Building Ardour on Windows with&nbsp;MSYS2</h1>
+		<div class="entry-meta">
+			<span class="posted-on">Posted on <a href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/" rel="bookmark"><time class="entry-date published" datetime="2015-08-16T15:33:48+00:00">August 16, 2015</time><time class="updated" datetime="2016-11-05T22:05:20+00:00">November 5, 2016</time></a></span><span class="byline"> by <span class="author vcard"><a class="url fn n" href="https://guysherman.com/author/guysherman/">guysherman</a></span></span>		</div><!-- .entry-meta -->
+	</header><!-- .entry-header -->
+
+	<div class="entry-content">
+		<p><strong>NOTE: This post was written for Ardour 4. There is at least
+ one more dependency (liblua, possibly more). Since I wrote this 
+article, I’ve mostly shifted my development environment to linux, hence I
+ haven’t kept this post up to date. So, caveat emptor, YMMV, and other 
+suitable disclaimers. If you just want to <em>use </em>Ardour on 
+Windows, it is now supported on Windows, so why not donate to the Ardour
+ developers and get an official download? I’m currently toying with 
+building Ardour for Windows via the Windows Subsystem for Linux on 
+Windows 10, but a post on that is a bit far away.<br>
+</strong></p>
+<p>Building Ardour on Linux is quick and easy. Building Ardour on 
+Windows…isn’t. That being said, I bashed my way through it, and have 
+come up with a strategy that will get you up and running.</p>
+<h5>Who is this post for?</h5>
+<p>This post is most definitely for developers, familiarity with MSYS2 
+is handy, but as I was basically learning how MSYS2 works as I went, 
+this post won’t assume terribly much on that score. If you just want to 
+use Ardour on Windows I highly recommend downloading a <a href="http://nightly.ardour.org/" target="_blank">nightly build</a>
+ and using that instead. Keep in mind that Ardour is un-ashamedly built 
+for linux, and it is fantastic on that platform, so if you want the most
+ out of Ardour, use it on linux. If you MUST use windows, know that at 
+present it isn’t supported, and sometimes the nightly builds might be 
+broken. That being said the Ardour developer community is looking into 
+how support could become possible one day.</p>
+<h5>Other things you might want installed</h5>
+<p>I find it is handy to have <a href="http://jackaudio.org/faq/jack_on_windows.html">JACK</a> and <a href="http://www.asio4all.com/" target="_blank">ASIO4ALL</a> installed.</p>
+<h5>Getting Started</h5>
+<p>The first thing you’ll need to do is install MSYS2, but what is MSYS2? Google says this:</p>
+<pre><b>MSYS2</b> is a successor of MSYS and MinGW-builds. 
+<b>MSYS2</b>-shell uses “pacman” for downloading packages from
+repo, and these are GPG signed &amp; verified. Packages are
+by developer: lexx83 (Alexpux), mingwandroid, niXman.</pre>
+<p>Essentially it is a very light gnu-like environment for Windows, like
+ a very stripped down cygwin. It makes it a lot easier to build linux 
+programs and libraries for windows that don’t use Cmake. There is a good
+ set of instructions <a href="https://msys2.github.io/" target="_blank">here</a>&nbsp;on how to install it and set it up, so I won’t copy them.</p>
+<p>Great, now that you’ve followed all the way through that, you should 
+have an up-to-date msys2 system. Now we have a few packages that need to
+ be installed, well, quite a few, most of them from source, but we’ll do
+ it in four&nbsp;batches: tools, prebuilt dependencies, source 
+dependencies, and then some more pre-built packages which require some 
+of our source packages. Before that we should discuss the three shells 
+available to you:</p>
+<ul>
+<li>MSYS2&nbsp;shell</li>
+<li>MinGW-w64 Win64 shell</li>
+<li>MinGW-w64 Win32 shell</li>
+</ul>
+<p>Essentially, the MSYS2 shell is a runtime environment with full posix
+ support. This is most useful for the unix tools. The other two shells 
+have less posix compliance, but play much nicer with the windows APIs, 
+so if you want to build a windows application, you’ll use these. Of 
+these latter two, I’m only using the MinGW-w64 Win64 shell, which uses a
+ 64bit toolchain. That being said, it is easiest of you do all of the 
+package installation (both pre-built, and from source) in the MSYS2 
+shell. There’s a bunch more detail <a href="http://www.davidegrayson.com/windev/msys2/" target="_blank">here</a>.</p>
+<h5>Install various tools</h5>
+<pre>&gt; pacman -S mingw-w64-x86_64-toolchain python3 \
+python3-setuptools mingw-w64-x86_64-python3 \
+mingw-w64-x86_64-python3-setuptools python2 \
+python2-setuptools pkg-config \
+mingw-w64-x86_64-pkg-config autoconf automake perl \
+gtk-doc flex bison patch libtool \
+mingw-w64-x86_64-libtool wget git nasm \
+mingw-w64-x86_64-nasm dos2unix mingw-w64-x86_64-cmake</pre>
+<p>This will take a while based on your internet connection, etc.</p>
+<h5>Install pre-built dependencies</h5>
+<pre>&gt; pacman -S mingw-w64-x86_64-glib2 \
+mingw-w64-x86_64-gobject-introspection \
+mingw-w64-x86_64-pkg-config mingw-w64-x86_64-c-ares \
+mingw-w64-x86_64-ca-certificates \
+mingw-w64-x86_64-gnutls mingw-w64-x86_64-libidn \
+mingw-w64-x86_64-libssh2 mingw-w64-x86_64-rtmpdump \
+mingw-w64-x86_64-gnutls libgnutls-devel \
+libutil-linux-devel gtk-doc \
+mingw-w64_x86_64-docbook-xsl intltool \
+mingw-w64-x86_64-libjpeg-turbo \
+mingw-w64-x86_64-jbigkit \
+mingw-w64-x86_64-ladspa-sdk</pre>
+<p>Build and install source dependencies</p>
+<p>So the thing about MSYS2 is that it stays very “bleeding edge”, 
+whereas most of the Ardour devs use Debian, which has quite a long 
+update cycle. Both approaches have their merit, but they come into 
+conflict when you want to build something that expects debian-ish 
+packages, but have only the most up-to-date packages available. 
+Thankfully, others have blazed this trail before me and have created 
+repositories of package build scripts for most of the packages you’ll 
+need for Ardour. Most of these are quite straight-forward to install, 
+but there are some mighty strange quirks, which we’ll discuss as we get 
+to them.</p>
+<p>To get these package scripts, clone my github fork of them:</p>
+<pre>&gt; git clone&nbsp;https://github.com/guysherman/MINGW-packages</pre>
+<p>NB: Make sure to switch to the <em>guypkgs</em> branch!</p>
+<p>As the README says, to make a given package do the following:</p>
+<pre><code>&gt; cd ${package-name}
+&gt; makepkg-mingw</code></pre>
+<p>And to install it do:</p>
+<pre><code>&gt; pacman -U ${package-name}*.pkg.tar.xz</code></pre>
+<p>Alternatively, you can do this to build and install at once:</p>
+<pre><code>&gt; cd ${package-name}
+&gt; makepkg-mingw --install</code></pre>
+<p>There are also a few useful flags that you’ll need at times:</p>
+<pre>--nocheck - disables the 'check' step, which is usually
+            unit tests
+--nodeps - disables dependency checking, which is 
+           useful because a few packages have cyclic 
+           runtime dependencies
+--skippgpcheck - doesn't check the signature of the 
+                 package, I needed this on a couple of
+                 packages, only use it if you have 
+                 errors relating to unknow public keys,
+                 or the pgp part of the process.</pre>
+<p>So, now that we’ve covered how to build and install the packages, build and install the following list of packages:</p>
+<pre> mingw-w64-x86_64-icu
+ mingw-w64-x86_64-boost
+ mingw-w64-x86_64-curl
+ mingw-w64-x86_64-fftw
+ mingw-w64-x86_64-libusb
+ mingw-w64-x86_64-libxml2
+ mingw-w64-x86_64-libogg
+ mingw-w64-x86_64-libflac
+ mingw-w64-x86_64-libvorbis
+ mingw-w64-x86_64-libsndfile
+ mingw-w64-x86_64-libsamplerate
+ mingw-w64-x86_64-soundtouch
+ mingw-w64-x86_64-wineditline
+ mingw-w64-x86_64-pcre with --nocheck
+ mingw-w64-x86_64-cppunit
+ mingw-w64-x86_64-taglib
+ mingw-w64-x86_64-dlfcn
+ mingw-w64-x86_64-gobject-introspection with --nodeps
+ mingw-w64-x86_64-gnome-doc-utils
+ mingw-w64-x86_64-gtk-doc
+ mingw-w64-x86_64-gnome-common
+ mingw-w64-x86_64-atk
+ mingw-w64-x86_64-libpng</pre>
+<p>These should all be straight forward, but some of the will take a 
+long time. Next we get into the weirdest quirk I’ve seen in a while. 
+There are two libraries, <a href="http://www.freedesktop.org/wiki/Software/HarfBuzz/">harfbuzz</a> and <a href="http://www.freetype.org/">freetype</a>. Turns out they have a circular dependency on eachother. So what you have to do is</p>
+<p>First, build and install harfbuzz with –nodeps</p>
+<pre>&gt; cd mingw-w64-x86_64-harfbuzz
+&gt; makepkg-mingw --nodeps --install</pre>
+<p>This will end up installing the following packages from the pre-built
+ repositories, but the freetype will have no harfbuzz support:</p>
+<pre>mingw-w64-x86_64-cairo
+mingw-w64-x86_64-fontconfig
+mingw-w64-x86_64-freetype
+mingw-w64-x86_64-pixman</pre>
+<p>So, next step delete the harfbuzz package that you already built and rebuild it (assuming your still in the harfbuzz directory):</p>
+<pre>&gt; rm -rf mingw-w64-x86_64-harfbuzz*.pkg.tar.gz
+&gt; makepkg-mingw --nodeps --install</pre>
+<p>Next build and install the following packages:</p>
+<pre>mingw-w64-x86_64-freetype
+mingw-w64-x86_64-fontconfig
+mingw-w64-x86_64-pixman</pre>
+<p>Ok, now that’s the harfbuzz freetype weirdness out of the way. You 
+should be good to go ahead and install the rest of the source packages:</p>
+<pre> mingw-w64-x86_64-pango
+ mingw-w64-x86_64-libjpeg-turbo
+ mingw-w64-x86_64-jasper
+ mingw-w64-x86_64-libtiff
+ mingw-w64-x86_64-gdk-pixbuf2 
+ mingw-w64-x86_64-shared-mime-info
+ mingw-w64-x86_64-gtk2 
+ mingw-w64-x86_64-libsigc++
+ mingw-w64-x86_64-cairomm
+ mingw-w64-x86_64-glibmm
+ mingw-w64-x86_64-atkmm
+ mingw-w64-x86_64-pangomm
+ mingw-w64-x86_64-gtkmm
+ mingw-w64-liblo
+ mingw-w64-serd
+ mingw-w64-sord
+ mingw-w64-lv2
+ mingw-w64-sratom
+ mingw-w64-lilv
+ mingw-w64-aubio
+ mingw-w64-portaudio
+ mingw-w64-jack
+ mingw-w64-libltc</pre>
+<p>The second wave of pre-built packages</p>
+<p>Ok, so now there are two more pre-built packages that you need to install:</p>
+<pre>&gt; pacman -S&nbsp;mingw-w64-x86_64-rubberband \
+mingw-w64-x86_64-vamp-plugin-sdk</pre>
+<h5>Actually Building Ardour</h5>
+<p>Ok, so now you have all the dependencies you need to build and run 
+Ardour (although we’ll discuss one other work around a bit later which 
+solved a problem that I had, that&nbsp;I’m not sure if you will 
+encounter or not).</p>
+<p><del>For now you’ll need to clone my fork of Ardour. I’ll update when my pull request is accepted</del>. Get the ardour code (do this from somewhere you’d like the code to go):</p>
+<pre><del>&gt; git clone https://github.com/guysherman/ardour.git</del>
+&gt; git clone git://git.ardour.org/ardour/ardour.git
+&gt; cd ardour</pre>
+<p>Ardour uses the <a href="https://github.com/waf-project/waf" target="_blank">waf</a> build system. I found there was a tiny quirk with running it under MSYS. Run it as follows to configure Ardour:</p>
+<pre>&gt; MSYSTEM=''
+&gt; ./waf configure \
+  --dist-target=mingw \
+  --prefix=/mingw64 \
+  --configdir=/share</pre>
+<p>Then to build it, run</p>
+<pre>&gt; ./waf</pre>
+<p>If you want to install it you can do so with</p>
+<pre>&gt; ./waf install</pre>
+<p>I’m more interested in running it:</p>
+<pre>&gt; cd gtk2_ardour
+&gt; ./ardev-win</pre>
+<p>Now, you might find that you get white text on white buttons, like I 
+did, and you’ll probably see warnings about the gtk ‘clearlooks’ engine.
+ I worked out a weird work around for this.</p>
+<p>Weird clearlooks workaround</p>
+<p>Go to a folder somewhere (ie ~/), and get the gtk-engines source code:</p>
+<pre>&gt; cd ~/
+&gt; wget http://ftp.gnome.org/pub/GNOME/sources/gtk-engines/2.20/gtk-engines-2.20.2.tar.gz
+&gt; cd gtk-engines-2.20.2
+&gt; ./configure&nbsp;\
+  --build=x86_64-w64-mingw32 \
+  --host=x86_64-w64-mingw32 \
+  --prefix=/mingw64
+&gt; make
+&gt; make install</pre>
+<p>You’ll get a whole lot of warnings that it can’t find various dlls. That’s no biggie in this case.</p>
+<p>Next you’ll want to download a nightly build of ardour for windows and install it.</p>
+<p>Then copy <em>C:\Program Files\Ardour4\lib\gtk-2.0\engines\libclearlooks.la</em> to <em>C:\msys64\mingw64\lib\gtk-2.0\2.10.0\engines</em>. It’ll want to over-write a file, which is all good. Now if you go back and run Ardour, it should look fine.</p>
+<h5>UPDATE: ACKNOWLEDGEMENTS</h5>
+<p>It occurred to me after I wrote this that I should have acknowledged 
+all the help the Ardour devs gave me while I was asking pesky questions.
+ They are a very helpful and welcoming group.</p>
+<div id="jp-post-flair" class="sharedaddy sd-like-enabled sd-sharing-enabled"><div class="sharedaddy sd-sharing-enabled"><div class="robots-nocontent sd-block sd-social sd-social-icon-text sd-sharing"><h3 class="sd-title">If this post was useful to you, please share it:</h3><div class="sd-content"><ul><li class="share-twitter"><a rel="nofollow" data-shared="sharing-twitter-78994" class="share-twitter sd-button share-icon" href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/?share=twitter&amp;nb=1" target="_blank" title="Click to share on Twitter"><span>Twitter</span></a></li><li class="share-facebook"><a rel="nofollow" data-shared="sharing-facebook-78994" class="share-facebook sd-button share-icon" href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/?share=facebook&amp;nb=1" target="_blank" title="Share on Facebook"><span>Facebook</span></a></li><li><a href="#" class="sharing-anchor sd-button share-more"><span>More</span></a></li><li class="share-end"></li></ul><div class="sharing-hidden"><div class="inner" style="display: none;"><ul><li class="share-reddit"><a rel="nofollow" data-shared="" class="share-reddit sd-button share-icon" href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/?share=reddit&amp;nb=1" target="_blank" title="Click to share on Reddit"><span>Reddit</span></a></li><li class="share-tumblr"><a rel="nofollow" data-shared="" class="share-tumblr sd-button share-icon" href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/?share=tumblr&amp;nb=1" target="_blank" title="Click to share on Tumblr"><span>Tumblr</span></a></li><li class="share-end"></li><li class="share-linkedin"><a rel="nofollow" data-shared="sharing-linkedin-78994" class="share-linkedin sd-button share-icon" href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/?share=linkedin&amp;nb=1" target="_blank" title="Click to share on LinkedIn"><span>LinkedIn</span></a></li><li class="share-google-plus-1"><a rel="nofollow" data-shared="sharing-google-78994" class="share-google-plus-1 sd-button share-icon" href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/?share=google-plus-1&amp;nb=1" target="_blank" title="Click to share on Google+"><span>Google</span></a></li><li class="share-end"></li><li class="share-email share-service-visible"><a rel="nofollow" data-shared="" class="share-email sd-button share-icon" href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/?share=email&amp;nb=1" target="_blank" title="Click to email"><span>Email</span></a></li><li class="share-end"></li></ul></div></div></div></div></div><div class="sharedaddy sd-block sd-like jetpack-likes-widget-wrapper jetpack-likes-widget-loaded" id="like-post-wrapper-38597928-78994-593d1d5f9f9a4" data-src="//widgets.wp.com/likes/#blog_id=38597928&amp;post_id=78994&amp;origin=guysherman.wordpress.com&amp;obj_id=38597928-78994-593d1d5f9f9a4" data-name="like-post-frame-38597928-78994-593d1d5f9f9a4"><h3 class="sd-title">Like this:</h3><div class="likes-widget-placeholder post-likes-widget-placeholder" style="height: 55px; display: none;"><span class="button"><span>Like</span></span> <span class="loading">Loading...</span></div><iframe class="post-likes-widget jetpack-likes-widget" name="like-post-frame-38597928-78994-593d1d5f9f9a4" src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/a.htm" width="100%" height="55px" frameborder="0"></iframe><span class="sd-text-color"></span><a class="sd-link-color"></a></div>
+<div id="jp-relatedposts" class="jp-relatedposts" style="display: block;">
+	<h3 class="jp-relatedposts-headline"><em>Related</em></h3>
+<div class="jp-relatedposts-items jp-relatedposts-items-minimal"><p class="jp-relatedposts-post jp-relatedposts-post0" data-post-id="78988" data-post-format="false"><span class="jp-relatedposts-post-title"><a class="jp-relatedposts-post-a" href="https://guysherman.com/2015/08/12/building-ardour-on-ubuntu/" title="Building Ardour on Ubuntu
+
+[UPDATE] I've found that the instructions below cause jackd2 to be uninstalled, which causes some problems. Reinstalling the jackd2, libjack-jackd2-0, libjack-jackd2-dev and pulseaudio-module-jack packages should fix those issues[/UPDATE] I'm taking a journey&nbsp;into audio software, and I've been playing around on Linux because there's quite a good open-source audio community out…" rel="nofollow" data-origin="78994" data-position="0">Building Ardour on Ubuntu</a></span><span class="jp-relatedposts-post-context">In "Ardour"</span></p><p class="jp-relatedposts-post jp-relatedposts-post1" data-post-id="79237" data-post-format="false"><span class="jp-relatedposts-post-title"><a class="jp-relatedposts-post-a" href="https://guysherman.com/2016/06/21/building-ardour-on-arch/" title="Building Ardour on arch
+
+UPDATE: It turns out if you want LV2 GUIs to show up you need to install the suil&nbsp;package, it is an optional dependency, but well worth it! NB: I haven't written this post with the intent of showing every-day users how to build Ardour on Arch, if you just want…" rel="nofollow" data-origin="78994" data-position="1">Building Ardour on arch</a></span><span class="jp-relatedposts-post-context"></span></p><p class="jp-relatedposts-post jp-relatedposts-post2" data-post-id="79054" data-post-format="false"><span class="jp-relatedposts-post-title"><a class="jp-relatedposts-post-a" href="https://guysherman.com/2015/09/19/dont-forget-the-cross-fade/" title="Don't forget the cross-fade
+
+A quick post about a little lesson I learned tonight whilst editing some audio: don't forget the cross-fade. I recorded some synth drum tracks to audio (so that I wouldn't have to open up the drum machine again), and then trimmed the tracks down so that they ended tidily at…" rel="nofollow" data-origin="78994" data-position="2">Don't forget the cross-fade</a></span><span class="jp-relatedposts-post-context">In "Ardour"</span></p></div></div></div>			</div><!-- .entry-content -->
+
+	<footer class="entry-footer">
+		<span class="tags-links">Tagged <a href="https://guysherman.com/tag/ardour/" rel="tag">Ardour</a>, <a href="https://guysherman.com/tag/audio/" rel="tag">Audio</a>, <a href="https://guysherman.com/tag/msys2/" rel="tag">MSYS2</a>, <a href="https://guysherman.com/tag/windows/" rel="tag">Windows</a></span>	</footer><!-- .entry-footer -->
+</article><!-- #post-## -->
+
+
+			
+	<nav class="navigation post-navigation" role="navigation">
+		<h2 class="screen-reader-text">Post navigation</h2>
+		<div class="nav-links"><div class="nav-previous"><a href="https://guysherman.com/2015/08/12/building-ardour-on-ubuntu/" rel="prev"><span class="meta-nav">Previous Post</span> Building Ardour on&nbsp;Ubuntu</a></div><div class="nav-next"><a href="https://guysherman.com/2015/08/22/towards-a-cross-platform-cc-dev-environment/" rel="next"><span class="meta-nav">Next Post</span> Towards a cross-platform C/C++ dev&nbsp;environment</a></div></div>
+	</nav>
+			
+<div id="comments" class="comments-area">
+
+	
+			<h2 class="comments-title">
+			16 thoughts on “<span>Building Ardour on Windows with&nbsp;MSYS2</span>”		</h2><!-- .comments-title -->
+
+		<ol class="comment-list">
+					<li id="comment-3237" class="comment even thread-even depth-1 highlander-comment">
+			<article id="div-comment-3237" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-metadata">
+						<span class="comment-author vcard">
+							<img alt="" src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/b584786d7ff067757242a8fc219f05c1.jpg" class="avatar avatar-54 grav-hashed grav-hijack" id="grav-b584786d7ff067757242a8fc219f05c1-0" width="54" height="54">
+							<b class="fn"><a href="http://gareus.org/" rel="external nofollow" class="url">rgareus</a></b>						</span>
+						<a href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/#comment-3237">
+							<time datetime="2015-08-16T21:51:38+00:00">
+								<span class="comment-date">August 16, 2015</span><span class="comment-time screen-reader-text">9:51 pm</span>							</time>
+						</a>
+						<span class="reply"><a rel="nofollow" class="comment-reply-link" href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/?replytocom=3237#respond" onclick='return addComment.moveForm( "div-comment-3237", "3237", "respond", "78994" )' aria-label="Reply to rgareus">Reply</a></span>						
+					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>wow, nice walkthough. Thanks.</p>
+<p>A quick note regarding the circular dependency.  Just build freetype with -with-harfbuzz=no<br>
+and libharfbuzz after that. No need to look back. None of the libs nor 
+Ardour itself uses freetype’s harfbuzz engine directly (it all goes via 
+pango -&gt; harfbuzz -&gt; freetype).</p>
+				</div><!-- .comment-content -->
+
+			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+		<li id="comment-3379" class="comment odd alt thread-odd thread-alt depth-1 parent highlander-comment">
+			<article id="div-comment-3379" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-metadata">
+						<span class="comment-author vcard">
+							<img alt="" src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/avatar_normal.png" class="avatar avatar-54" width="54" height="54">
+							<b class="fn"><a href="http://twitter.com/JPDefault" rel="external nofollow" class="url">JPDefault (@JPDefault)</a></b>						</span>
+						<a href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/#comment-3379">
+							<time datetime="2015-09-28T10:03:23+00:00">
+								<span class="comment-date">September 28, 2015</span><span class="comment-time screen-reader-text">10:03 am</span>							</time>
+						</a>
+						<span class="reply"><a rel="nofollow" class="comment-reply-link" href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/?replytocom=3379#respond" onclick='return addComment.moveForm( "div-comment-3379", "3379", "respond", "78994" )' aria-label="Reply to JPDefault (@JPDefault)">Reply</a></span>						
+					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>Thanks mate, that was helpful.</p>
+<p>Some packages are missing from your github repository, or would not compile so I had to use a combination of these: <a href="https://github.com/Alexpux/MINGW-packages" rel="nofollow">https://github.com/Alexpux/MINGW-packages</a> and <a href="https://github.com/mojofunk/MINGW-packages" rel="nofollow">https://github.com/mojofunk/MINGW-packages</a>.</p>
+<p>Also, there are a few typos: dockbook-xsl should be docbook-xsl 
+(though you don’t need to manually install that, so it could be 
+removed), and mingw-m64-x86_64-toolchain should be 
+mingw-w64-x86_64-toolchain.</p>
+<p>Great job anyway, cheers!</p>
+				</div><!-- .comment-content -->
+
+			</article><!-- .comment-body -->
+<ol class="children">
+		<li id="comment-3381" class="comment byuser comment-author-guysherman bypostauthor even depth-2 highlander-comment">
+			<article id="div-comment-3381" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-metadata">
+						<span class="comment-author vcard">
+							<img alt="" src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/fdb4e792e6677cd7786682ee86d82023.jpg" class="avatar avatar-54 grav-hashed grav-hijack" id="grav-fdb4e792e6677cd7786682ee86d82023-0" width="54" height="54">
+							<b class="fn"><a href="https://guysherman.wordpress.com/" rel="external nofollow" class="url">guysherman</a></b>						</span>
+						<a href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/#comment-3381">
+							<time datetime="2015-09-28T13:32:54+00:00">
+								<span class="comment-date">September 28, 2015</span><span class="comment-time screen-reader-text">1:32 pm</span>							</time>
+						</a>
+						<span class="reply"><a rel="nofollow" class="comment-reply-link" href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/?replytocom=3381#respond" onclick='return addComment.moveForm( "div-comment-3381", "3381", "respond", "78994" )' aria-label="Reply to guysherman">Reply</a></span>						
+					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>Hi thanks for that, I’ll update my repository to match the other ones, and correct the typos.</p>
+				</div><!-- .comment-content -->
+
+			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+		<li id="comment-3456" class="comment byuser comment-author-guysherman bypostauthor odd alt depth-2 highlander-comment">
+			<article id="div-comment-3456" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-metadata">
+						<span class="comment-author vcard">
+							<img alt="" src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/fdb4e792e6677cd7786682ee86d82023.jpg" class="avatar avatar-54 grav-hashed grav-hijack" id="grav-fdb4e792e6677cd7786682ee86d82023-1" width="54" height="54">
+							<b class="fn"><a href="https://guysherman.wordpress.com/" rel="external nofollow" class="url">guysherman</a></b>						</span>
+						<a href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/#comment-3456">
+							<time datetime="2015-10-24T16:34:53+00:00">
+								<span class="comment-date">October 24, 2015</span><span class="comment-time screen-reader-text">4:34 pm</span>							</time>
+						</a>
+						<span class="reply"><a rel="nofollow" class="comment-reply-link" href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/?replytocom=3456#respond" onclick='return addComment.moveForm( "div-comment-3456", "3456", "respond", "78994" )' aria-label="Reply to guysherman">Reply</a></span>						
+					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>I’ve now updated the post to fix the typos, and include a note 
+to switch to the guypkgs branch of the MINGW-packages repository, which 
+may have been the issue you had with getting some of those packages 
+sorted.</p>
+				</div><!-- .comment-content -->
+
+			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+		<li id="comment-3666" class="comment even thread-even depth-1 parent highlander-comment">
+			<article id="div-comment-3666" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-metadata">
+						<span class="comment-author vcard">
+							<img alt="" src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/40bf85c1722b61ca1f6592f6c673110d.png" class="avatar avatar-54 grav-hashed grav-hijack" id="grav-40bf85c1722b61ca1f6592f6c673110d-0" width="54" height="54">
+							<b class="fn">Frank</b>						</span>
+						<a href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/#comment-3666">
+							<time datetime="2015-12-24T05:49:06+00:00">
+								<span class="comment-date">December 24, 2015</span><span class="comment-time screen-reader-text">5:49 am</span>							</time>
+						</a>
+						<span class="reply"><a rel="nofollow" class="comment-reply-link" href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/?replytocom=3666#respond" onclick='return addComment.moveForm( "div-comment-3666", "3666", "respond", "78994" )' aria-label="Reply to Frank">Reply</a></span>						
+					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>Hi,<br>
+I got as far as the command<br>
+     makepkg-mingw  –install<br>
+but that gave me an error below:<br>
+/home/Frank/MINGW-packages/mingw-w64-icu/PKGBUILD: line 86: make: command not found<br>
+==&gt; ERROR: A failure occurred in build().<br>
+Line 86 runs “make”, and sure enough I dont have make on the path.  
+Doesnt seem to be even installed.  I googled and someone suggested to 
+run<br>
+      pacman -S make<br>
+That works, thought I would point it out for anyone else who stumbles over the same rocky outcrop.</p>
+<p>Any ideas?</p>
+				</div><!-- .comment-content -->
+
+			</article><!-- .comment-body -->
+<ol class="children">
+		<li id="comment-3952" class="comment byuser comment-author-guysherman bypostauthor odd alt depth-2 highlander-comment">
+			<article id="div-comment-3952" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-metadata">
+						<span class="comment-author vcard">
+							<img alt="" src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/fdb4e792e6677cd7786682ee86d82023.jpg" class="avatar avatar-54 grav-hashed grav-hijack" id="grav-fdb4e792e6677cd7786682ee86d82023-2" width="54" height="54">
+							<b class="fn"><a href="https://guysherman.wordpress.com/" rel="external nofollow" class="url">guysherman</a></b>						</span>
+						<a href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/#comment-3952">
+							<time datetime="2016-11-05T21:10:31+00:00">
+								<span class="comment-date">November 5, 2016</span><span class="comment-time screen-reader-text">9:10 pm</span>							</time>
+						</a>
+						<span class="reply"><a rel="nofollow" class="comment-reply-link" href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/?replytocom=3952#respond" onclick='return addComment.moveForm( "div-comment-3952", "3952", "respond", "78994" )' aria-label="Reply to guysherman">Reply</a></span>						
+					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>You might have been using the wrong MSYS2 shell, there are three
+ of them, you have to use the MSYS2 shell to do the installing of 
+packages, but to build stuff you have to use either the MinGW-w64 shell 
+or the MinGW-w32 shell (these have the paths set appropriately). Note, 
+I’m about to put a warning at the top of this post that it is not valid 
+as of the release of Ardour 5.</p>
+				</div><!-- .comment-content -->
+
+			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+		<li id="comment-3847" class="comment byuser comment-author-saiatsai even thread-odd thread-alt depth-1 parent highlander-comment">
+			<article id="div-comment-3847" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-metadata">
+						<span class="comment-author vcard">
+							<img alt="" src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/c94c2c6ac036b5239c5a32fc300b76b3.png" class="avatar avatar-54 grav-hashed grav-hijack" id="grav-c94c2c6ac036b5239c5a32fc300b76b3-0" width="54" height="54">
+							<b class="fn"><a href="http://saiatsai.wordpress.com/" rel="external nofollow" class="url">saiatsai</a></b>						</span>
+						<a href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/#comment-3847">
+							<time datetime="2016-05-14T18:30:27+00:00">
+								<span class="comment-date">May 14, 2016</span><span class="comment-time screen-reader-text">6:30 pm</span>							</time>
+						</a>
+						<span class="reply"><a rel="nofollow" class="comment-reply-link" href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/?replytocom=3847#respond" onclick='return addComment.moveForm( "div-comment-3847", "3847", "respond", "78994" )' aria-label="Reply to saiatsai">Reply</a></span>						
+					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>./waf configure –dist-target=mingw –prefix=/mingw64 –configdir=/share<br>
+Setting top to                           : C:\msys64\home\Administrator\ardour<br>
+Setting out to                           : C:\msys64\home\Administrator\ardour\build<br>
+Checking for ‘msvc’ (c compiler)         : not found<br>
+Checking for ‘gcc’ (c compiler)          : C:\msys64\mingw64\bin\gcc.exe<br>
+Checking for ‘msvc’ (c++ compiler)       : not found<br>
+Checking for ‘g++’ (c++ compiler)        : C:\msys64\mingw64\bin\g++.exe<br>
+Checking for program windres             : C:\msys64\mingw64\bin\windres.exe<br>
+Global Configuration<br>
+ * Install prefix                                    : C:/msys64/mingw64<br>
+ * Debuggable build                                  : True<br>
+ * Build documentation                               : False<br>
+Ardour Configuration<br>
+ * Will build against private GTK dependency stack   : no<br>
+ * Will rely on libintl built into libc              : yes<br>
+ * Will build against private Ardour dependency stack : no<br>
+Checking for program pkg-config                      : C:\msys64\mingw64\bin\pkg-config.exe<br>
+Checking for ‘glib-2.0’ &gt;= 2.28                      : yes<br>
+Checking for ‘gthread-2.0’ &gt;= 2.2                    : yes<br>
+Checking for ‘glibmm-2.4’ &gt;= 2.32.0                  : yes<br>
+Checking for ‘sndfile’ &gt;= 1.0.18                     : yes<br>
+Checking for ‘giomm-2.4’ &gt;= 2.2                      : yes<br>
+Checking for ‘libcurl’ &gt;= 7.0.0                      : yes<br>
+Checking for ‘liblo’ &gt;= 0.26                         : yes<br>
+Checking for ‘taglib’ &gt;= 1.6                         : yes<br>
+Checking for ‘vamp-sdk’ &gt;= 2.1                       : yes<br>
+Checking for ‘vamp-hostsdk’ &gt;= 2.1                   : yes<br>
+Checking for ‘rubberband’                            : yes<br>
+Checking for  sndfile RF64=&gt;RIFF support             : Not found, no RF64-to-WAV support<br>
+Checking for function htonl                          : yes<br>
+Checking for function regcomp                        : yes<br>
+Checking for pthread posix semaphore                 : Found<br>
+Checking for clang                                   : no<br>
+Checking for ‘fftw3f’                                : yes<br>
+Checking for ‘aubio’ &gt;= 0.3.2                        : yes<br>
+Checking for ‘aubio’ &gt;= 0.4.0                        : yes<br>
+Checking for ‘libxml-2.0’                            : yes<br>
+Checking for ‘sigc++-2.0’ &gt;= 2.0                     : yes<br>
+Checking for function getmntent                      : not found<br>
+Checking for header execinfo.h                       : not found<br>
+Checking for header unistd.h                         : yes<br>
+Checking for function posix_memalign                 : no<br>
+Checking for function localtime_r                    : not found<br>
+Checking for header boost/shared_ptr.hpp             : yes<br>
+Checking for header boost/weak_ptr.hpp               : yes<br>
+Checking for library ole32                           : yes<br>
+Checking for ‘cppunit’ &gt;= 1.12.0                     : yes<br>
+Checking for header boost/shared_ptr.hpp             : yes<br>
+Checking for header boost/weak_ptr.hpp               : yes<br>
+Checking for header boost/shared_ptr.hpp             : yes<br>
+Checking for header boost/weak_ptr.hpp               : yes<br>
+Checking for header cwiid.h                          : not found<br>
+Checking for ‘jack’ &gt;= 0.121.0                       : yes<br>
+Checking for ‘portaudio-2.0’ &gt;= 19                   : yes<br>
+Checking for JACK metadata API                       : ok<br>
+Checking for program gas,as,gcc                      : C:\msys64\mingw64\bin\as.exe<br>
+Checking for ‘samplerate’ &gt;= 0.1.0                   : yes<br>
+Checking for ‘lv2’ &gt;= 1.0.0                          : yes<br>
+Checking for ‘lv2’ &gt;= 1.2.0                          : yes<br>
+Checking for ‘lv2’ &gt;= 1.10.0                         : yes<br>
+Checking for ‘serd-0’ &gt;= 0.14.0                      : yes<br>
+Checking for ‘sord-0’ &gt;= 0.8.0                       : yes<br>
+Checking for ‘sratom-0’ &gt;= 0.2.0                     : yes<br>
+Checking for ‘lilv-0’ &gt;= 0.14.0                      : yes<br>
+Checking for ‘lilv-0’ &gt;= 0.16.0                      : yes<br>
+Checking for ‘lilv-0’ &gt;= 0.19.2                      : yes<br>
+Checking for ‘lilv-0’ &gt;= 0.21.3                      : yes<br>
+Checking for ‘suil-0’ &gt;= 0.6.0                       : not found<br>
+Checking for ‘ogg’ &gt;= 1.1.2                          : yes<br>
+Checking for ‘flac’ &gt;= 1.2.1                         : yes<br>
+Checking for header sys/vfs.h                        : not found<br>
+Checking for header sys/statvfs.h                    : not found<br>
+Checking for header unistd.h                         : yes<br>
+Checking for header boost/shared_ptr.hpp             : yes<br>
+Checking for header boost/weak_ptr.hpp               : yes<br>
+Checking for header boost/scoped_ptr.hpp             : yes<br>
+Checking for header boost/ptr_container/ptr_list.hpp : yes<br>
+Checking for ‘gtkmm-2.4’ &gt;= 2.8                      : yes<br>
+Checking for ‘gtk+-2.0’ &gt;= 2.12.1                    : yes<br>
+Checking for ‘samplerate’ &gt;= 0.1.7                   : yes<br>
+Checking for header boost/shared_ptr.hpp             : yes<br>
+Checking for header boost/format.hpp                 : yes<br>
+Checking for ‘cairomm-1.0’ &gt;= 1.8.4                  : yes<br>
+Checking for ‘lv2’ &gt;= 1.0.0                          : yes<br>
+Checking for ‘fftw3f’ &gt;= 3.3.5                       : not found<br>
+Checking for ‘gthread-2.0’ &gt;= 2.10.1                 : yes<br>
+Checking for ‘gtk+-2.0’ &gt;= 2.18                      : yes<br>
+Checking for ‘x11’ &gt;= 1.1                            : not found<br>
+Checking for ‘fontconfig’                            : yes<br>
+Checking for header boost/shared_ptr.hpp             : yes<br>
+Checking for header boost/weak_ptr.hpp               : yes<br>
+ * build session-utils                               : no<br>
+ * Build documentation                               : False<br>
+ * Debuggable build                                  : True<br>
+ * Export all symbols (backtrace)                    : False<br>
+ * Install prefix                                    : C:/msys64/mingw64<br>
+ * Strict compiler flags                             : []<br>
+ * Internal Shared Libraries                         : True<br>
+ * Use External Libraries                            : False<br>
+ * Library exports hidden                            : True<br>
+ * ALSA DBus Reservation                             : False<br>
+ * Architecture flags                                : None<br>
+ * Aubio                                             : True<br>
+ * AudioUnits                                        : False<br>
+ * Free/Demo copy                                    : False<br>
+ * Build target                                      : mingw<br>
+ * CoreAudio                                         : False<br>
+ * CoreAudio 10.5 compat                             : False<br>
+ * Debug RT allocations                              : False<br>
+ * Debug Symbols                                     : True<br>
+ * Process thread timing                             : False<br>
+ * Denormal exceptions                               : False<br>
+ * FLAC                                              : True<br>
+ * FPU optimization                                  : True<br>
+ * Freedesktop files                                 : False<br>
+ * Libjack linking                                   : weak<br>
+ * Libjack metadata                                  : True<br>
+ * LV2 UI embedding                                  : False<br>
+ * LV2 support                                       : True<br>
+ * LXVST support                                     : False<br>
+ * OGG                                               : True<br>
+ * Phone home                                        : True<br>
+ * Program name                                      : Ardour<br>
+ * Samplerate                                        : True<br>
+ * PT format                                         : False<br>
+ * PTW32 Semaphore                                   : False<br>
+ * Translation                                       : True<br>
+ * Unit tests                                        : False<br>
+ * Mac i386 Architecture                             : False<br>
+ * Mac ppc Architecture                              : False<br>
+ * Windows VST support                               : False<br>
+ * Wiimote support                                   : False<br>
+ * Windows key                                       : Mod4&gt;&lt;Super<br>
+ * PortAudio Backend                                 : False<br>
+ * CoreAudio/Midi Backend                            : False<br>
+ * ALSA Backend                                      : False<br>
+ * Dummy backend                                     : False<br>
+ * JACK Backend                                      : True<br>
+ * C compiler flags                                  : 
+['-IC:\\msys64\\home\\Administrator\\ardour', '-DPLATFORM_WINDOWS', 
+'-DCOMPILER_MINGW', '-DUSE_CAIRO_IMAGE_SURFACE', '-DWAF_BUILD', '-g', 
+'-fshow-column', '-DARCH_X86', '-msse', '-mfpmath=sse', 
+'-DUSE_XMMINTRIN', '-masm=att', '-Wall', '-Wpointer-arith', 
+'-Wcast-qual', '-Wcast-align', '-Wno-unused-parameter', 
+'-DBOOST_SYSTEM_NO_DEPRECATED', '-D_ISOC9X_SOURCE', 
+'-D_LARGEFILE64_SOURCE', '-D_FILE_OFFSET_BITS=64', '-DENABLE_NLS', 
+'-DPROGRAM_NAME="Ardour"', u'-DPROGRAM_VERSION="4"', 
+'-Wstrict-prototypes', '-Wmissing-prototypes']<br>
+ * C++ compiler flags                                : 
+['-IC:\\msys64\\home\\Administrator\\ardour', '-DPLATFORM_WINDOWS', 
+'-DCOMPILER_MINGW', '-DUSE_CAIRO_IMAGE_SURFACE', '-DWAF_BUILD', '-g', 
+'-fshow-column', '-DARCH_X86', '-msse', '-mfpmath=sse', 
+'-DUSE_XMMINTRIN', '-masm=att', '-Wall', '-Wpointer-arith', 
+'-Wcast-qual', '-Wcast-align', '-Wno-unused-parameter', 
+'-DBOOST_SYSTEM_NO_DEPRECATED', '-D_ISOC9X_SOURCE', 
+'-D_LARGEFILE64_SOURCE', '-D_FILE_OFFSET_BITS=64', '-DENABLE_NLS', 
+'-DPROGRAM_NAME="Ardour"', u'-DPROGRAM_VERSION="4"', 
+'-Woverloaded-virtual', '-Wno-unused-local-typedefs', 
+'-D__STDC_LIMIT_MACROS', '-D__STDC_FORMAT_MACROS', 
+'-DCANVAS_COMPATIBILITY', '-DCANVAS_DEBUG']<br>
+ * Linker flags                                      : ['-Wl,–enable-auto-import', '-Wl,–enable-auto-import', '']<br>
+'configure' finished successfully (30.221s)</p>
+<p>You are missing the cwiid headers needed to compile wiimote support<br>
+session-utils depend on the dummy backend.</p>
+<p>Backends:</p>
+				</div><!-- .comment-content -->
+
+			</article><!-- .comment-body -->
+<ol class="children">
+		<li id="comment-3848" class="comment byuser comment-author-guysherman bypostauthor odd alt depth-2 highlander-comment">
+			<article id="div-comment-3848" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-metadata">
+						<span class="comment-author vcard">
+							<img alt="" src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/fdb4e792e6677cd7786682ee86d82023.jpg" class="avatar avatar-54 grav-hashed grav-hijack" id="grav-fdb4e792e6677cd7786682ee86d82023-3" width="54" height="54">
+							<b class="fn"><a href="https://guysherman.wordpress.com/" rel="external nofollow" class="url">guysherman</a></b>						</span>
+						<a href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/#comment-3848">
+							<time datetime="2016-05-14T19:20:58+00:00">
+								<span class="comment-date">May 14, 2016</span><span class="comment-time screen-reader-text">7:20 pm</span>							</time>
+						</a>
+						<span class="reply"><a rel="nofollow" class="comment-reply-link" href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/?replytocom=3848#respond" onclick='return addComment.moveForm( "div-comment-3848", "3848", "respond", "78994" )' aria-label="Reply to guysherman">Reply</a></span>						
+					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>I think there is a configuration option to turn off wiimote support. </p>
+				</div><!-- .comment-content -->
+
+			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+		<li id="comment-3850" class="comment byuser comment-author-saiatsai even thread-even depth-1 parent highlander-comment">
+			<article id="div-comment-3850" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-metadata">
+						<span class="comment-author vcard">
+							<img alt="" src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/c94c2c6ac036b5239c5a32fc300b76b3.png" class="avatar avatar-54 grav-hashed grav-hijack" id="grav-c94c2c6ac036b5239c5a32fc300b76b3-1" width="54" height="54">
+							<b class="fn"><a href="http://saiatsai.wordpress.com/" rel="external nofollow" class="url">saiatsai</a></b>						</span>
+						<a href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/#comment-3850">
+							<time datetime="2016-05-15T10:11:05+00:00">
+								<span class="comment-date">May 15, 2016</span><span class="comment-time screen-reader-text">10:11 am</span>							</time>
+						</a>
+						<span class="reply"><a rel="nofollow" class="comment-reply-link" href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/?replytocom=3850#respond" onclick='return addComment.moveForm( "div-comment-3850", "3850", "respond", "78994" )' aria-label="Reply to saiatsai">Reply</a></span>						
+					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>When i run ./waf ,it build failed.<br>
+missing some build dependencies ?<br>
+ardour version: 4.7-1011-g1968f94</p>
+<p>“failed message”<br>
+In file included from C:\msys64\mingw64\include\sigc++-2.0/sigc++/functors/slot.h:8:0,<br>
+                 from C:\msys64\mingw64\include\sigc++-2.0/sigc++/signal_base.h:27,<br>
+                 from C:\msys64\mingw64\include\sigc++-2.0/sigc++/signal.h:8,<br>
+                 from C:\msys64\mingw64\include\sigc++-2.0/sigc++/sigc++.h:104,<br>
+                 from C:\msys64\mingw64\include\glibmm-2.4/glibmm/signalproxy.h:28,<br>
+                 from C:\msys64\mingw64\include\glibmm-2.4/glibmm/objectbase.h:23,<br>
+                 from C:\msys64\mingw64\include\glibmm-2.4/glibmm/wrap.h:23,<br>
+                 from C:\msys64\mingw64\include\glibmm-2.4/glibmm/containerhandle_shared.h:25,<br>
+                 from C:\msys64\mingw64\include\glibmm-2.4/glibmm/arrayhandle.h:23,<br>
+                 from C:\msys64\mingw64\include\glibmm-2.4/glibmm/miscutils.h:24,<br>
+                 from ..\libs\pbd\basename.cc:21:<br>
+C:\msys64\mingw64\include\sigc++-2.0/sigc++/functors/slot_base.h:313:15:
+ warning: inline function ‘bool sigc::slot_base::empty() const’ used but
+ never defined<br>
+   inline bool empty() const noexcept<br>
+               ^<br>
+C:\msys64\mingw64\include\sigc++-2.0/sigc++/functors/slot_base.h:319:15:
+ warning: inline function ‘bool sigc::slot_base::blocked() const’ used 
+but never defined<br>
+   inline bool blocked() const noexcept<br>
+               ^<br>
+Waf: Leaving directory `C:\msys64\home\Administrator\ardour\build’<br>
+Build failed<br>
+ -&gt; task in ‘liblua’ failed (exit status 1):</p>
+				</div><!-- .comment-content -->
+
+			</article><!-- .comment-body -->
+<ol class="children">
+		<li id="comment-3852" class="comment byuser comment-author-saiatsai odd alt depth-2 parent highlander-comment">
+			<article id="div-comment-3852" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-metadata">
+						<span class="comment-author vcard">
+							<img alt="" src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/c94c2c6ac036b5239c5a32fc300b76b3.png" class="avatar avatar-54 grav-hashed grav-hijack" id="grav-c94c2c6ac036b5239c5a32fc300b76b3-2" width="54" height="54">
+							<b class="fn"><a href="http://saiatsai.wordpress.com/" rel="external nofollow" class="url">saiatsai</a></b>						</span>
+						<a href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/#comment-3852">
+							<time datetime="2016-05-15T10:47:10+00:00">
+								<span class="comment-date">May 15, 2016</span><span class="comment-time screen-reader-text">10:47 am</span>							</time>
+						</a>
+						<span class="reply"><a rel="nofollow" class="comment-reply-link" href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/?replytocom=3852#respond" onclick='return addComment.moveForm( "div-comment-3852", "3852", "respond", "78994" )' aria-label="Reply to saiatsai">Reply</a></span>						
+					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>-&gt; task in ‘liblua’ failed (exit status 1):<br>
+        {task 47506960L: cxx luastate.cc -&gt; luastate.cc.1.o}<br>
+ -&gt; task in ‘libpbd’ failed (exit status 1):<br>
+        {task 48228304L: cxx basename.cc -&gt; basename.cc.2.o}<br>
+ -&gt; task in ‘libpbd’ failed (exit status 1):<br>
+        {task 48228432L: cxx base_ui.cc -&gt; base_ui.cc.2.o}</p>
+				</div><!-- .comment-content -->
+
+			</article><!-- .comment-body -->
+<ol class="children">
+		<li id="comment-3953" class="comment byuser comment-author-guysherman bypostauthor even depth-3 highlander-comment">
+			<article id="div-comment-3953" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-metadata">
+						<span class="comment-author vcard">
+							<img alt="" src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/fdb4e792e6677cd7786682ee86d82023.jpg" class="avatar avatar-54 grav-hashed grav-hijack" id="grav-fdb4e792e6677cd7786682ee86d82023-4" width="54" height="54">
+							<b class="fn"><a href="https://guysherman.wordpress.com/" rel="external nofollow" class="url">guysherman</a></b>						</span>
+						<a href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/#comment-3953">
+							<time datetime="2016-11-05T21:13:57+00:00">
+								<span class="comment-date">November 5, 2016</span><span class="comment-time screen-reader-text">9:13 pm</span>							</time>
+						</a>
+												
+					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>Looks like you’re trying to build Ardour 5, this post isn’t up 
+to date. I’m not sure whether you’ll find a liblua package for MSYS2 or 
+not, it couldn’t hurt to have a look. I’m about to put a warning at the 
+top of the post.</p>
+				</div><!-- .comment-content -->
+
+			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+		<li id="comment-3883" class="pingback odd alt thread-odd thread-alt depth-1 highlander-comment">
+			<article id="div-comment-3883" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-metadata">
+						<span class="comment-author vcard">
+							
+							<b class="fn"><a href="https://guysherman.com/2016/06/21/building-ardour-on-arch/" rel="external nofollow" class="url">Building Ardour on arch – guysherman.com</a></b>						</span>
+						<a href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/#comment-3883">
+							<time datetime="2016-06-21T21:36:32+00:00">
+								<span class="comment-date">June 21, 2016</span><span class="comment-time screen-reader-text">9:36 pm</span>							</time>
+						</a>
+						<span class="reply"><a rel="nofollow" class="comment-reply-link" href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/?replytocom=3883#respond" onclick='return addComment.moveForm( "div-comment-3883", "3883", "respond", "78994" )' aria-label="Reply to Building Ardour on arch – guysherman.com">Reply</a></span>						
+					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>[…] used the package list from my 
+post&nbsp;https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/&nbsp;as
+ the basis for this post because MSYS uses pacman, and has similar 
+naming conventions for […]</p>
+				</div><!-- .comment-content -->
+
+			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+		<li id="comment-3951" class="comment even thread-even depth-1 parent highlander-comment">
+			<article id="div-comment-3951" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-metadata">
+						<span class="comment-author vcard">
+							<img alt="" src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/ad1ffdef671e0df081c7edd69eebf1b8.png" class="avatar avatar-54 grav-hashed grav-hijack" id="grav-ad1ffdef671e0df081c7edd69eebf1b8-0" width="54" height="54">
+							<b class="fn">Jakp</b>						</span>
+						<a href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/#comment-3951">
+							<time datetime="2016-11-05T20:28:25+00:00">
+								<span class="comment-date">November 5, 2016</span><span class="comment-time screen-reader-text">8:28 pm</span>							</time>
+						</a>
+						<span class="reply"><a rel="nofollow" class="comment-reply-link" href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/?replytocom=3951#respond" onclick='return addComment.moveForm( "div-comment-3951", "3951", "respond", "78994" )' aria-label="Reply to Jakp">Reply</a></span>						
+					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>I kind of got stuck when trying to do the makepkg-mingw step. Got a nice ==&gt; ERROR: PKGBUILD does not exist.<br>
+ message.</p>
+				</div><!-- .comment-content -->
+
+			</article><!-- .comment-body -->
+<ol class="children">
+		<li id="comment-3955" class="comment byuser comment-author-guysherman bypostauthor odd alt depth-2 highlander-comment">
+			<article id="div-comment-3955" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-metadata">
+						<span class="comment-author vcard">
+							<img alt="" src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/fdb4e792e6677cd7786682ee86d82023.jpg" class="avatar avatar-54 grav-hashed grav-hijack" id="grav-fdb4e792e6677cd7786682ee86d82023-5" width="54" height="54">
+							<b class="fn"><a href="https://guysherman.wordpress.com/" rel="external nofollow" class="url">guysherman</a></b>						</span>
+						<a href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/#comment-3955">
+							<time datetime="2016-11-05T22:03:22+00:00">
+								<span class="comment-date">November 5, 2016</span><span class="comment-time screen-reader-text">10:03 pm</span>							</time>
+						</a>
+						<span class="reply"><a rel="nofollow" class="comment-reply-link" href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/?replytocom=3955#respond" onclick='return addComment.moveForm( "div-comment-3955", "3955", "respond", "78994" )' aria-label="Reply to guysherman">Reply</a></span>						
+					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>Sounds like you weren’t in a folder with a PKGBUILD file.</p>
+				</div><!-- .comment-content -->
+
+			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+		<li id="comment-3954" class="comment even thread-odd thread-alt depth-1 parent highlander-comment">
+			<article id="div-comment-3954" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-metadata">
+						<span class="comment-author vcard">
+							<img alt="" src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/b584786d7ff067757242a8fc219f05c1.jpg" class="avatar avatar-54 grav-hashed grav-hijack" id="grav-b584786d7ff067757242a8fc219f05c1-1" width="54" height="54">
+							<b class="fn">Robin Gareus</b>						</span>
+						<a href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/#comment-3954">
+							<time datetime="2016-11-05T21:59:33+00:00">
+								<span class="comment-date">November 5, 2016</span><span class="comment-time screen-reader-text">9:59 pm</span>							</time>
+						</a>
+						<span class="reply"><a rel="nofollow" class="comment-reply-link" href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/?replytocom=3954#respond" onclick='return addComment.moveForm( "div-comment-3954", "3954", "respond", "78994" )' aria-label="Reply to Robin Gareus">Reply</a></span>						
+					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>The problem is  sigc++-2.0 and gcc.  Update sigc++ and compile 
+it with the same compiler… or try to work-around with  `./waf configure 
+-cxx11 ….`<br>
+(Ardour’s source does include Lua, and liblua is early in the compile process and the first to stumble over this)</p>
+				</div><!-- .comment-content -->
+
+			</article><!-- .comment-body -->
+<ol class="children">
+		<li id="comment-3956" class="comment byuser comment-author-guysherman bypostauthor odd alt depth-2 highlander-comment">
+			<article id="div-comment-3956" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-metadata">
+						<span class="comment-author vcard">
+							<img alt="" src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/fdb4e792e6677cd7786682ee86d82023.jpg" class="avatar avatar-54 grav-hashed grav-hijack" id="grav-fdb4e792e6677cd7786682ee86d82023-6" width="54" height="54">
+							<b class="fn"><a href="https://guysherman.wordpress.com/" rel="external nofollow" class="url">guysherman</a></b>						</span>
+						<a href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/#comment-3956">
+							<time datetime="2016-11-05T22:03:40+00:00">
+								<span class="comment-date">November 5, 2016</span><span class="comment-time screen-reader-text">10:03 pm</span>							</time>
+						</a>
+						<span class="reply"><a rel="nofollow" class="comment-reply-link" href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/?replytocom=3956#respond" onclick='return addComment.moveForm( "div-comment-3956", "3956", "respond", "78994" )' aria-label="Reply to guysherman">Reply</a></span>						
+					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>Thanks for that info Robin!</p>
+				</div><!-- .comment-content -->
+
+			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+		</ol><!-- .comment-list -->
+
+		
+	
+	
+		<div id="respond" class="comment-respond js">
+		<h3 id="reply-title" class="comment-reply-title">Leave a Reply <small><a rel="nofollow" id="cancel-comment-reply-link" href="https://guysherman.com/2015/08/16/building-ardour-on-windows-with-msys2/#respond" style="display:none;">Cancel reply</a></small></h3>			<form action="https://guysherman.com/wp-comments-post.php" method="post" id="commentform" class="comment-form" novalidate="">
+				<input id="highlander_comment_nonce" name="highlander_comment_nonce" value="ca245cb530" type="hidden"><input name="_wp_http_referer" value="/2015/08/16/building-ardour-on-windows-with-msys2/" type="hidden">
+<input name="hc_post_as" id="hc_post_as" value="guest" type="hidden">
+
+<div class="comment-form-field comment-textarea">
+	
+	<div id="comment-form-comment"><textarea tabindex="-1" style="position: absolute; top: -999px; left: 0px; right: auto; bottom: auto; border: 0px none; padding: 0px; box-sizing: content-box; overflow-wrap: break-word; height: 0px !important; min-height: 0px !important; overflow: hidden; transition: none 0s ease 0s ; font-family: Arial,Helvetica,Tahoma,Verdana,sans-serif; font-size: 14px; font-weight: 400; font-style: normal; letter-spacing: 0px; text-transform: none; text-decoration: none; word-spacing: 0px; text-indent: 0px; line-height: 24.5px; width: 717.85px;" class="autosizejs ">Enter your comment here...</textarea><textarea id="comment" name="comment" title="Enter your comment here..." placeholder="Enter your comment here..." style="height: 44px; overflow: hidden; overflow-wrap: break-word; resize: none;"></textarea></div>
+</div>
+
+<div id="comment-form-identity" style="display: none;">
+
+	<div id="comment-form-nascar">
+		<p>Fill in your details below or click an icon to log in:</p>
+		<ul>
+			<li class="selected" style="display:none;">
+				<a href="#comment-form-guest" id="postas-guest" title="Guest">
+					<span></span>
+				</a>
+			</li>
+			<li>
+				<a href="#comment-form-load-service:WordPress.com" id="postas-wordpress" title="WordPress.com">
+					<span></span>
+				</a>
+			</li>
+			<li>
+				<a href="#comment-form-load-service:Twitter" id="postas-twitter" title="Twitter">
+					<span></span>
+				</a>
+			</li>
+			<li>
+				<a href="#comment-form-load-service:Facebook" id="postas-facebook" title="Facebook">
+					<span></span>
+				</a>
+			</li>
+			<li>
+		</li></ul>
+	</div>
+
+	<div id="comment-form-guest" class="comment-form-service selected">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+<a href="https://gravatar.com/site/signup/" target="_blank">				<img src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/ad516503a11cd5ca435acc9bb6523536.png" alt="Gravatar" class="no-grav" width="25">
+</a>			</div>
+
+				<div class="comment-form-fields">
+				<div class="comment-form-field comment-form-email">
+					<label for="email">Email <span class="required">(required)</span> <span class="nopublish">(Address never made public)</span></label>
+					<div class="comment-form-input"><input id="email" name="email" type="email"></div>
+				</div>
+				<div class="comment-form-field comment-form-author">
+					<label for="author">Name <span class="required">(required)</span></label>
+					<div class="comment-form-input"><input id="author" name="author" type="text"></div>
+				</div>
+				<div class="comment-form-field comment-form-url">
+					<label for="url">Website</label>
+					<div class="comment-form-input"><input id="url" name="url" type="url"></div>
+				</div>
+			</div>
+	
+		</div>
+	</div>
+
+	<div id="comment-form-wordpress" class="comment-form-service">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+				<img src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/ad516503a11cd5ca435acc9bb6523536.png" alt="WordPress.com Logo" class="no-grav" width="25">
+			</div>
+
+				<div class="comment-form-fields">
+				<input name="wp_avatar" id="wordpress-avatar" class="comment-meta-wordpress" value="" type="hidden">
+				<input name="wp_user_id" id="wordpress-user_id" class="comment-meta-wordpress" value="" type="hidden">
+				<input name="wp_access_token" id="wordpress-access_token" class="comment-meta-wordpress" value="" type="hidden">
+				<p class="comment-form-posting-as pa-wordpress"><strong></strong> You are commenting using your WordPress.com account. <span class="comment-form-log-out">(&nbsp;<a href="javascript:HighlanderComments.doExternalLogout(%20'wordpress'%20);">Log&nbsp;Out</a>&nbsp;/&nbsp;<a href="#" onclick="javascript:HighlanderComments.switchAccount();return false;">Change</a>&nbsp;)</span></p>
+			</div>
+	
+		</div>
+	</div>
+
+	<div id="comment-form-twitter" class="comment-form-service">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+				<img src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/ad516503a11cd5ca435acc9bb6523536.png" alt="Twitter picture" class="no-grav" width="25">
+			</div>
+
+				<div class="comment-form-fields">
+				<input name="twitter_avatar" id="twitter-avatar" class="comment-meta-twitter" value="" type="hidden">
+				<input name="twitter_user_id" id="twitter-user_id" class="comment-meta-twitter" value="" type="hidden">
+				<input name="twitter_access_token" id="twitter-access_token" class="comment-meta-twitter" value="" type="hidden">
+				<p class="comment-form-posting-as pa-twitter"><strong></strong> You are commenting using your Twitter account. <span class="comment-form-log-out">(&nbsp;<a href="javascript:HighlanderComments.doExternalLogout(%20'twitter'%20);">Log&nbsp;Out</a>&nbsp;/&nbsp;<a href="#" onclick="javascript:HighlanderComments.switchAccount();return false;">Change</a>&nbsp;)</span></p>
+			</div>
+	
+		</div>
+	</div>
+
+	<div id="comment-form-facebook" class="comment-form-service">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+				<img src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/ad516503a11cd5ca435acc9bb6523536.png" alt="Facebook photo" class="no-grav" width="25">
+			</div>
+
+				<div class="comment-form-fields">
+				<input name="fb_avatar" id="facebook-avatar" class="comment-meta-facebook" value="" type="hidden">
+				<input name="fb_user_id" id="facebook-user_id" class="comment-meta-facebook" value="" type="hidden">
+				<input name="fb_access_token" id="facebook-access_token" class="comment-meta-facebook" value="" type="hidden">
+				<p class="comment-form-posting-as pa-facebook"><strong></strong> You are commenting using your Facebook account. <span class="comment-form-log-out">(&nbsp;<a href="javascript:HighlanderComments.doExternalLogout(%20'facebook'%20);">Log&nbsp;Out</a>&nbsp;/&nbsp;<a href="#" onclick="javascript:HighlanderComments.switchAccount();return false;">Change</a>&nbsp;)</span></p>
+			</div>
+	
+		</div>
+	</div>
+
+	<div id="comment-form-googleplus" class="comment-form-service">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+				<img src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/ad516503a11cd5ca435acc9bb6523536.png" alt="Google+ photo" class="no-grav" width="25">
+			</div>
+
+				<div class="comment-form-fields">
+				<input name="googleplus_avatar" id="googleplus-avatar" class="comment-meta-googleplus" value="" type="hidden">
+				<input name="googleplus_user_id" id="googleplus-user_id" class="comment-meta-googleplus" value="" type="hidden">
+				<input name="googleplus_access_token" id="googleplus-access_token" class="comment-meta-googleplus" value="" type="hidden">
+				<p class="comment-form-posting-as pa-googleplus"><strong></strong> You are commenting using your Google+ account. <span class="comment-form-log-out">(&nbsp;<a href="javascript:HighlanderComments.doExternalLogout(%20'googleplus'%20);">Log&nbsp;Out</a>&nbsp;/&nbsp;<a href="#" onclick="javascript:HighlanderComments.switchAccount();return false;">Change</a>&nbsp;)</span></p>
+			</div>
+	
+		</div>
+	</div>
+
+
+	<div id="comment-form-load-service" class="comment-form-service">
+		<div class="comment-form-posting-as-cancel"><a href="javascript:HighlanderComments.cancelExternalWindow();">Cancel</a></div>
+		<p>Connecting to %s</p>
+	</div>
+
+</div>
+
+<script type="text/javascript">
+var highlander_expando_javascript = function(){
+	var input = document.createElement( 'input' ),
+	    comment = jQuery( '#comment' );
+
+	if ( 'placeholder' in input ) {
+		comment.attr( 'placeholder', jQuery( '.comment-textarea label' ).remove().text() );
+	}
+
+	// Expando Mode: start small, then auto-resize on first click + text length
+	jQuery( '#comment-form-identity' ).hide();
+	jQuery( '#comment-form-subscribe' ).hide();
+	jQuery( '#commentform .form-submit' ).hide();
+
+	comment.css( { 'height':'10px' } ).one( 'focus', function() {
+		var timer = setInterval( HighlanderComments.resizeCallback, 10 )
+		jQuery( this ).animate( { 'height': HighlanderComments.initialHeight } ).delay( 100 ).queue( function(n) { clearInterval( timer ); HighlanderComments.resizeCallback(); n(); } );
+		jQuery( '#comment-form-identity' ).slideDown();
+		jQuery( '#comment-form-subscribe' ).slideDown();
+		jQuery( '#commentform .form-submit' ).slideDown();
+	});
+}
+jQuery(document).ready( highlander_expando_javascript );
+</script>
+
+<div id="comment-form-subscribe" style="display: none;">
+	<p class="comment-subscription-form"><input name="subscribe" id="subscribe" value="subscribe" style="width: auto;" type="checkbox"> <label class="subscribe-label" id="subscribe-label" for="subscribe" style="display: inline;">Notify me of new comments via email.</label></p></div>
+
+
+
+
+<p class="form-submit" style="display: none;"><input name="submit" id="comment-submit" class="submit" value="Post Comment" type="submit"> <input name="comment_post_ID" value="78994" id="comment_post_ID" type="hidden">
+<input name="comment_parent" id="comment_parent" value="0" type="hidden">
+</p><p style="display: none;"><input id="akismet_comment_nonce" name="akismet_comment_nonce" value="802550199d" type="hidden"></p>
+<input name="genseq" value="1497177439" type="hidden">
+<p style="display: none;"></p>			<input id="ak_js" name="ak_js" value="1497177435354" type="hidden"></form>
+			</div><!-- #respond -->
+	<div style="clear: both"></div>
+</div><!-- #comments -->
+
+		
+		</main><!-- #main -->
+	</div><!-- #primary -->
+
+
+<div id="secondary" class="widget-area" role="complementary">
+	<aside id="follow_button_widget-4" class="widget widget_follow_button_widget">
+		<iframe src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/index.htm" scrolling="no" width="100%" height="20" frameborder="0"></iframe>
+		<script type="text/javascript">(function(d){var f = 
+d.getElementsByTagName('SCRIPT')[0], p = 
+d.createElement('SCRIPT');p.type = 'text/javascript';p.async = 
+true;p.src = 
+'//widgets.wp.com/platform.js';f.parentNode.insertBefore(p,f);}(document));</script>
+
+		</aside><aside id="twitter-2" class="widget widget_twitter"><h2 class="widget-title"><a href="http://twitter.com/guysherman">Twitter Updates</a></h2><ul class="tweets">
+			<li>
+				Nick McConnell Hayden Lucas <a href="https://t.co/zXB1s60mmo" rel="nofollow">https://t.co/zXB1s60mmo</a> 				<a href="http://twitter.com/guysherman/statuses/866406451245445120" class="timesince">2&nbsp;weeks&nbsp;ago</a>
+			</li>
+
+			
+			<li>
+				@<a href="http://twitter.com/lastpass">lastpass</a> the way that you
+ automatically update passwords for sites now is infuriating. Could you 
+maybe give us the ability to turn if off? 				<a href="http://twitter.com/guysherman/statuses/861909601687662592" class="timesince">1&nbsp;month&nbsp;ago</a>
+			</li>
+
+			
+			<li>
+				<a href="https://t.co/CBybKvbNmF" rel="nofollow">https://t.co/CBybKvbNmF</a> 				<a href="http://twitter.com/guysherman/statuses/861138172583063552" class="timesince">1&nbsp;month&nbsp;ago</a>
+			</li>
+
+			
+			<li>
+				<a href="https://t.co/2d1dW6SE8v" rel="nofollow">https://t.co/2d1dW6SE8v</a> 				<a href="http://twitter.com/guysherman/statuses/860976674682408961" class="timesince">1&nbsp;month&nbsp;ago</a>
+			</li>
+
+			
+			<li>
+				<a href="https://t.co/5MlBF97gJQ" rel="nofollow">https://t.co/5MlBF97gJQ</a> 				<a href="http://twitter.com/guysherman/statuses/860973208706719745" class="timesince">1&nbsp;month&nbsp;ago</a>
+			</li>
+
+			</ul><iframe id="twitter-widget-0" scrolling="no" allowtransparency="true" class="twitter-follow-button twitter-follow-button-rendered" style="position: static; visibility: visible; width: 137px; height: 20px;" title="Twitter Follow Button" src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/follow_button.htm" data-screen-name="guysherman" frameborder="0"></iframe></aside></div><!-- #secondary -->
+
+	</div><!-- #content -->
+
+	<footer id="colophon" class="site-footer" role="contentinfo">
+		
+			<div class="footer-widgets clear">
+
+				
+					<div class="widget-area">
+
+						<aside id="wp_tag_cloud-4" class="widget wp_widget_tag_cloud"><h2 class="widget-title">Tags</h2><div style="overflow:hidden"><a href="https://guysherman.com/tag/net/" class="tag-cloud-link tag-link-2427 tag-link-position-1" style="font-size: 10.625pt;" aria-label=".NET (2 items)">.NET</a>
+<a href="https://guysherman.com/tag/ado/" class="tag-cloud-link tag-link-10367 tag-link-position-2" style="font-size: 8pt;" aria-label="ADO (1 item)">ADO</a>
+<a href="https://guysherman.com/tag/ajax/" class="tag-cloud-link tag-link-141 tag-link-position-3" style="font-size: 8pt;" aria-label="AJAX (1 item)">AJAX</a>
+<a href="https://guysherman.com/tag/ardour/" class="tag-cloud-link tag-link-325653 tag-link-position-4" style="font-size: 12.375pt;" aria-label="Ardour (3 items)">Ardour</a>
+<a href="https://guysherman.com/tag/arduino/" class="tag-cloud-link tag-link-134289 tag-link-position-5" style="font-size: 8pt;" aria-label="Arduino (1 item)">Arduino</a>
+<a href="https://guysherman.com/tag/asp/" class="tag-cloud-link tag-link-9817 tag-link-position-6" style="font-size: 8pt;" aria-label="ASP (1 item)">ASP</a>
+<a href="https://guysherman.com/tag/assimp/" class="tag-cloud-link tag-link-71435543 tag-link-position-7" style="font-size: 13.833333333333pt;" aria-label="Assimp (4 items)">Assimp</a>
+<a href="https://guysherman.com/tag/audio/" class="tag-cloud-link tag-link-413 tag-link-position-8" style="font-size: 16.020833333333pt;" aria-label="Audio (6 items)">Audio</a>
+<a href="https://guysherman.com/tag/bash/" class="tag-cloud-link tag-link-2674 tag-link-position-9" style="font-size: 8pt;" aria-label="BASH (1 item)">BASH</a>
+<a href="https://guysherman.com/tag/battery/" class="tag-cloud-link tag-link-135609 tag-link-position-10" style="font-size: 8pt;" aria-label="Battery (1 item)">Battery</a>
+<a href="https://guysherman.com/tag/beaglebone/" class="tag-cloud-link tag-link-67778846 tag-link-position-11" style="font-size: 8pt;" aria-label="BeagleBone (1 item)">BeagleBone</a>
+<a href="https://guysherman.com/tag/boost/" class="tag-cloud-link tag-link-214632 tag-link-position-12" style="font-size: 10.625pt;" aria-label="Boost (2 items)">Boost</a>
+<a href="https://guysherman.com/tag/c/" class="tag-cloud-link tag-link-2426 tag-link-position-13" style="font-size: 22pt;" aria-label="C++ (17 items)">C++</a>
+<a href="https://guysherman.com/tag/cdt/" class="tag-cloud-link tag-link-213214 tag-link-position-14" style="font-size: 8pt;" aria-label="CDT (1 item)">CDT</a>
+<a href="https://guysherman.com/tag/cepheid/" class="tag-cloud-link tag-link-9379543 tag-link-position-15" style="font-size: 8pt;" aria-label="Cepheid (1 item)">Cepheid</a>
+<a href="https://guysherman.com/tag/cities/" class="tag-cloud-link tag-link-38369 tag-link-position-16" style="font-size: 8pt;" aria-label="Cities (1 item)">Cities</a>
+<a href="https://guysherman.com/tag/comment/" class="tag-cloud-link tag-link-487 tag-link-position-17" style="font-size: 8pt;" aria-label="Comment (1 item)">Comment</a>
+<a href="https://guysherman.com/tag/c-sharp/" class="tag-cloud-link tag-link-14056 tag-link-position-18" style="font-size: 16.020833333333pt;" aria-label="C Sharp (6 items)">C Sharp</a>
+<a href="https://guysherman.com/tag/cv/" class="tag-cloud-link tag-link-10923 tag-link-position-19" style="font-size: 8pt;" aria-label="CV (1 item)">CV</a>
+<a href="https://guysherman.com/tag/cycling/" class="tag-cloud-link tag-link-1676 tag-link-position-20" style="font-size: 8pt;" aria-label="Cycling (1 item)">Cycling</a>
+<a href="https://guysherman.com/tag/cygwin/" class="tag-cloud-link tag-link-24433 tag-link-position-21" style="font-size: 8pt;" aria-label="Cygwin (1 item)">Cygwin</a>
+<a href="https://guysherman.com/tag/default/" class="tag-cloud-link tag-link-662 tag-link-position-22" style="font-size: 8pt;" aria-label="Default (1 item)">Default</a>
+<a href="https://guysherman.com/tag/demo/" class="tag-cloud-link tag-link-3186 tag-link-position-23" style="font-size: 8pt;" aria-label="Demo (1 item)">Demo</a>
+<a href="https://guysherman.com/tag/directx/" class="tag-cloud-link tag-link-20056 tag-link-position-24" style="font-size: 12.375pt;" aria-label="DirectX (3 items)">DirectX</a>
+<a href="https://guysherman.com/tag/dom/" class="tag-cloud-link tag-link-8076 tag-link-position-25" style="font-size: 8pt;" aria-label="DOM (1 item)">DOM</a>
+<a href="https://guysherman.com/tag/driving/" class="tag-cloud-link tag-link-399 tag-link-position-26" style="font-size: 8pt;" aria-label="Driving (1 item)">Driving</a>
+<a href="https://guysherman.com/tag/eclipse/" class="tag-cloud-link tag-link-18466 tag-link-position-27" style="font-size: 8pt;" aria-label="Eclipse (1 item)">Eclipse</a>
+<a href="https://guysherman.com/tag/engine/" class="tag-cloud-link tag-link-40472 tag-link-position-28" style="font-size: 8pt;" aria-label="Engine (1 item)">Engine</a>
+<a href="https://guysherman.com/tag/environment/" class="tag-cloud-link tag-link-184 tag-link-position-29" style="font-size: 8pt;" aria-label="Environment (1 item)">Environment</a>
+<a href="https://guysherman.com/tag/eric-meyer/" class="tag-cloud-link tag-link-1386660 tag-link-position-30" style="font-size: 8pt;" aria-label="Eric Meyer (1 item)">Eric Meyer</a>
+<a href="https://guysherman.com/tag/etw/" class="tag-cloud-link tag-link-1223671 tag-link-position-31" style="font-size: 12.375pt;" aria-label="ETW (3 items)">ETW</a>
+<a href="https://guysherman.com/tag/external/" class="tag-cloud-link tag-link-21293 tag-link-position-32" style="font-size: 8pt;" aria-label="External (1 item)">External</a>
+<a href="https://guysherman.com/tag/flash/" class="tag-cloud-link tag-link-456 tag-link-position-33" style="font-size: 8pt;" aria-label="flash (1 item)">flash</a>
+<a href="https://guysherman.com/tag/flyweight/" class="tag-cloud-link tag-link-1578059 tag-link-position-34" style="font-size: 8pt;" aria-label="flyweight (1 item)">flyweight</a>
+<a href="https://guysherman.com/tag/games/" class="tag-cloud-link tag-link-21 tag-link-position-35" style="font-size: 8pt;" aria-label="Games (1 item)">Games</a>
+<a href="https://guysherman.com/tag/gdb/" class="tag-cloud-link tag-link-320749 tag-link-position-36" style="font-size: 8pt;" aria-label="GDB (1 item)">GDB</a>
+<a href="https://guysherman.com/tag/genetic-modification/" class="tag-cloud-link tag-link-1012703 tag-link-position-37" style="font-size: 8pt;" aria-label="Genetic Modification (1 item)">Genetic Modification</a>
+<a href="https://guysherman.com/tag/geoengineering/" class="tag-cloud-link tag-link-675382 tag-link-position-38" style="font-size: 8pt;" aria-label="Geoengineering (1 item)">Geoengineering</a>
+<a href="https://guysherman.com/tag/glitch/" class="tag-cloud-link tag-link-139666 tag-link-position-39" style="font-size: 8pt;" aria-label="Glitch (1 item)">Glitch</a>
+<a href="https://guysherman.com/tag/hack/" class="tag-cloud-link tag-link-16981 tag-link-position-40" style="font-size: 8pt;" aria-label="Hack (1 item)">Hack</a>
+<a href="https://guysherman.com/tag/halyard/" class="tag-cloud-link tag-link-28151215 tag-link-position-41" style="font-size: 8pt;" aria-label="Halyard (1 item)">Halyard</a>
+<a href="https://guysherman.com/tag/iphone/" class="tag-cloud-link tag-link-106595 tag-link-position-42" style="font-size: 8pt;" aria-label="iPhone (1 item)">iPhone</a>
+<a href="https://guysherman.com/tag/ipod/" class="tag-cloud-link tag-link-1353 tag-link-position-43" style="font-size: 8pt;" aria-label="iPod (1 item)">iPod</a>
+<a href="https://guysherman.com/tag/javascript/" class="tag-cloud-link tag-link-457 tag-link-position-44" style="font-size: 8pt;" aria-label="JavaScript (1 item)">JavaScript</a>
+<a href="https://guysherman.com/tag/john-resig/" class="tag-cloud-link tag-link-6585906 tag-link-position-45" style="font-size: 8pt;" aria-label="John Resig (1 item)">John Resig</a>
+<a href="https://guysherman.com/tag/jquery/" class="tag-cloud-link tag-link-203308 tag-link-position-46" style="font-size: 8pt;" aria-label="jQuery (1 item)">jQuery</a>
+<a href="https://guysherman.com/tag/k2-net-2003/" class="tag-cloud-link tag-link-102029639 tag-link-position-47" style="font-size: 8pt;" aria-label="K2.Net 2003 (1 item)">K2.Net 2003</a>
+<a href="https://guysherman.com/tag/kinect/" class="tag-cloud-link tag-link-18608004 tag-link-position-48" style="font-size: 8pt;" aria-label="Kinect (1 item)">Kinect</a>
+<a href="https://guysherman.com/tag/license/" class="tag-cloud-link tag-link-45234 tag-link-position-49" style="font-size: 8pt;" aria-label="License (1 item)">License</a>
+<a href="https://guysherman.com/tag/linux/" class="tag-cloud-link tag-link-610 tag-link-position-50" style="font-size: 15pt;" aria-label="Linux (5 items)">Linux</a>
+<a href="https://guysherman.com/tag/mast/" class="tag-cloud-link tag-link-1070144 tag-link-position-51" style="font-size: 8pt;" aria-label="Mast (1 item)">Mast</a>
+<a href="https://guysherman.com/tag/mingw/" class="tag-cloud-link tag-link-190609 tag-link-position-52" style="font-size: 8pt;" aria-label="MinGW (1 item)">MinGW</a>
+<a href="https://guysherman.com/tag/mingw-msys/" class="tag-cloud-link tag-link-102029640 tag-link-position-53" style="font-size: 8pt;" aria-label="MinGW-MSYS (1 item)">MinGW-MSYS</a>
+<a href="https://guysherman.com/tag/mono/" class="tag-cloud-link tag-link-14247 tag-link-position-54" style="font-size: 13.833333333333pt;" aria-label="Mono (4 items)">Mono</a>
+<a href="https://guysherman.com/tag/namespace/" class="tag-cloud-link tag-link-2593229 tag-link-position-55" style="font-size: 8pt;" aria-label="Namespace (1 item)">Namespace</a>
+<a href="https://guysherman.com/tag/new/" class="tag-cloud-link tag-link-4597 tag-link-position-56" style="font-size: 8pt;" aria-label="New (1 item)">New</a>
+<a href="https://guysherman.com/tag/nmea/" class="tag-cloud-link tag-link-1543051 tag-link-position-57" style="font-size: 8pt;" aria-label="NMEA (1 item)">NMEA</a>
+<a href="https://guysherman.com/tag/nuclear-power/" class="tag-cloud-link tag-link-40221 tag-link-position-58" style="font-size: 8pt;" aria-label="Nuclear Power (1 item)">Nuclear Power</a>
+<a href="https://guysherman.com/tag/performance/" class="tag-cloud-link tag-link-1930 tag-link-position-59" style="font-size: 8pt;" aria-label="performance (1 item)">performance</a>
+<a href="https://guysherman.com/tag/performance-counter/" class="tag-cloud-link tag-link-7950768 tag-link-position-60" style="font-size: 8pt;" aria-label="Performance Counter (1 item)">Performance Counter</a>
+<a href="https://guysherman.com/tag/portable/" class="tag-cloud-link tag-link-8106 tag-link-position-61" style="font-size: 10.625pt;" aria-label="Portable (2 items)">Portable</a>
+<a href="https://guysherman.com/tag/re-vitalise/" class="tag-cloud-link tag-link-102029642 tag-link-position-62" style="font-size: 8pt;" aria-label="Re-vitalise (1 item)">Re-vitalise</a>
+<a href="https://guysherman.com/tag/reset-css/" class="tag-cloud-link tag-link-1723412 tag-link-position-63" style="font-size: 8pt;" aria-label="Reset CSS (1 item)">Reset CSS</a>
+<a href="https://guysherman.com/tag/road/" class="tag-cloud-link tag-link-47561 tag-link-position-64" style="font-size: 8pt;" aria-label="Road (1 item)">Road</a>
+<a href="https://guysherman.com/tag/safety/" class="tag-cloud-link tag-link-14812 tag-link-position-65" style="font-size: 8pt;" aria-label="Safety (1 item)">Safety</a>
+<a href="https://guysherman.com/tag/sailing/" class="tag-cloud-link tag-link-11828 tag-link-position-66" style="font-size: 8pt;" aria-label="Sailing (1 item)">Sailing</a>
+<a href="https://guysherman.com/tag/scooter/" class="tag-cloud-link tag-link-7879 tag-link-position-67" style="font-size: 8pt;" aria-label="Scooter (1 item)">Scooter</a>
+<a href="https://guysherman.com/tag/service/" class="tag-cloud-link tag-link-30351 tag-link-position-68" style="font-size: 8pt;" aria-label="Service (1 item)">Service</a>
+<a href="https://guysherman.com/tag/stewart-brand/" class="tag-cloud-link tag-link-2324424 tag-link-position-69" style="font-size: 8pt;" aria-label="Stewart Brand (1 item)">Stewart Brand</a>
+<a href="https://guysherman.com/tag/supernova/" class="tag-cloud-link tag-link-12876 tag-link-position-70" style="font-size: 10.625pt;" aria-label="SuperNova (2 items)">SuperNova</a>
+<a href="https://guysherman.com/tag/win32/" class="tag-cloud-link tag-link-4935 tag-link-position-71" style="font-size: 10.625pt;" aria-label="Win32 (2 items)">Win32</a>
+<a href="https://guysherman.com/tag/windows/" class="tag-cloud-link tag-link-800 tag-link-position-72" style="font-size: 12.375pt;" aria-label="Windows (3 items)">Windows</a>
+<a href="https://guysherman.com/tag/winrt/" class="tag-cloud-link tag-link-59597472 tag-link-position-73" style="font-size: 13.833333333333pt;" aria-label="WinRT (4 items)">WinRT</a>
+<a href="https://guysherman.com/tag/xml/" class="tag-cloud-link tag-link-6852 tag-link-position-74" style="font-size: 10.625pt;" aria-label="XML (2 items)">XML</a>
+<a href="https://guysherman.com/tag/xpath/" class="tag-cloud-link tag-link-99556 tag-link-position-75" style="font-size: 10.625pt;" aria-label="XPath (2 items)">XPath</a></div></aside>
+					</div><!-- .widget-area -->
+
+				
+				
+				
+			</div><!-- .footer-widgets -->
+
+		
+		<div class="site-info">
+			<a href="https://wordpress.com/?ref=footer_blog">Blog at WordPress.com.</a>
+			
+					</div><!-- .site-info -->
+	</footer><!-- #colophon -->
+</div><!-- #page -->
+
+<!--  -->
+<script type="text/javascript" src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/gprofiles.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var WPGroHo = {"my_hash":""};
+/* ]]> */
+</script>
+<script type="text/javascript" src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/wpgroho.js"></script>
+
+	<script>
+		//initialize and attach hovercards to all gravatars
+		jQuery( document ).ready( function( $ ) {
+
+			if (typeof Gravatar === "undefined"){
+				return;
+			}
+
+			if ( typeof Gravatar.init !== "function" ) {
+				return;
+			}			
+
+			Gravatar.profile_cb = function( hash, id ) {
+				WPGroHo.syncProfileData( hash, id );
+			};
+			Gravatar.my_hash = WPGroHo.my_hash;
+			Gravatar.init( 'body', '#wp-admin-bar-my-account' );
+		});
+	</script>
+
+		<div style="display:none">
+	<div class="grofile-hash-map-b584786d7ff067757242a8fc219f05c1">
+	</div>
+	<div class="grofile-hash-map-ff6a6e810881b03da0f3c6e5ae2531ba">
+	</div>
+	<div class="grofile-hash-map-fdb4e792e6677cd7786682ee86d82023">
+	</div>
+	<div class="grofile-hash-map-40bf85c1722b61ca1f6592f6c673110d">
+	</div>
+	<div class="grofile-hash-map-c94c2c6ac036b5239c5a32fc300b76b3">
+	</div>
+	<div class="grofile-hash-map-ad1ffdef671e0df081c7edd69eebf1b8">
+	</div>
+	</div>
+<script type="text/javascript">
+/* <![CDATA[ */
+var HighlanderComments = {"loggingInText":"Logging 
+In\u2026","submittingText":"Posting 
+Comment\u2026","postCommentText":"Post 
+Comment","connectingToText":"Connecting to %s","commentingAsText":"%1$s:
+ You are commenting using your %2$s account.","logoutText":"Log 
+Out","loginText":"Log 
+In","connectURL":"https:\/\/guysherman.wordpress.com\/public.api\/connect\/?action=request","logoutURL":"https:\/\/guysherman.wordpress.com\/wp-login.php?action=logout&_wpnonce=72d13e7ec4","homeURL":"https:\/\/guysherman.com\/","postID":"78994","gravDefault":"identicon","enterACommentError":"Please
+ enter a comment","enterEmailError":"Please enter your email address 
+here","invalidEmailError":"Invalid email 
+address","enterAuthorError":"Please enter your name 
+here","gravatarFromEmail":"This picture will show whenever you leave a 
+comment. Click to customize it.","logInToExternalAccount":"Log in to use
+ details from one of these 
+accounts.","change":"Change","changeAccount":"Change 
+Account","comment_registration":"0","userIsLoggedIn":"","isJetpack":"0","text_direction":"ltr"};
+/*
+ ]]> */
+</script>
+<script type="text/javascript" src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/a.js"></script>
+
+	<script type="text/javascript">
+		window.WPCOM_sharing_counts = {"https:\/\/guysherman.com\/2015\/08\/16\/building-ardour-on-windows-with-msys2\/":78994};
+	</script>
+		<script type="text/javascript">
+			var windowOpen;
+		jQuery(document).on( 'ready post-load', function(){
+			jQuery( 'a.share-twitter' ).on( 'click', function() {
+				if ( 'undefined' !== typeof windowOpen ){ // If there's another sharing window open, close it.
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery(this).attr( 'href' ), 'wpcomtwitter', 'menubar=1,resizable=1,width=600,height=350' );
+				return false;
+			});
+		});
+		</script>
+				<script type="text/javascript">
+			var windowOpen;
+		jQuery(document).on( 'ready post-load', function(){
+			jQuery( 'a.share-facebook' ).on( 'click', function() {
+				if ( 'undefined' !== typeof windowOpen ){ // If there's another sharing window open, close it.
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery(this).attr( 'href' ), 'wpcomfacebook', 'menubar=1,resizable=1,width=600,height=400' );
+				return false;
+			});
+		});
+		</script>
+				<script type="text/javascript">
+			var windowOpen;
+		jQuery(document).on( 'ready post-load', function(){
+			jQuery( 'a.share-tumblr' ).on( 'click', function() {
+				if ( 'undefined' !== typeof windowOpen ){ // If there's another sharing window open, close it.
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery(this).attr( 'href' ), 'wpcomtumblr', 'menubar=1,resizable=1,width=450,height=450' );
+				return false;
+			});
+		});
+		</script>
+				<script type="text/javascript">
+			var windowOpen;
+		jQuery(document).on( 'ready post-load', function(){
+			jQuery( 'a.share-linkedin' ).on( 'click', function() {
+				if ( 'undefined' !== typeof windowOpen ){ // If there's another sharing window open, close it.
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery(this).attr( 'href' ), 'wpcomlinkedin', 'menubar=1,resizable=1,width=580,height=450' );
+				return false;
+			});
+		});
+		</script>
+				<script type="text/javascript">
+			var windowOpen;
+		jQuery(document).on( 'ready post-load', function(){
+			jQuery( 'a.share-google-plus-1' ).on( 'click', function() {
+				if ( 'undefined' !== typeof windowOpen ){ // If there's another sharing window open, close it.
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery(this).attr( 'href' ), 'wpcomgoogle-plus-1', 'menubar=1,resizable=1,width=480,height=550' );
+				return false;
+			});
+		});
+		</script>
+			
+<script type="text/javascript" src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/form.js"></script>
+<script type="text/javascript" src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/widgets.js"></script>
+<div id="eu-cookie-law" class="hide-on-button" data-hide-timeout="30">
+	<form method="post">
+		<input id="_wpnonce" name="_wpnonce" value="f9e0c67b9d" type="hidden"><input name="_wp_http_referer" value="/2015/08/16/building-ardour-on-windows-with-msys2/" type="hidden">		<input name="eucookielaw" value="accept" type="hidden">
+		<input name="redirect_url" value="/2015/08/16/building-ardour-on-windows-with-msys2/" type="hidden">
+		<input value="Close and accept" class="accept" type="submit">
+
+		Privacy &amp; Cookies: This site uses cookies from WordPress.com and selected partners. <br>To find out more, as well as how to remove or block these, see here: <a href="https://guysherman.com/privacy-policy">Our Cookie Policy</a>
+ </form>
+</div>
+
+<script type="text/javascript">
+jQuery(function( $ ) {
+	var overlay = $( '#eu-cookie-law' ), initialScrollPosition, scrollFunction;
+	overlay.find( 'form' ).on( 'submit', accept );
+	if ( overlay.hasClass( 'hide-on-scroll' ) ) {
+		initialScrollPosition = $( window ).scrollTop();
+		scrollFunction = function() {
+			if ( Math.abs( $( window ).scrollTop() - initialScrollPosition ) > 50 ) {
+				accept();
+			}
+		};
+		$( window ).on( 'scroll', scrollFunction );
+	} else if ( overlay.hasClass( 'hide-on-time' ) ) {
+		setTimeout( accept, overlay.data( 'hide-timeout' ) * 1000 );
+	}
+
+	var accepted = false;
+	function accept( event ) {
+		if ( accepted ) {
+			return;
+		}
+		accepted = true;
+
+		if ( event && event.preventDefault ) {
+			event.preventDefault();
+		}
+
+		if ( overlay.hasClass( 'hide-on-scroll' ) ) {
+			$( window ).off( 'scroll', scrollFunction );
+		}
+
+		var expireTime = new Date();
+		expireTime.setTime( expireTime.getTime() + 2592000000 );
+
+		document.cookie = 'eucookielaw=' + expireTime.getTime() + ';path=/;expires=' + expireTime.toGMTString();
+
+		overlay.fadeOut(400, function() {
+			overlay.remove();
+		});
+	}
+});
+</script>
+
+<style type="text/css">
+	#eu-cookie-law {
+		position: fixed;
+		bottom: 1em;
+		left: 1em;
+		right: 1em;
+		z-index: 50001;
+		font-size: 12px;
+		color: #2e4467;
+		line-height: 1.5;
+		border: 1px solid #dedede;
+		padding: 6px 6px 6px 15px;
+		background-color: #fff;
+	}
+
+	#eu-cookie-law a,
+	#eu-cookie-law a:active,
+	#eu-cookie-law a:visited {
+		color: inherit;
+		text-decoration: underline;
+		cursor: inherit;
+	}
+
+	#eu-cookie-law a:hover {
+		text-decoration: none;
+		cursor: pointer;
+	}
+
+	#eu-cookie-law.negative {
+		background-color: #000;
+		color: #fff;
+		border: none;
+	}
+
+	/**
+	* Using a highly-specific rule to make sure that all button styles
+	* will be reset
+	*/
+	#eu-cookie-law input,
+	#eu-cookie-law input:hover,
+	#eu-cookie-law input:focus {
+		display: inline;
+		position: static;
+		float: right;
+		padding: 8px 12px;
+		margin: 0 0 0 5%;
+		border: 1px solid #dedede;
+		border-radius: 4px;
+		-moz-border-radius: 3px;
+		-webkit-border-radius: 3px;
+		background: #f3f3f3;
+		font-size: 14px;
+		line-height: inherit;
+		text-transform: none;
+		color: #2e4453;
+		cursor: pointer;
+		font-weight: inherit;
+		font-family: inherit;
+	}
+
+	#eu-cookie-law.negative input,
+	#eu-cookie-law.negative input:hover,
+	#eu-cookie-law.negative input:focus {
+		background-color: #282828;
+		color: #fff;
+		border-color: #535353;
+	}
+
+	@media (max-width: 600px) {
+		#eu-cookie-law {
+			padding-bottom: 55px;
+		}
+
+		#eu-cookie-law input.accept {
+			position: absolute;
+			bottom: 8px;
+			right: 8px;
+		}
+	}
+
+</style>
+<script type="text/javascript">
+/* <![CDATA[ */
+var libreadminbar = [""];
+/* ]]> */
+</script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var actionbardata = 
+{"siteID":"38597928","siteName":"guysherman.com","siteURL":"https:\/\/guysherman.com","icon":"<img
+ alt='' src='https:\/\/s1.wp.com\/i\/logo\/wpcom-gray-white.png' 
+class='avatar avatar-50' height='50' width='50' 
+\/>","canManageOptions":"","canCustomizeSite":"","isFollowing":"","themeSlug":"pub\/libre","signupURL":"https:\/\/wordpress.com\/start\/","loginURL":"https:\/\/guysherman.wordpress.com\/wp-login.php?redirect_to=https%3A%2F%2Fguysherman.com%2F2015%2F08%2F16%2Fbuilding-ardour-on-windows-with-msys2%2F","themeURL":"","xhrURL":"https:\/\/guysherman.com\/wp-admin\/admin-ajax.php","nonce":"d2e04a6e4a","isSingular":"1","isFolded":"","isLoggedIn":"","isMobile":"","subscribeNonce":"<input
+ type=\"hidden\" id=\"_wpnonce\" name=\"_wpnonce\" value=\"485e706700\" 
+\/>","referer":"https:\/\/guysherman.com\/2015\/08\/16\/building-ardour-on-windows-with-msys2\/","canFollow":"1","statusMessage":"","customizeLink":"https:\/\/guysherman.wordpress.com\/wp-admin\/customize.php?url=https%3A%2F%2Fguysherman.wordpress.com%2F2015%2F08%2F16%2Fbuilding-ardour-on-windows-with-msys2%2F","postID":"78994","shortlink":"http:\/\/wp.me\/p2BX5e-ky6","canEditPost":"","editLink":"https:\/\/wordpress.com\/post\/guysherman.com\/78994","statsLink":"https:\/\/wordpress.com\/stats\/post\/78994\/guysherman.com","i18n":{"view":"View
+ 
+site","follow":"Follow","following":"Following","edit":"Edit","login":"Log
+ in","signup":"Sign up","customize":"Customize","report":"Report this 
+content","themeInfo":"Get theme: Libre","shortlink":"Copy 
+shortlink","copied":"Copied","followedText":"New posts from this site 
+will now appear in your <a 
+href=\"https:\/\/wordpress.com\/\">Reader<\/a>","foldBar":"Collapse this
+ bar","unfoldBar":"Expand this bar","editSubs":"Manage 
+subscriptions","viewReader":"View site in the Reader","subscribe":"Sign 
+me up","enterEmail":"Enter your email address","followers":"Join 445 
+other followers","alreadyUser":"Already have a WordPress.com account? <a
+ 
+href=\"https:\/\/guysherman.wordpress.com\/wp-login.php?redirect_to=https%3A%2F%2Fguysherman.com%2F2015%2F08%2F16%2Fbuilding-ardour-on-windows-with-msys2%2F\">Log
+ in now.<\/a>","stats":"Stats"}};
+/* ]]> */
+</script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var sharing_js_options = {"lang":"en","counts":"1"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/a_003.js"></script><div id="actionbar" class="actnbr-pub-libre actnbr-has-follow actnbr-hidden"><ul><li class="actnbr-btn actnbr-hidden"> 			    	<a class="actnbr-action actnbr-actn-follow" href=""><svg class="gridicon gridicon__follow" height="24px" width="24px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path d="M23 16v2h-3v3h-2v-3h-3v-2h3v-3h2v3h3zM20 2v9h-4v3h-3v4H4c-1.1 0-2-.9-2-2V2h18zM8 13v-1H4v1h4zm3-3H4v1h7v-1zm0-2H4v1h7V8zm7-4H4v2h14V4z"></path></g></svg><span>Follow</span></a> 			    	<div class="actnbr-popover tip tip-top-left actnbr-notice"> 			    		<div class="tip-arrow"></div> 			    		<div class="tip-inner actnbr-follow-bubble"></div> 			    	</div> 			    </li><li class="actnbr-ellipsis actnbr-hidden"> 			  <svg class="gridicon gridicon__ellipsis" height="24" width="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><circle cx="5" cy="12" r="2"></circle><circle cx="19" cy="12" r="2"></circle><circle cx="12" cy="12" r="2"></circle></g></svg> 			  <div class="actnbr-popover tip tip-top-left actnbr-more"> 			  	<div class="tip-arrow"></div> 			  	<div class="tip-inner"> 				  <ul> 				    <li class="actnbr-sitename actnbr-hidden"><a href="https://guysherman.com/"><img alt="" src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/wpcom-gray-white.png" class="avatar avatar-50" width="50" height="50"> guysherman.com</a></li> 				   	<li class="actnbr-folded-customize actnbr-hidden"><a href="https://guysherman.wordpress.com/wp-admin/customize.php?url=https%3A%2F%2Fguysherman.wordpress.com%2F2015%2F08%2F16%2Fbuilding-ardour-on-windows-with-msys2%2F"><svg class="gridicon gridicon__customize" height="20px" width="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path d="M2 6c0-1.505.78-3.08 2-4 0 .845.69 2 2 2 1.657 0 3 1.343 3 3 0 .386-.08.752-.212 1.09.74.594 1.476 1.19 2.19 1.81L8.9 11.98c-.62-.716-1.214-1.454-1.807-2.192C6.753 9.92 6.387 10 6 10c-2.21 0-4-1.79-4-4zm12.152 6.848l1.34-1.34c.607.304 1.283.492 2.008.492 2.485 0 4.5-2.015 4.5-4.5 0-.725-.188-1.4-.493-2.007L18 9l-2-2 3.507-3.507C18.9 3.188 18.225 3 17.5 3 15.015 3 13 5.015 13 7.5c0 .725.188 1.4.493 2.007L3 20l2 2 6.848-6.848c1.885 1.928 3.874 3.753 5.977 5.45l1.425 1.148 1.5-1.5-1.15-1.425c-1.695-2.103-3.52-4.092-5.448-5.977z" data-reactid=".2.1.1:0.1b.0"></path></g></svg><span>Customize<span></span></span></a></li> 				    <li class="actnbr-folded-follow actnbr-hidden"><a class="actnbr-action actnbr-actn-follow" href=""><svg class="gridicon gridicon__follow" height="24px" width="24px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path d="M23 16v2h-3v3h-2v-3h-3v-2h3v-3h2v3h3zM20 2v9h-4v3h-3v4H4c-1.1 0-2-.9-2-2V2h18zM8 13v-1H4v1h4zm3-3H4v1h7v-1zm0-2H4v1h7V8zm7-4H4v2h14V4z"></path></g></svg><span>Follow</span></a></li> 					<li class="actnbr-signup actnbr-hidden"><a href="https://wordpress.com/start/">Sign up</a></li> 				    <li class="actnbr-login actnbr-hidden"><a href="https://guysherman.wordpress.com/wp-login.php?redirect_to=https%3A%2F%2Fguysherman.com%2F2015%2F08%2F16%2Fbuilding-ardour-on-windows-with-msys2%2F">Log in</a></li> 				     				    <li class="actnbr-shortlink actnbr-hidden"><a href="http://wp.me/p2BX5e-ky6">Copy shortlink</a></li> 				    <li class="flb-report actnbr-hidden"><a href="http://en.wordpress.com/abuse/">Report this content</a></li> 				     				     				    <li class="actnbr-subs actnbr-hidden"><a href="https://subscribe.wordpress.com/">Manage subscriptions</a></li> 				    <li class="actnbr-fold actnbr-hidden"><a href="">Collapse this bar</a></li> 			      </ul> 			    </div> 		      </div> 		    </li> 	      </ul></div>
+<script type="text/javascript">
+// <![CDATA[
+(function() {
+try{
+  if ( window.external &&'msIsSiteMode' in window.external) {
+    if (window.external.msIsSiteMode()) {
+      var jl = document.createElement('script');
+      jl.type='text/javascript';
+      jl.async=true;
+      jl.src='/wp-content/plugins/ie-sitemode/custom-jumplist.php';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(jl, s);
+    }
+  }
+}catch(e){}
+})();
+// ]]>
+</script>		<iframe src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/master.htm" scrolling="no" id="likes-master" name="likes-master" style="display:none;"></iframe>
+		<div id="likes-other-gravatars"><div class="likes-text"><span>%d</span> bloggers like this:</div><ul class="wpl-avatars sd-like-gravatars"></ul></div>
+		<script>
+			var _comscore = _comscore || [];
+			_comscore.push({
+				c1: "2",
+				c2: "7518284"
+			});
+			(function() {
+				var s = document.createElement("script"),
+					el = document.getElementsByTagName("script")[0];
+				s.defer = true;
+				s.src = (document.location.protocol == "https:" ? "https://sb" : "http://b") + ".scorecardresearch.com/beacon.js";
+				el.parentNode.insertBefore(s, el);
+			})();
+		</script>
+		<noscript>
+			<p class="robots-nocontent"><img 
+src="https://sb.scorecardresearch.com/p?c1=2&c2=7518284&c3=&c4=&c5=&c6=&c15=&cv=2.0&cj=1"
+ alt="" style="display:none;" width="1" height="1" /></p>
+		</noscript><script src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/w.js" type="text/javascript" async="" defer="defer"></script>
+<script type="text/javascript">
+_tkq = window._tkq || [];
+_stq = window._stq || [];
+_tkq.push(['storeContext', 
+{'blog_id':'38597928','blog_tz':'0','user_lang':'en','blog_lang':'en','user_id':'0'}]);
+_stq.push(['view',
+ 
+{'blog':'38597928','v':'wpcom','tz':'0','user_id':'0','post':'78994','subd':'guysherman'}]);
+_stq.push(['extra',
+ 
+{'crypt':'UE40eW5QN0p8M2Y/RE1TaVhzUzFMbjdWNHpwZGhTayxPSUFCMGRVYVNrSFguN3FwSmQ5RGtNX3VQcj1yVzhiflM1THQtLGFdQ2toOXYlVGlsWFhQNVpUOHlbPUJnQi45S3x+M3RpMkxWWG1vVktRdnw4SVpbcVRJZ2xGaU0uaHhmdy8/Y2htWnxoTXQzaW9bSVpyVjBNQUZKRVA5THVhUHVqbWM0M043bWIlOWIuUzguP2NHSXoxRVg5MFRsS0N1VThXd1k5WjZ8LHJNY3FtLTZDXW5YVy5Wc0V4LEhqeW8vQk5+bi9SUkJLRjlEOGI4dWlnfjdFWlgsZDlNcm5bWlFyJWRdQz1VPTQ2UmJ1Ll9mQndYclt5QnlzZ3RMZkhNRS90NnwwaExPV3NzZFJ8R1JtQ20rX28sRFlffExKZ2FuTG56Zk49'}]);
+_stq.push([
+ 'clickTrackerInit', '38597928', '78994' ]);
+	</script>
+<noscript><img src="https://pixel.wp.com/b.gif?v=noscript" style="height:0px;width:0px;overflow:hidden" alt="" /></noscript>
+<script>
+if ( 'object' === typeof wpcom_mobile_user_agent_info ) {
+
+	wpcom_mobile_user_agent_info.init();
+	var mobileStatsQueryString = "";
+	
+	if( false !== wpcom_mobile_user_agent_info.matchedPlatformName )
+		mobileStatsQueryString += "&x_" + 'mobile_platforms' + '=' + 
+wpcom_mobile_user_agent_info.matchedPlatformName;
+	
+	if( false !== wpcom_mobile_user_agent_info.matchedUserAgentName )
+		mobileStatsQueryString += "&x_" + 'mobile_devices' + '=' + 
+wpcom_mobile_user_agent_info.matchedUserAgentName;
+	
+	if( wpcom_mobile_user_agent_info.isIPad() )
+		mobileStatsQueryString += "&x_" + 'ipad_views' + '=' + 'views';
+
+	if( "" != mobileStatsQueryString ) {
+		new Image().src = document.location.protocol + 
+'//pixel.wp.com/g.gif?v=wpcom-no-pv' + mobileStatsQueryString + '&baba='
+ + Math.random();
+	}
+	
+}
+</script>
+
+
+<div id="sharing_email" style="display: none;">
+		<form action="/2015/08/16/building-ardour-on-windows-with-msys2/" method="post">
+			<label for="target_email">Send to Email Address</label>
+			<input name="target_email" id="target_email" type="email">
+
+			
+				<label for="source_name">Your Name</label>
+				<input name="source_name" id="source_name" type="text">
+
+				<label for="source_email">Your Email Address</label>
+				<input name="source_email" id="source_email" type="email">
+
+						<input id="jetpack-source_f_name" name="source_f_name" class="input" size="25" autocomplete="off" type="text">
+			<script> document.getElementById('jetpack-source_f_name').value = ''; </script>
+			<div class="recaptcha" id="sharing_recaptcha"></div><input name="recaptcha_public_key" id="recaptcha_public_key" value="6LcYW8MSAAAAADBAuEH9yaPcF7lWh11Iq62ZKtoo" type="hidden">
+			<img style="float: right; display: none" class="loading" src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/loading.gif" alt="loading" width="16" height="16">
+			<input value="Send Email" class="sharing_send" type="submit">
+			<a rel="nofollow" href="#cancel" class="sharing_cancel">Cancel</a>
+
+			<div class="errors errors-1" style="display: none;">
+				Post was not sent - check your email addresses!			</div>
+
+			<div class="errors errors-2" style="display: none;">
+				Email check failed, please try again			</div>
+
+			<div class="errors errors-3" style="display: none;">
+				Sorry, your blog cannot share posts by email.			</div>
+		</form>
+	</div><img src="Building%20Ardour%20on%20Windows%20with%20MSYS2%20%E2%80%93%20guysherman.com_files/g.gif" alt=":)" id="wpstats"><iframe id="rufous-sandbox" scrolling="no" allowtransparency="true" allowfullscreen="true" style="position: absolute; visibility: hidden; display: none; width: 0px; height: 0px; padding: 0px; border: medium none;" title="Twitter analytics iframe" frameborder="0"></iframe></body></html>
