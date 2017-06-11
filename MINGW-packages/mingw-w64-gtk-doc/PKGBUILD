@@ -1,0 +1,61 @@
+# Maintainer: Alexey Pavlov <Alexpux@gmail.com>
+
+_realname=gtk-doc
+
+pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
+pkgver=1.21
+pkgrel=1
+pkgdesc="Documentation tool for public library API (mingw-w64)"
+arch=('any')
+url="http://www.gtk.org/gtk-doc/"
+license=("GPL" "FDL")
+options=(staticlibs strip)
+depends=("${MINGW_PACKAGE_PREFIX}-docbook-xsl"
+    "${MINGW_PACKAGE_PREFIX}-gnome-doc-utils"
+    "perl"
+    #"vim"
+    #"source-highlight"
+    )
+makedepends=(
+    #'jade'
+    "${MINGW_PACKAGE_PREFIX}-libxml2"
+    ${MINGW_PACKAGE_PREFIX}-"python2"
+    'itstool'
+    #'dblatex'
+    )
+optdepends=(#"${MINGW_PACKAGE_PREFIX}-jade: SGML support"
+            #"${MINGW_PACKAGE_PREFIX}-dblatex: PDF support"
+      )
+url="http://www.gtk.org/gtk-doc/"
+source=(http://ftp.gnome.org/pub/gnome/sources/${_realname}/${pkgver}/${_realname}-${pkgver}.tar.xz)
+md5sums=('e361de4750b707590d9ea1b5550fa738')
+
+prepare() {
+  cd "${srcdir}/${_realname}-${pkgver}"
+  #patch -p1 -i ${srcdir}/my.patch
+
+  #libtoolize --force --copy
+  #autoreconf -fi
+}
+
+build() {
+  export MSYS2_ARG_CONV_EXCL="-//OASIS"
+  mkdir -p "${srcdir}/build-${MINGW_CHOST}"
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  export PYTHON=${MINGW_PREFIX}/bin/python2
+  ../${_realname}-${pkgver}/configure \
+    --prefix=${MINGW_PREFIX} \
+    --build=${MINGW_CHOST} \
+    --host=${MINGW_CHOST} \
+    --enable-shared \
+    --enable-static \
+    --with-xml-catalog=${MINGW_PREFIX}/etc/xml/catalog
+  make
+}
+
+package() {
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  make DESTDIR="$pkgdir" install
+  mkdir -p ${pkgdir}${MINGW_PREFIX}/lib
+  mv ${pkgdir}${MINGW_PREFIX}/share/pkgconfig ${pkgdir}${MINGW_PREFIX}/lib/
+}

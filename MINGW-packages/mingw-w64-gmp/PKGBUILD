@@ -1,0 +1,53 @@
+# Maintainer: Alexey Pavlov <Alexpux@gmail.com>
+
+_realname=gmp
+
+pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
+pkgver=6.0.0
+pkgrel=2
+pkgdesc="A free library for arbitrary precision arithmetic"
+arch=('any')
+groups=("${MINGW_PACKAGE_PREFIX}")
+url="http://gmplib.org/"
+license=('LGPL3')
+source=(ftp://ftp.gmplib.org/pub/gmp-${pkgver}/${_realname}-${pkgver}a.tar.xz{,.sig})
+options=('staticlibs')
+md5sums=('1e6da4e434553d2811437aa42c7f7c76'
+         'SKIP')
+
+build() {
+  cd "${srcdir}/${_realname}-${pkgver}"
+
+  # Build static version
+  mkdir -p "${srcdir}/build-static-${CARCH}" && cd "${srcdir}/build-static-${CARCH}"
+  ../${_realname}-${pkgver}/configure --build=${MINGW_CHOST} \
+    --prefix=${MINGW_PREFIX} \
+    --enable-cxx \
+    --enable-static \
+    --disable-shared
+  make
+
+  # Build shared version
+  mkdir -p "${srcdir}/build-shared-${CARCH}" && cd "${srcdir}/build-shared-${CARCH}"
+  ../${_realname}-${pkgver}/configure --build=${MINGW_CHOST} \
+    --prefix=${MINGW_PREFIX} \
+    --enable-cxx \
+    --disable-static \
+    --enable-shared
+  make
+}
+
+check() {
+  cd "${srcdir}/build-static-${CARCH}"
+  make check
+}
+
+package() {
+  cd "${srcdir}/build-static-${CARCH}"
+  make DESTDIR="${pkgdir}" install
+
+  cd ${srcdir}/build-shared-${CARCH}
+  mkdir -p ${pkgdir}${MINGW_PREFIX}/{bin,lib}
+  cp .libs/libgmp*.dll ${pkgdir}${MINGW_PREFIX}/bin/
+  cp .libs/libgmp*.dll.a ${pkgdir}${MINGW_PREFIX}/lib/
+}

@@ -1,0 +1,87 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname='firebird'
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}-git"
+pkgver=3.0.0.31514.b244095
+pkgrel=1
+pkgdesc="Cross-platform relational database offering many ANSI SQL standard features (mingw-w64)"
+url="http://www.firebirdsql.org/"
+license=('custom')
+arch=('any')
+conflicts=("${MINGW_PACKAGE_PREFIX}-${_realname}" "${MINGW_PACKAGE_PREFIX}-libfbclient")
+provides=("${MINGW_PACKAGE_PREFIX}-${_realname}" "${MINGW_PACKAGE_PREFIX}-libfbclient")
+replaces=("${MINGW_PACKAGE_PREFIX}-${_realname}")
+depends=(
+         "${MINGW_PACKAGE_PREFIX}-gcc-libs"
+         "${MINGW_PACKAGE_PREFIX}-icu"
+         "${MINGW_PACKAGE_PREFIX}-libtommath" # For Firebird 3.x
+         "${MINGW_PACKAGE_PREFIX}-zlib"
+        )
+makedepends=(#"${MINGW_PACKAGE_PREFIX}-btyacc" # Maybe add check in firebird presence of system btyacc
+             "${MINGW_PACKAGE_PREFIX}-gcc"
+             "${MINGW_PACKAGE_PREFIX}-libatomic_ops"
+             "${MINGW_PACKAGE_PREFIX}-pkg-config"
+             "git"
+            )
+options=('!debug' 'strip')
+source=("${_realname}"::"git+https://github.com/Alexpux/firebird-git-svn.git"
+        #"${_realname}"::"git+https://Alexpux@bitbucket.org/msys2/firebird.git#branch=mingw-w64-trunk"
+        #"${_realname}"::"git+file:///v/Sources/GNU/firebird-git#branch=mingw-w64-trunk"
+        firebird-mingw.diff
+        firebird-msys.diff)
+sha256sums=('SKIP'
+            '5c8e225c0412ca9d67249658b0ba08ef9e701c1ba51b98a0e6e1771ca0e3dc64'
+            '0852dd5d8d919c7a448be60369f7b246893f35666d8748e305b4d03f767dca62')
+
+pkgver() {
+  cd "${_realname}"
+  source ${srcdir}/${_realname}/src/misc/writeBuildNum.sh
+  printf '%s.%s.%s.%s.%s' ${MajorVer} ${MinorVer} ${RevNo} ${BuildNum} "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd ${_realname}
+  git am ${srcdir}/firebird-mingw.diff
+  git am ${srcdir}/firebird-msys.diff
+  cd ..
+
+  mv "${_realname}" "${CARCH}"
+  cd "${CARCH}"
+  NOCONFIGURE=1 ./autogen.sh
+}
+
+build() {
+  local _debug_conf=
+  if check_option "debug" "y"; then
+    _debug_conf="--enable-debug"
+  fi
+
+  cd ${srcdir}/${CARCH}
+
+  ./configure \
+    --prefix=${MINGW_PREFIX} \
+    --build=${MINGW_CHOST} \
+    --host=${MINGW_CHOST} \
+    --target=${MINGW_CHOST} \
+    --enable-static \
+    --enable-shared \
+    ${_debug_conf} \
+    --disable-rpath \
+    --with-fbdoc=${MINGW_PREFIX}/share/${_realname}/doc
+
+  CC=${MINGW_PREFIX}/bin/gcc \
+  make -j1
+}
+
+package() {
+  cd ${srcdir}/${CARCH}
+
+  local _dir=Release
+  if check_option "debug" "y"; then
+    _dir=Debug
+  fi
+
+  mkdir -p ${pkgdir}
+  cp -rf gen/${_dir}/firebird ${pkgdir}${MINGW_PREFIX}
+  cp -rf ${srcdir}/${CARCH}/doc ${pkgdir}${MINGW_PREFIX}/
+}

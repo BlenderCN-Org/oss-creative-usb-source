@@ -1,0 +1,38 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname=nasm
+
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=2.11.02
+pkgrel=1
+pkgdesc="An 80x86 assembler designed for portability and modularity (mingw-w64)"
+arch=('any')
+license=('BSD')
+url="http://www.nasm.us"
+depends=("${MINGW_PACKAGE_PREFIX}-gcc-libs")
+options=('strip' '!libtool' 'staticlibs' '!makeflags')
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc" "${MINGW_PACKAGE_PREFIX}-pkg-config")
+source=(http://www.nasm.us/pub/nasm/releasebuilds/${pkgver}/${_realname}-${pkgver}.tar.xz)
+sha1sums=('d0525883abc6a8a9c0d2207b6872442ee26bfe1b')
+
+prepare() {
+  cd ${srcdir}/${_realname}-${pkgver}
+}
+
+build() {
+  export MSYS2_ARG_CONV_EXCL="-//OASIS"
+  cp -rf ${srcdir}/${_realname}-${pkgver} ${srcdir}/build-${MINGW_CHOST}
+  cd ${srcdir}/build-${MINGW_CHOST}
+  ./configure \
+    --prefix=${MINGW_PREFIX} \
+    --build=${MINGW_CHOST} \
+    --host=${MINGW_CHOST}
+
+  make
+}
+
+package() {
+  cd ${srcdir}/build-${MINGW_CHOST}
+  make INSTALLROOT="${pkgdir}" install install_rdf
+  install -Dm644 ${srcdir}/${_realname}-${pkgver}/LICENSE "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE"
+}

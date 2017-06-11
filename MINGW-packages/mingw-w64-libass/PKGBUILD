@@ -1,0 +1,48 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname=libass
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=0.12.1
+pkgrel=1
+pkgdesc="A portable library for SSA/ASS subtitles rendering (mingw-w64)"
+arch=('any')
+url='https://github.com/libass/libass'
+license=('ISC')
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc"
+             "${MINGW_PACKAGE_PREFIX}-yasm"
+             "${MINGW_PACKAGE_PREFIX}-pkg-config")
+depends=("${MINGW_PACKAGE_PREFIX}-fribidi"
+        "${MINGW_PACKAGE_PREFIX}-fontconfig"
+        "${MINGW_PACKAGE_PREFIX}-freetype"
+        "${MINGW_PACKAGE_PREFIX}-harfbuzz"
+        "${MINGW_PACKAGE_PREFIX}-enca")
+options=('strip' 'staticlibs')
+source=(https://github.com/libass/${_realname}/archive/${pkgver}.tar.gz)
+md5sums=('d493cd050d62aa174dbe1f41461f95c3')
+
+prepare() {
+  cd "${srcdir}/${_realname}-${pkgver}"
+  ./autogen.sh
+}
+
+build() {
+  mkdir -p "${srcdir}/build-${MINGW_CHOST}"
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  ../${_realname}-${pkgver}/configure \
+    --prefix=${MINGW_PREFIX} \
+    --build=${MINGW_CHOST} \
+    --host=${MINGW_CHOST} \
+    --target=${MINGW_CHOST} \
+    --enable-shared \
+    --enable-static \
+    --enable-harfbuzz \
+    --enable-fontconfig \
+    --enable-enca \
+    --enable-asm
+  make
+}
+
+package() {
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  make DESTDIR="${pkgdir}" install
+}

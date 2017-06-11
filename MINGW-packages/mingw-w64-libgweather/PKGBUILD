@@ -1,0 +1,55 @@
+# Maintainer: Andrea Zagli <andrea.zagli.free@gmail.com>
+
+_realname=libgweather
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=3.14.2
+pkgrel=1
+arch=('any')
+pkgdesc="GWeather shared library (mingw-w64)"
+depends=("${MINGW_PACKAGE_PREFIX}-gtk3"
+         "${MINGW_PACKAGE_PREFIX}-libsoup"
+         "${MINGW_PACKAGE_PREFIX}-libsystre"
+         "${MINGW_PACKAGE_PREFIX}-libxml2"
+         "${MINGW_PACKAGE_PREFIX}-geocode-glib")
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc"
+             "${MINGW_PACKAGE_PREFIX}-gtk-doc"
+             "${MINGW_PACKAGE_PREFIX}-vala"
+             "${MINGW_PACKAGE_PREFIX}-gobject-introspection"
+             "${MINGW_PACKAGE_PREFIX}-glade"
+             "intltool")
+options=('strip' 'staticlibs')
+license=("LGPL 2.1")
+url="http://www.gnome.org/"
+source=(http://ftp.gnome.org/pub/gnome/sources/${_realname}/${pkgver%.*}/${_realname}-$pkgver.tar.xz
+        001-win.patch
+        002-localedir-fix.patch)
+sha256sums=('aa0d03132fc6c446cf549df1d91e319e1abcc676f1d9f8bc1dc01f033dcff493'
+            '54aafa1ec47f818855cb8d17bb4f7f4458505a54b08c9fc51bfd4bbc1d6c37a2'
+            '6677acc97b0322170339479df46435f14eb232df2d36e607029af3bd1f1a4eb0')
+
+prepare() {
+  cd ${_realname}-${pkgver}
+  patch -p1 -i ${srcdir}/001-win.patch
+  patch -p1 -i ${srcdir}/002-localedir-fix.patch
+
+  AUTOPOINT='intltoolize --automake --copy' autoreconf -fiv
+}
+
+build() {
+  mkdir -p build-${MINGW_CHOST}
+  cd build-${MINGW_CHOST}
+
+  ../${_realname}-${pkgver}/configure \
+    --host=${MINGW_CHOST} \
+    --target=${MINGW_CHOST} \
+    --build=${MINGW_CHOST} \
+    --prefix=${MINGW_PREFIX} \
+    --libexecdir=${MINGW_PREFIX}/lib \
+    --enable-introspection
+  make
+}
+
+package() {
+  cd "$srcdir/build-${MINGW_CHOST}"
+  make DESTDIR=$pkgdir install
+}

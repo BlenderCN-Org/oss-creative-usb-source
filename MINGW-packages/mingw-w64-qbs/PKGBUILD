@@ -1,0 +1,87 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+# Maintainer: Ray Donnelly <mingw.android@gmail.com>
+
+# TODO :: Patch this for clang support:
+#         qbs setup-toolchains --type clang /mingw64/bin/clang.exe clang
+#         .. will add a profile to %AppData%/QtProject/qbs.ini that contains:
+#         qt-project\qbs\profiles\clang\qbs\toolchain=clang, llvm, gcc
+#         .. but is missing:
+#         qt-project\qbs\profiles\clang\qbs\targetOS=windows
+#         then in share/qbs/modules/cpp/windows-mingw.qbs we need to change
+#         condition: qbs.targetOS.contains("windows") && qbs.toolchain.contains("mingw")
+#         .. to:
+#         condition: qbs.targetOS.contains("windows") \
+#               && (qbs.toolchain.contains("mingw") || qbs.toolchain.contains("gcc"))
+
+_realname=qbs
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=1.3.3
+pkgrel=1
+_pkgfqn="${_realname}-${pkgver}.src"
+pkgdesc='Qt Build Suite'
+url='http://qt-project.org'
+arch=('any')
+depends=("${MINGW_PACKAGE_PREFIX}-qt5")
+makedepends=("git")
+options=('docs' 'staticlibs') # '!strip' 'debug')
+source=("http://download.qt-project.org/official_releases/qbs/${pkgver}/${_pkgfqn}.tar.gz"
+        #${_realname}-${pkgver}::"git://gitorious.org/qt-labs/qbs.git#tag=v$pkgver"
+        "manifest"
+        "0001-add-hostosinfo.h-to-installed-headers.1.3.2.patch"
+        "0002-WIP-Xcode-generator.1.3.2.patch"
+        "0003-add-generator-header-installs.1.3.2.patch"
+        "0004-Use-.dll.a-instead-of-.a-for-mingw-import-libraries.1.3.2.patch"
+        "0005-setup-toolchains-Pretend-msys-is-mingw.1.3.2.patch")
+sha256sums=('6d3372d088f2328cb2f51f77321f98d20068e91a0334b4c176d85d000a78036a'
+            '838098b25a8044176b3139b4003594570c62a8d64f5470fbbd769f3bf44e0855'
+            '6cc55051178868aeda33608f1ea7cc5d30641454c852c807d13b3eaf6db9a513'
+            '9d770fec6b89b9568e9a35813c4e017377b618438be17c8caba0b950c4cddc85'
+            '6afc5fc270d7ef82c183f58e90d8a02aba80863e50d1073ed176de07c11bd7b6'
+            '6efed604de50ac5ab43205845e5888604705fa907b6eb30c7004a9bd228973bf'
+            'f41dba9096ba87bd7112d785ccd01f7217f2d4f6ea8eada45dcb85b6ffbe79ab')
+
+prepare() {
+  cd ${_realname}-${pkgver}
+  [ -d src/plugins/generator ] && rm -rf src/plugins/generator
+  rm -rf src/lib/corelib/api/generator.*
+  rm -rf src/lib/corelib/tools/generat*
+  git init .
+  git add -A
+  git commit -m "Initial git import"
+  git am "${srcdir}"/0001-add-hostosinfo.h-to-installed-headers.1.3.2.patch
+  git am "${srcdir}"/0002-WIP-Xcode-generator.1.3.2.patch
+  git am "${srcdir}"/0003-add-generator-header-installs.1.3.2.patch
+  git am "${srcdir}"/0004-Use-.dll.a-instead-of-.a-for-mingw-import-libraries.1.3.2.patch
+  git am "${srcdir}"/0005-setup-toolchains-Pretend-msys-is-mingw.1.3.2.patch
+}
+
+build() {
+local _config
+if check_option "debug" "n"; then
+  _config="release"
+else
+  _config="debug"
+fi
+  cd ${srcdir}/${_realname}-${pkgver}
+  [ -d build-${CARCH} ] && rm -rf build-${CARCH}
+  mkdir build-${CARCH}
+  cd build-${CARCH}
+  ${MINGW_PREFIX}/bin/qmake.exe ../qbs.pro \
+    CONFIG+=${_config} \
+    CONFIG+=qbs_enable_project_file_updates
+  make
+  make docs
+}
+
+package() {
+  cd ${srcdir}/${_realname}-${pkgver}/build-${CARCH}
+  make INSTALL_ROOT=${pkgdir}${MINGW_PREFIX} install
+  make INSTALL_ROOT=${pkgdir}${MINGW_PREFIX} install_docs
+
+  rm -f ${pkgdir}${MINGW_PREFIX}/lib/*.dll
+
+  for file in qbs-setup-madde-platforms qbs-setup-qt; do
+    cp ${srcdir}/manifest ${pkgdir}${MINGW_PREFIX}/bin/${file}.exe.manifest
+  done
+}
+

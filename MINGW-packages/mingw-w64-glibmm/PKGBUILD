@@ -1,0 +1,37 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname=glibmm
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=2.42.0
+pkgrel=2
+pkgdesc="Glib-- (glibmm) is a C++ interface for glib (mingw-w64)"
+arch=('any')
+url="http://www.gtkmm.org"
+license=("LGPL")
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc" "${MINGW_PACKAGE_PREFIX}-pkg-config")
+depends=("${MINGW_PACKAGE_PREFIX}-libsigc++" "${MINGW_PACKAGE_PREFIX}-glib2")
+options=('staticlibs' 'strip')
+source=("http://ftp.gnome.org/pub/GNOME/sources/glibmm/${pkgver%.*}/glibmm-$pkgver.tar.xz")
+sha256sums=('985083d97378d234da27a7243587cc0d186897a4b2d3c1286f794089be1a3397')
+
+prepare() {
+  cd "${srcdir}"/${_realname}-${pkgver}
+}
+
+build() {
+  mkdir -p "${srcdir}/build-${MINGW_CHOST}"
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  "${srcdir}"/${_realname}-${pkgver}/configure \
+    --prefix=${MINGW_PREFIX} \
+    --build=${MINGW_CHOST} \
+    --host=${MINGW_CHOST} \
+    --enable-static \
+    --enable-shared \
+    --disable-documentation
+  make
+}
+
+package() {
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  make DESTDIR="$pkgdir" install
+}

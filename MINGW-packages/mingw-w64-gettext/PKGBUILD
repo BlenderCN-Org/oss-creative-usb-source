@@ -1,0 +1,88 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+# Contributor: Renato Silva <br.renatosilva@gmail.com>
+
+_realname=gettext
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=0.19.4
+pkgrel=2
+arch=('any')
+groups=("${MINGW_PACKAGE_PREFIX}")
+pkgdesc="GNU internationalization library (mingw-w64)"
+depends=("${MINGW_PACKAGE_PREFIX}-gcc-libs" "${MINGW_PACKAGE_PREFIX}-libiconv") # "${MINGW_PACKAGE_PREFIX}-termcap"
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc" "${MINGW_PACKAGE_PREFIX}-ncurses")
+options=('strip' 'staticlibs')
+
+# GPL3 for the package as a whole and LGPL for some parts, see the license files
+license=(GPL3 partial:'LGPL2.1')
+
+url="http://www.gnu.org/software/gettext/"
+source=("http://ftp.gnu.org/pub/gnu/${_realname}/${_realname}-$pkgver.tar.gz"{,.sig}
+        00-relocatex-libintl-0.18.3.1.patch
+        120-Fix-Woe32-link-errors-when-compiling-with-O0.patch
+        04-mingw-script-slash-fix.mingw.patch
+        05-always-use-libintl-vsnprintf.mingw.patch
+        06-dont-include-ctype-after-gnulibs-wctype.mingw.patch
+        07-fix-asprintf-conflict.mingw.patch)
+md5sums=('d3511af1e604a3478900d2c2b4a4a48e'
+         'SKIP'
+         '397d7d6d4abd15a70edb3c9f2bab4cd2'
+         '6fc5459e5afa3f9df7602fcd1d09355b'
+         '0f754bf438368854ef63886715a3b023'
+         '27852a388b8cf38188dc392c244230ff'
+         'f69747f43f279b8a81286cfe5916b82f'
+         '3ebccf730ec3377b068027eb2283afb2')
+
+prepare() {
+  cd "$srcdir/${_realname}-$pkgver"
+  patch -p1 -i ${srcdir}/00-relocatex-libintl-0.18.3.1.patch
+  patch -p0 -i ${srcdir}/04-mingw-script-slash-fix.mingw.patch
+  patch -p0 -i ${srcdir}/05-always-use-libintl-vsnprintf.mingw.patch
+  patch -p0 -i ${srcdir}/06-dont-include-ctype-after-gnulibs-wctype.mingw.patch
+  patch -p0 -i ${srcdir}/07-fix-asprintf-conflict.mingw.patch
+  #patch -p1 -i ${srcdir}/120-Fix-Woe32-link-errors-when-compiling-with-O0.patch
+
+  # libtoolize --automake --copy --force
+  #WANT_AUTOMAKE=latest ./autogen.sh --skip-gnulib
+}
+
+build()
+{
+  mkdir -p $srcdir/build-${MINGW_CHOST} && cd $srcdir/build-${MINGW_CHOST}
+  # export lt_cv_deplibs_check_method='pass_all'
+  ${srcdir}/${_realname}-$pkgver/configure \
+    --prefix=${MINGW_PREFIX} \
+    --host=${MINGW_CHOST} \
+    --target=${MINGW_CHOST} \
+    --build=${MINGW_CHOST} \
+    --disable-java \
+    --disable-native-java \
+    --disable-csharp \
+    --enable-static \
+    --enable-threads=win32 \
+    --without-emacs \
+    --disable-openmp \
+    --without-cvs \
+    --without-git \
+    --with-included-libcroco \
+    --with-included-libunistring \
+    --with-included-libxml \
+    --with-included-glib \
+    --with-libncurses-prefix=${MINGW_PREFIX}
+  make
+}
+
+package() {
+  cd $srcdir/build-${MINGW_CHOST}
+  make DESTDIR="$pkgdir" install
+
+  # Licenses
+  install -Dm644 "${srcdir}/${_realname}-${pkgver}/COPYING"                                 "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/COPYING"
+  install -Dm644 "${srcdir}/${_realname}-${pkgver}/gettext-runtime/COPYING"                 "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/gettext-runtime/COPYING"
+  install -Dm644 "${srcdir}/${_realname}-${pkgver}/gettext-runtime/intl/COPYING.LIB"        "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/gettext-runtime/intl/COPYING.LIB"
+  install -Dm644 "${srcdir}/${_realname}-${pkgver}/gettext-runtime/libasprintf/COPYING"     "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/gettext-runtime/libasprintf/COPYING"
+  install -Dm644 "${srcdir}/${_realname}-${pkgver}/gettext-runtime/libasprintf/COPYING.LIB" "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/gettext-runtime/libasprintf/COPYING.LIB"
+  install -Dm644 "${srcdir}/${_realname}-${pkgver}/gettext-tools/COPYING"                   "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/gettext-tools/COPYING"
+  install -Dm644 "${srcdir}/${_realname}-${pkgver}/gettext-tools/gnulib-lib/libxml/COPYING" "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/gettext-tools/gnulib-lib/libxml/COPYING"
+  install -Dm644 "${srcdir}/${_realname}-${pkgver}/gnulib-local/lib/libxml/COPYING"         "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/gnulib-local/lib/libxml/COPYING"
+  rm "${pkgdir}${MINGW_PREFIX}/share/${_realname}/intl/COPYING.LIB"
+}

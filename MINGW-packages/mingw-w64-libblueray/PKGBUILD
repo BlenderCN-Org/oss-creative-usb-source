@@ -1,0 +1,43 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname=libbluray
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=0.7.0
+pkgrel=1
+pkgdesc='Library to access Blu-Ray disks for video playback (mingw-w64)'
+arch=('any')
+url='http://www.videolan.org/developers/libbluray.html'
+license=('LGPL2.1')
+depends=("${MINGW_PACKAGE_PREFIX}-libxml2" "${MINGW_PACKAGE_PREFIX}-freetype")
+options=('strip' 'staticlibs')
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc" "${MINGW_PACKAGE_PREFIX}-pkg-config")
+source=(ftp://ftp.videolan.org/pub/videolan/libbluray/$pkgver/${_realname}-$pkgver.tar.bz2
+        no-undefined.patch)
+md5sums=('efad766330164f0c7c7cb18f66389870'
+         '788a036c8b28eff04234972767ec1ac2')
+
+prepare() {
+  cd ${srcdir}/${_realname}-${pkgver}
+  patch -p1 -i ${srcdir}/no-undefined.patch
+
+  autoreconf -fiv
+}
+
+build() {
+  mkdir -p ${srcdir}/build-${MINGW_CHOST}
+  cd ${srcdir}/build-${MINGW_CHOST}
+  export lt_cv_deplibs_check_method='pass_all'
+
+  ../${_realname}-$pkgver/configure \
+    --prefix=${MINGW_PREFIX} \
+    --build=${MINGW_CHOST} \
+    --host=${MINGW_CHOST} \
+    --target=${MINGW_CHOST} \
+    --disable-examples
+    make
+}
+
+package() {
+  cd ${srcdir}/build-${MINGW_CHOST}
+  make DESTDIR="$pkgdir" install
+}

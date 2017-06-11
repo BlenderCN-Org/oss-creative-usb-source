@@ -1,0 +1,58 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname=libgpg-error
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=1.18
+pkgrel=1
+pkgdesc="Support library for libgcrypt (mingw-w64)"
+arch=('any')
+url="http://www.gnupg.org"
+license=("LGPL")
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc")
+depends=("${MINGW_PACKAGE_PREFIX}-gcc-libs" "${MINGW_PACKAGE_PREFIX}-gettext")
+groups=("${MINGW_PACKAGE_PREFIX}")
+options=('staticlibs' 'strip')
+source=("ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-${pkgver}.tar.bz2"
+        01-mingw32-fix-potomo.mingw.patch
+        02-fix-symbollist-on.mingw.patch
+        04-use-winpthreads.mingw.patch
+        05-w32-gen.all.patch
+        07-windows-build.patch
+        09-fix-generating-union.patch)
+md5sums=('12312802d2065774b787cbfc22cc04e9'
+         '4865ce481ec9aa5efc0a4979f197a686'
+         'a69b0fd4c8e4ebda9ddeb68e565bf1b1'
+         'f7650decafae57ef791318b6a7e8f7e7'
+         'c2a1405908895e98c877201204a410e2'
+         '688227799064deb20699cc37fd3cee7d'
+         '14cc65006c4c19919182c56759be7b95')
+
+prepare() {
+  cd "$srcdir/libgpg-error-$pkgver"
+  patch -p1 -i ${srcdir}/01-mingw32-fix-potomo.mingw.patch
+  patch -p1 -i ${srcdir}/02-fix-symbollist-on.mingw.patch
+  #patch -p1 -i ${srcdir}/03-fix-config-on.mingw.patch
+  #patch -p1 -i ${srcdir}/04-use-winpthreads.mingw.patch
+  patch -p1 -i ${srcdir}/05-w32-gen.all.patch
+  patch -p1 -i ${srcdir}/07-windows-build.patch
+  #patch -p1 -i ${srcdir}/09-fix-generating-union.patch
+  autoreconf -fi
+}
+
+build() {
+  cd "$srcdir/libgpg-error-$pkgver"
+  mkdir -p $srcdir/build-${CARCH} && cd $srcdir/build-${CARCH}
+  ../libgpg-error-$pkgver/configure \
+      --prefix=${MINGW_PREFIX} \
+      --build=${MINGW_CHOST} \
+      --host=${MINGW_CHOST} \
+      --target=${MINGW_CHOST} \
+      --enable-shared \
+      --enable-static
+  make
+}
+
+package() {
+  cd "${srcdir}/build-${CARCH}"
+  make DESTDIR="$pkgdir" install
+}

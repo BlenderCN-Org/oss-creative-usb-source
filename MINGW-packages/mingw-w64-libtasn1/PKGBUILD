@@ -1,0 +1,36 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname=libtasn1
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=4.2
+pkgrel=1
+pkgdesc="Implementation of the Stringprep, Punycode and IDNA specifications (mingw-w64)"
+arch=('any')
+url="http://www.gnu.org/software/libidn"
+license=("GPL3, LGPL")
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc" "${MINGW_PACKAGE_PREFIX}-pkg-config")
+depends=("${MINGW_PACKAGE_PREFIX}-libwinpthread")
+options=('staticlibs' 'strip')
+source=("http://ftp.gnu.org/gnu/libtasn1/${_realname}-${pkgver}.tar.gz"{,.sig})
+md5sums=('414df906df421dee0a5cf7548788d153'
+         'SKIP')
+
+prepare() {
+  cd "${srcdir}"/${_realname}-${pkgver}
+}
+
+build() {
+  mkdir -p "${srcdir}/build-${MINGW_CHOST}"
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  "${srcdir}"/${_realname}-${pkgver}/configure \
+    --prefix=${MINGW_PREFIX}\
+    --build=${MINGW_CHOST} \
+    --host=${MINGW_CHOST} \
+    --target=${MINGW_CHOST}
+  make
+}
+
+package() {
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  make DESTDIR="$pkgdir" install
+}

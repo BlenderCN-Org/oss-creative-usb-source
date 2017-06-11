@@ -1,0 +1,39 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname=optipng
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=0.7.5
+pkgrel=1
+pkgdesc="Compresses PNG files to a smaller size, without losing any information (mingw-w64)"
+arch=('any')
+url="http://optipng.sourceforge.net/"
+license=("ZLIB")
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc")
+depends=("${MINGW_PACKAGE_PREFIX}-gcc-libs"
+         "${MINGW_PACKAGE_PREFIX}-libpng"
+         "${MINGW_PACKAGE_PREFIX}-zlib")
+options=('strip' 'staticlibs')
+source=("http://downloads.sourceforge.net/sourceforge/${_realname}/${_realname}-$pkgver.tar.gz")
+md5sums=('90ac1ec7945d48c0e9859b977b5df411')
+
+prepare() {
+  cd "${srcdir}/${_realname}-${pkgver}"
+}
+
+build() {
+  cd "${srcdir}/${_realname}-${pkgver}"
+  ./configure \
+    --prefix=${MINGW_PREFIX} \
+    --with-system-libpng \
+    --with-system-zlib
+
+  make
+}
+
+package() {
+  cd "${srcdir}/${_realname}-${pkgver}"
+  make prefix="${pkgdir}${MINGW_PREFIX}" mandir="${pkgdir}${MINGW_PREFIX}/share/man" install
+
+  # Install license
+  install -Dm644 LICENSE.txt ${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE
+}

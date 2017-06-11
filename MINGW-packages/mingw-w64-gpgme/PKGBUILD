@@ -1,0 +1,48 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname=gpgme
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=1.5.3
+pkgrel=1
+pkgdesc="A C wrapper library for GnuPG"
+arch=('any')
+url="http://www.gnupg.org/related_software/gpgme/"
+license=('LGPL')
+depends=("${MINGW_PACKAGE_PREFIX}-libgpg-error"
+        "${MINGW_PACKAGE_PREFIX}-w32pth"
+        "${MINGW_PACKAGE_PREFIX}-glib2"
+        "${MINGW_PACKAGE_PREFIX}-gnupg")
+options=('!emptydirs')
+source=(ftp://ftp.gnupg.org/gcrypt/${_realname}/${_realname}-${pkgver}.tar.bz2{,.sig})
+sha1sums=('8dd7711a4de117994fe2d45879ef8a9900d50f6a'
+          'SKIP')
+
+prepare() {
+  cd ${srcdir}/${_realname}-${pkgver}
+  autoreconf -ivf
+}
+
+build() {
+  mkdir -p "${srcdir}/build-${CARCH}"
+  cd "${srcdir}/build-${CARCH}"
+  "${srcdir}"/gpgme-${pkgver}/configure \
+    --prefix=${MINGW_PREFIX} \
+    --build=${MINGW_CHOST} \
+    --host=${MINGW_CHOST} \
+    --target=${MINGW_CHOST} \
+    --libexecdir=${MINGW_PREFIX}/lib \
+    --disable-fd-passing \
+    --disable-static \
+    --disable-gpgsm-test
+  make
+}
+
+check() {
+  cd "${srcdir}/build-${CARCH}"
+  #make check
+}
+
+package() {
+  cd "${srcdir}/build-${CARCH}"
+  make DESTDIR=${pkgdir} install
+}

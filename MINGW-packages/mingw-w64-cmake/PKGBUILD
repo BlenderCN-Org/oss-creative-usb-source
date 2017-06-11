@@ -1,0 +1,62 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname=cmake
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=3.1.3
+pkgrel=1
+pkgdesc="A cross-platform open-source make system (mingw-w64)."
+arch=('any')
+url="http://www.cmake.org/"
+license=("MIT")
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc" "${MINGW_PACKAGE_PREFIX}-pkg-config" "${MINGW_PACKAGE_PREFIX}-qt5")
+depends=("${MINGW_PACKAGE_PREFIX}-gcc-libs"
+        "${MINGW_PACKAGE_PREFIX}-curl"
+        "${MINGW_PACKAGE_PREFIX}-expat"
+        "${MINGW_PACKAGE_PREFIX}-libarchive"
+        "${MINGW_PACKAGE_PREFIX}-zlib")
+optdepends=("${MINGW_PACKAGE_PREFIX}-qt5: CMake Qt GUI")
+options=('staticlibs') # '!strip' 'debug')
+source=("http://www.cmake.org/files/v${pkgver%.*}/${_realname}-${pkgver}.tar.gz"
+        "disable-response-files-for-msys.patch"
+        "dont-install-bundle.patch"
+        "wxWidgets-module.patch"
+        "qt5-static-plugin-support.patch")
+md5sums=('5697a77503bb5636f4b4057dcc02aa32'
+         '663edba4faae25d3e5c48ab0ca6b6cb9'
+         'fb33ace70ba863159b2c7964a9661e1e'
+         '09ea9092ca85e482de79886bd0c09144'
+         '6461b89ff7d1ca0c4022801dff8475a7')
+
+prepare() {
+  cd ${_realname}-${pkgver}
+  patch -Np1 -i ${srcdir}/disable-response-files-for-msys.patch
+  patch -Np1 -i ${srcdir}/dont-install-bundle.patch
+  patch -Np1 -i ${srcdir}/wxWidgets-module.patch
+  patch -Np1 -i ${srcdir}/qt5-static-plugin-support.patch
+}
+
+build() {
+  pushd ${MINGW_PREFIX} > /dev/null
+  export PREFIX_LIB=`pwd -W`
+  popd > /dev/null
+
+  mkdir -p "${srcdir}/build-${MINGW_CHOST}"
+  cd "${srcdir}/build-${MINGW_CHOST}"
+
+  MSYSTEM=MINGW "${srcdir}"/${_realname}-${pkgver}/configure \
+    --prefix=${PREFIX_LIB} \
+    --system-libs \
+    --no-system-expat \
+    --qt-gui \
+    --parallel=3 \
+    --mandir=share \
+    --docdir=share/doc/cmake
+
+  plain "Start building..."
+  make
+}
+
+package() {
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  ./bin/cmake.exe -DCMAKE_INSTALL_PREFIX:PATH=${pkgdir}${MINGW_PREFIX} -P cmake_install.cmake
+}

@@ -1,0 +1,33 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname=libsigc++
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=2.4.0
+pkgrel=1
+pkgdesc="Libsigc++ implements a full callback system for use in widget libraries - V2 (mingw-w64)"
+arch=('any')
+url="http://libsigc.sourceforge.net"
+license=("LGPL")
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc" "${MINGW_PACKAGE_PREFIX}-pkg-config")
+depends=("${MINGW_PACKAGE_PREFIX}-gcc-libs")
+options=('staticlibs' 'strip')
+source=("http://ftp.gnome.org/pub/GNOME/sources/libsigc++/${pkgver%.*}/libsigc++-${pkgver}.tar.xz")
+sha256sums=('7593d5fa9187bbad7c6868dce375ce3079a805f3f1e74236143bceb15a37cd30')
+
+build() {
+  mkdir -p "${srcdir}/build-${MINGW_CHOST}"
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  "${srcdir}"/${_realname}-${pkgver}/configure \
+    --prefix=${MINGW_PREFIX} \
+    --build=${MINGW_CHOST} \
+    --host=${MINGW_CHOST} \
+    --enable-static \
+    --enable-shared \
+    --disable-documentation
+  make
+}
+
+package() {
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  make DESTDIR="$pkgdir" install
+}

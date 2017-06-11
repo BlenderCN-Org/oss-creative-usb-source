@@ -1,0 +1,44 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname=pkgconf
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=0.9.7
+pkgrel=2
+pkgdesc='pkg-config compatible utility which does not depend on glib'
+url='https://github.com/nenolod/pkgconf'
+arch=('any')
+license=('ISC')
+options=('!debug' 'strip')
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc")
+conflicts=("${MINGW_PACKAGE_PREFIX}-pkg-config")
+provides=("${MINGW_PACKAGE_PREFIX}-pkg-config")
+source=(http://rabbit.dereferenced.org/~nenolod/distfiles//$_realname-$pkgver.tar.bz2
+        0002-relocate.patch)
+sha256sums=('afd2675d3cf39741906ab08e86421381271d67122a8a401d3a0fe59ad46af493'
+            'f8579642f97be9a5a04714dfe979081b698045d01dd4035b96e8266120d74a50')
+
+prepare() {
+  cd $_realname-$pkgver
+  patch -p1 -i ${srcdir}/0002-relocate.patch
+
+  autoreconf -vfi
+}
+
+build() {
+  cd $_realname-$pkgver
+  ./configure --prefix=${MINGW_PREFIX} \
+    --build=${MINGW_CHOST} \
+    --host=${MINGW_CHOST} \
+    --target=${MINGW_CHOST} \
+    --sysconfdir=${MINGW_PREFIX}/etc \
+    --mandir=${MINGW_PREFIX}/share/man \
+    --infodir=${MINGW_PREFIX}/share/info \
+    --localstatedir=${MINGW_PREFIX}/var
+  make
+}
+
+package() {
+  cd $_realname-$pkgver
+  make DESTDIR="$pkgdir" install
+  cp "${pkgdir}${MINGW_PREFIX}"/bin/pkgconf "${pkgdir}${MINGW_PREFIX}"/bin/pkg-config
+}

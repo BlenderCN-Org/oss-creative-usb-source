@@ -1,0 +1,61 @@
+From 15813ebd2ff591a5d3c855f128926aa5c3029f7a Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Tue, 6 May 2014 11:11:50 +0100
+Subject: [PATCH 2/5] add installation stuff to pro files
+
+---
+ src/sdk/sdk.pro                       | 2 ++
+ tools/archivegen/archivegen.pro       | 3 +++
+ tools/binarycreator/binarycreator.pro | 3 +++
+ tools/repogen/repogen.pro             | 3 +++
+ 4 files changed, 11 insertions(+)
+
+diff --git a/src/sdk/sdk.pro b/src/sdk/sdk.pro
+index 4168923..7742add 100644
+--- a/src/sdk/sdk.pro
++++ b/src/sdk/sdk.pro
+@@ -1,6 +1,8 @@
+ TEMPLATE = app
+ INCLUDEPATH += . .. 
+ TARGET = installerbase
++target.path = $$PREFIX/bin
++INSTALLS += target
+ 
+ include(../../installerfw.pri)
+ 
+diff --git a/tools/archivegen/archivegen.pro b/tools/archivegen/archivegen.pro
+index 135c340..e94c03c 100644
+--- a/tools/archivegen/archivegen.pro
++++ b/tools/archivegen/archivegen.pro
+@@ -15,3 +15,6 @@ SOURCES += archive.cpp \
+ HEADERS += ../common/repositorygen.h
+ 
+ macx:include(../../no_app_bundle.pri)
++
++target.path = $$PREFIX/bin
++INSTALLS += target
+diff --git a/tools/binarycreator/binarycreator.pro b/tools/binarycreator/binarycreator.pro
+index 7492647..053d16c 100644
+--- a/tools/binarycreator/binarycreator.pro
++++ b/tools/binarycreator/binarycreator.pro
+@@ -18,3 +18,6 @@ HEADERS = rcc/rcc.h
+ RESOURCES += binarycreator.qrc
+ 
+ macx:include(../../no_app_bundle.pri)
++
++target.path = $$PREFIX/bin
++INSTALLS += target
+diff --git a/tools/repogen/repogen.pro b/tools/repogen/repogen.pro
+index e6ee447..52f53ce 100644
+--- a/tools/repogen/repogen.pro
++++ b/tools/repogen/repogen.pro
+@@ -15,3 +15,6 @@ SOURCES += repogen.cpp \
+ HEADERS += ../common/repositorygen.h
+ 
+ macx:include(../../no_app_bundle.pri)
++
++target.path = $$PREFIX/bin
++INSTALLS += target
+-- 
+2.0.0
+

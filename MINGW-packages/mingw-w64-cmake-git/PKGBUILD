@@ -1,0 +1,78 @@
+# Maintainer: Martell Malone <martell malone at g mail dot com>
+
+_realname=cmake
+
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}-git"
+pkgver=r25180.3bbdb23
+pkgrel=1
+pkgdesc="A cross-platform open-source make system (mingw-w64)."
+arch=('any')
+url="http://www.cmake.org/"
+license=("MIT")
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc"
+             "${MINGW_PACKAGE_PREFIX}-pkg-config"
+             "${MINGW_PACKAGE_PREFIX}-qt5"
+             "git")
+provides=("${MINGW_PACKAGE_PREFIX}-${_realname}")
+conflicts=("${MINGW_PACKAGE_PREFIX}-${_realname}")
+depends=("${MINGW_PACKAGE_PREFIX}-winpthreads"
+        "${MINGW_PACKAGE_PREFIX}-curl"
+        #"${MINGW_PACKAGE_PREFIX}-expat"
+        "${MINGW_PACKAGE_PREFIX}-libarchive"
+        "${MINGW_PACKAGE_PREFIX}-ncurses"
+        "${MINGW_PACKAGE_PREFIX}-pkg-config"
+        "${MINGW_PACKAGE_PREFIX}-zlib")
+optdepends=("${MINGW_PACKAGE_PREFIX}-qt5: CMake Qt GUI")
+options=('staticlibs' 'strip')
+source=("${_realname}"::"git+http://cmake.org/cmake.git"
+        'disable-response-files-for-msys.patch'
+        'dont-install-bundle.patch'
+        'wxWidgets-module.patch')
+md5sums=('SKIP'
+         'cdd0c24ffdad5e175a731ddc9781a123'
+         'fb33ace70ba863159b2c7964a9661e1e'
+         '09ea9092ca85e482de79886bd0c09144')
+
+pkgver() {
+  cd "$srcdir/$_realname"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd ${_realname}
+  patch -Np1 -i ${srcdir}/disable-response-files-for-msys.patch
+  patch -Np1 -i ${srcdir}/dont-install-bundle.patch
+  patch -Np1 -i ${srcdir}/wxWidgets-module.patch
+}
+
+build() {
+  mkdir -p ${pkgdir}${MINGW_PREFIX}
+  pushd ${MINGW_PREFIX} > /dev/null
+  export PREFIX_LIB=`pwd -W`
+  popd > /dev/null
+
+  mkdir -p "${srcdir}/build-${CARCH}"
+  cd "${srcdir}/build-${CARCH}"
+
+  MSYSTEM=MINGW "${srcdir}"/${_realname}/configure \
+    --prefix=${PREFIX_LIB} \
+    --system-libs \
+    --no-system-expat \
+    --qt-gui \
+    --parallel=3 \
+    --mandir=share \
+    --docdir=share/doc/cmake
+
+  plain "Start building..."
+  make
+}
+
+package() {
+  mkdir -p "${pkgdir}${MINGW_PREFIX}"
+  pushd ${pkgdir}${MINGW_PREFIX} > /dev/null
+  export PREFIX_WIN=`pwd -W`
+  popd > /dev/null
+
+  cd "${srcdir}/build-${CARCH}"
+  ./bin/cmake.exe -DCMAKE_INSTALL_PREFIX:PATH=${PREFIX_WIN} -P cmake_install.cmake
+}

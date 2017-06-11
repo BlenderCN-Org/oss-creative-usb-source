@@ -1,0 +1,68 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+# Contributor: Renato Silva <br.renatosilva@gmail.com>
+
+_realname=freetype
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=2.5.5
+pkgrel=3
+pkgdesc="TrueType font rendering library (mingw-w64)"
+arch=('any')
+url="http://www.freetype.org/"
+license=(GPL2+ custom:FreeType)
+depends=("${MINGW_PACKAGE_PREFIX}-gcc-libs"
+         "${MINGW_PACKAGE_PREFIX}-bzip2"
+         "${MINGW_PACKAGE_PREFIX}-libpng"
+         "${MINGW_PACKAGE_PREFIX}-harfbuzz"
+         "${MINGW_PACKAGE_PREFIX}-zlib")
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc")
+options=('strip' '!libtool' 'staticlibs')
+source=(http://downloads.sourceforge.net/sourceforge/freetype/freetype-${pkgver}.tar.bz2
+        freetype-2.2.1-enable-valid.patch
+        freetype-2.5.1-enable-spr.patch
+        freetype-2.5.1-enable-sph.patch
+        mingw-config.patch)
+md5sums=('2a7a314927011d5030903179cf183be0'
+         '214119610444c9b02766ccee5e220680'
+         '80a14cce234f3f190cd936ca9060c398'
+         '0636ba2ff074201e2ea5c47ac408bc63'
+         '9d62583e770c59af1c6bd19db89e7cf3')
+
+prepare() {
+  cd "${srcdir}/freetype-${pkgver}"
+  patch -p1 -i "${srcdir}/freetype-2.2.1-enable-valid.patch"
+  patch -p1 -i "${srcdir}/freetype-2.5.1-enable-spr.patch"
+  patch -p1 -i "${srcdir}/mingw-config.patch"
+
+  # Disabled for now due to resistance
+  # Kept here for easier rebuilds via ABS
+  # https://bugs.archlinux.org/task/35274
+  #patch -Np1 -i "${srcdir}/freetype-2.5.1-enable-sph.patch"
+}
+
+build() {
+  mkdir -p "${srcdir}/build-${CARCH}"
+  cd "${srcdir}/build-${CARCH}"
+
+  ../freetype-${pkgver}/configure \
+    --build=${MINGW_CHOST} \
+    --host=${MINGW_CHOST} \
+    --target=${MINGW_CHOST} \
+    --prefix=${MINGW_PREFIX} \
+    --enable-static \
+    --enable-shared \
+    --with-zlib \
+    --with-bzip2 \
+    --with-png \
+    --with-harfbuzz
+  make
+}
+
+package () {
+  cd "${srcdir}/build-${CARCH}"
+  make DESTDIR="${pkgdir}" install
+
+  # Licenses
+  install -Dm644 "${srcdir}/${_realname}-${pkgver}/docs/LICENSE.TXT" "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE.TXT"
+  install -Dm644 "${srcdir}/${_realname}-${pkgver}/docs/GPLv2.TXT"   "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/GPLv2.TXT"
+  install -Dm644 "${srcdir}/${_realname}-${pkgver}/docs/FTL.TXT"     "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/FTL.TXT"
+}

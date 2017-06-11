@@ -1,0 +1,62 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname=ruby
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=2.2.0
+pkgrel=1
+pkgdesc="An object-oriented language for quick and easy programming (mingw-w64)"
+arch=('any')
+url="http://www.ruby-lang.org/en"
+license=("BSD, custom")
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc" "${MINGW_PACKAGE_PREFIX}-pkg-config")
+depends=("${MINGW_PACKAGE_PREFIX}-gcc-libs"
+        "${MINGW_PACKAGE_PREFIX}-gdbm"
+        "${MINGW_PACKAGE_PREFIX}-libyaml"
+        "${MINGW_PACKAGE_PREFIX}-openssl"
+        "${MINGW_PACKAGE_PREFIX}-tk"
+        "${MINGW_PACKAGE_PREFIX}-ncurses"
+        "${MINGW_PACKAGE_PREFIX}-libffi")
+options=('staticlibs' 'strip')
+source=("http://cache.ruby-lang.org/pub/ruby/${pkgver%.*}/ruby-${pkgver}.tar.bz2"
+        0001-mingw-w64-time-functions.patch
+        0002-use-gnu-printf.patch
+        0003-fix-check-types.patch)
+md5sums=('d03cd4690fec1fff81d096d1c1255fde'
+         '4256c35613e6dc15c164015ae8977d4a'
+         '6d54f98b9e3a0d0077e9348dc7f69482'
+         'f9170e918fa7b7118d241d238d7a0e3b')
+
+prepare() {
+  cd ${srcdir}/ruby-${pkgver}
+  patch -p1 -i ${srcdir}/0001-mingw-w64-time-functions.patch
+  patch -p1 -i ${srcdir}/0002-use-gnu-printf.patch
+  patch -p1 -i ${srcdir}/0003-fix-check-types.patch
+
+  autoreconf -fi
+}
+
+build() {
+
+  local FFI_INC=$(pkg-config --cflags libffi)
+  CPPFLAGS+=" -DFD_SETSIZE=2048 ${FFI_INC} -I${MINGW_PREFIX}/include/ncurses"
+  CFLAGS+=" -I${MINGW_PREFIX}/include/ncurses ${FFI_INC}"
+  CXXFLAGS+=" -I${MINGW_PREFIX}/include/ncurses ${FFI_INC}"
+
+  mkdir -p "${srcdir}/build-${MINGW_CHOST}"
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  ${srcdir}/ruby-${pkgver}/configure \
+    --prefix=${MINGW_PREFIX} \
+    --build=${MINGW_CHOST} \
+    --host=${MINGW_CHOST} \
+    --target=${MINGW_CHOST}
+  make
+}
+
+package() {
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  make - GNUMakefile DESTDIR="${pkgdir}" install-nodoc
+  for script in {erb,gem,irb,rake,rdoc,ri}; do
+    install ${srcdir}/ruby-${pkgver}/bin/${script} \
+      ${pkgdir}${MINGW_PREFIX}/bin/
+  done
+}

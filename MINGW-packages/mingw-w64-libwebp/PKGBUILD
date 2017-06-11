@@ -1,0 +1,40 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname=libwebp
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=0.4.2
+pkgrel=1
+pkgdesc="the WebP library. Includes conversion tools. (mingw-w64)"
+arch=('any')
+url="https://code.google.com/p/webp/"
+license=('BSD')
+depends=("${MINGW_PACKAGE_PREFIX}-libpng" "${MINGW_PACKAGE_PREFIX}-libjpeg-turbo" "${MINGW_PACKAGE_PREFIX}-libtiff" "${MINGW_PACKAGE_PREFIX}-giflib")
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc")
+source=("http://downloads.webmproject.org/releases/webp/$_realname-$pkgver.tar.gz")
+md5sums=('404f45a7d695217db2bb49e1e22ad49f')
+
+prepare() {
+  cd $srcdir/$_realname-$pkgver
+}
+
+build() {
+  mkdir -p $srcdir/$MINGW_CHOST
+  cd "$srcdir/$MINGW_CHOST"
+  ../$_realname-$pkgver/configure \
+    --build=${MINGW_CHOST} \
+    --host=${MINGW_CHOST} \
+    --prefix=${MINGW_PREFIX} \
+    --enable-static \
+    --enable-swap-16bit-csp \
+    --enable-experimental \
+    --enable-libwebpmux \
+    --enable-libwebpdemux \
+    --enable-libwebpdecoder
+  make
+}
+
+package() {
+  cd "$srcdir/$MINGW_CHOST"
+  make install DESTDIR="${pkgdir}"
+  rm -r "${pkgdir}${MINGW_PREFIX}/share"
+}

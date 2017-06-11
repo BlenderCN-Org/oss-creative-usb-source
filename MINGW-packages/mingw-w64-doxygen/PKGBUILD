@@ -1,0 +1,63 @@
+# Maintainer: Alexey Pavlov <Alexpux@gmail.com>
+
+_realname=doxygen
+pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
+pkgver=1.8.9.1
+pkgrel=1
+pkgdesc="A documentation system for C++, C, Java, IDL and PHP (mingw-w64)"
+arch=('any')
+url="http://www.doxygen.org/"
+options=('strip' 'staticlibs')
+license=('GPL')
+depends=("${MINGW_PACKAGE_PREFIX}-gcc-libs"
+         "${MINGW_PACKAGE_PREFIX}-libiconv"
+         "${MINGW_PACKAGE_PREFIX}-recode"
+         "${MINGW_PACKAGE_PREFIX}-sqlite3")
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc"
+             'flex'
+             "${MINGW_PACKAGE_PREFIX}-ghostscript"
+             "${MINGW_PACKAGE_PREFIX}-python3")
+source=("http://ftp.stack.nl/pub/users/dimitri/${_realname}-${pkgver}.src.tar.gz"
+        'doxygen-configure-python2.patch'
+        'force-win32.patch'
+        'tmake-unquote.patch'
+        'fix-casts.patch'
+        'remove-extra-slashes.patch')
+sha1sums=('eb6b7e5f8dc8302e67053aba841f485017f246fd'
+          '98f9f473f906c5cd363b29c65b54bbe998c0793e'
+          '11ff505d15fa890aaa88fd7775842eb7ea3c1ed4'
+          '6b6338b36e1964064b303dc69282f87b335e5571'
+          '85f7e0b107fe788a071da5d94af54cd3bdab9e8a'
+          '4a8a560f317bd8710b88a658706391fb25212471')
+noextract=(${_realname}-${pkgver}.src.tar.gz)
+
+prepare() {
+  cd ${srcdir}
+  [[ -d $srcdir/${_realname}-${pkgver} ]] || tar -xzvf ${startdir}/${_realname}-${pkgver}.src.tar.gz -C $srcdir
+  cd "${srcdir}/${_realname}-${pkgver}"
+
+  #patch -p1 -i "${srcdir}/doxygen-configure-python2.patch"
+  patch -p1 -i "${srcdir}/force-win32.patch"
+  patch -p1 -i "${srcdir}/tmake-unquote.patch"
+  patch -p1 -i "${srcdir}/fix-casts.patch"
+  patch -p1 -i "${srcdir}/remove-extra-slashes.patch"
+}
+
+build() {
+  export QTDIR=${MINGW_PREFIX}
+  cd ${srcdir}/${_realname}-${pkgver}
+  ./configure \
+    --prefix ${MINGW_PREFIX} \
+    --bison /usr/bin/bison \
+    --with-sqlite3 \
+    --sqlite3-path ${MINGW_PREFIX} \
+    --shared
+  make
+}
+
+package() {
+  cd ${srcdir}/${_realname}-${pkgver}
+
+  #make DESTDIR="${pkgdir}" install
+  make INSTALL="${pkgdir}${MINGW_PREFIX}" MAN1DIR=share/man/man1 install
+}

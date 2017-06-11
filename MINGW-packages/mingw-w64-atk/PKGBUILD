@@ -1,0 +1,46 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+# Contributor: Renato Silva <br.renatosilva@gmail.com>
+
+_realname=atk
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=2.15.4
+pkgrel=1
+pkgdesc="A library providing a set of interfaces for accessibility (mingw-w64)"
+arch=('any')
+url="http://www.gtk.org"
+license=(LGPL2)
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc"
+            "${MINGW_PACKAGE_PREFIX}-pkg-config"
+            "${MINGW_PACKAGE_PREFIX}-gobject-introspection")
+depends=("${MINGW_PACKAGE_PREFIX}-gcc-libs"
+        "${MINGW_PACKAGE_PREFIX}-gnome-common"
+        "${MINGW_PACKAGE_PREFIX}-glib2>=2.41.0")
+options=('strip' 'staticlibs')
+source=("http://ftp.gnome.org/pub/gnome/sources/atk/${pkgver%.*}/${_realname}-$pkgver.tar.xz")
+md5sums=('430879fbffe433af118a2eb9c3bd69bf')
+
+prepare() {
+  cd "${srcdir}"/${_realname}-${pkgver}
+  #autoreconf -fi
+}
+
+build() {
+  mkdir -p "${srcdir}/build-${MINGW_CHOST}"
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  "${srcdir}"/${_realname}-${pkgver}/configure \
+    --prefix=${MINGW_PREFIX} \
+    --build=${MINGW_CHOST} \
+    --host=${MINGW_CHOST} \
+    --enable-static \
+    --enable-shared \
+    --enable-introspection \
+    --disable-glibtest
+  make
+}
+
+package() {
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  make -j1 DESTDIR="$pkgdir" install
+  find "${pkgdir}${MINGW_PREFIX}" -name '*.def' -o -name '*.exp' | xargs -rtl1 rm
+  install -Dm644 "${srcdir}/${_realname}-${pkgver}/COPYING" "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/COPYING"
+}

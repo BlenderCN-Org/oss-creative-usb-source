@@ -1,0 +1,44 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname=libmowgli
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=2.0.0
+pkgrel=2
+pkgdesc="Performance and usability-oriented extensions to C (mingw-w64)"
+arch=('any')
+url="http://www.atheme.org/project/mowgli"
+license=('GPL')
+depends=("${MINGW_PACKAGE_PREFIX}-openssl")
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc" "git")
+options=('staticlibs' 'strip')
+source=(#"${_realname}-${pkgver}::git+https://github.com/atheme/libmowgli-2.git#tag=${_realname}-${pkgver}"
+        https://github.com/atheme/libmowgli-2/archive/${_realname}-${pkgver}.tar.gz
+        libmowgli-2.0.0-mingw-have-declarations.patch)
+md5sums=('0b8cf8b66d745d40f186e3cbd22fdc0e'
+         '47ee3521d81255a675ff83f2c48b4909')
+
+prepare() {
+  cd ${srcdir}/${_realname}-2-${_realname}-${pkgver}
+  patch -p1 -i ${srcdir}/libmowgli-2.0.0-mingw-have-declarations.patch
+
+  #autoreconf -fi
+}
+
+build() {
+  cp -rf ${_realname}-2-${_realname}-${pkgver} ${srcdir}/build-${MINGW_CHOST}
+  cd build-${MINGW_CHOST}
+  ./configure \
+    --prefix=${MINGW_PREFIX} \
+    --build=${MINGW_CHOST} \
+    --host=${MINGW_CHOST} \
+    --target=${MINGW_CHOST} \
+    --enable-shared \
+    --enable-static
+  make
+}
+
+package() {
+  cd ${srcdir}/build-${MINGW_CHOST}
+  make DESTDIR="$pkgdir" install
+  install -D -m644 COPYING "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/COPYING"
+}

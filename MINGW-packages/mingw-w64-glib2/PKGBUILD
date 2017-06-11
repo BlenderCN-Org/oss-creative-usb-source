@@ -1,0 +1,115 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+# Contributor: Renato Silva <br.renatosilva@gmail.com>
+
+_realname=glib2
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=2.42.1
+pkgrel=4
+url="http://www.gtk.org/"
+arch=('any')
+pkgdesc="Common C routines used by GTK+ 2.4 and other libs (mingw-w64)"
+license=(LGPL2)
+options=('!debug' 'strip' 'staticlibs')
+install=glib2-${CARCH}.install
+depends=("${MINGW_PACKAGE_PREFIX}-gcc-libs"
+        "${MINGW_PACKAGE_PREFIX}-gettext"
+        "${MINGW_PACKAGE_PREFIX}-zlib"
+        "${MINGW_PACKAGE_PREFIX}-libffi")
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc" "${MINGW_PACKAGE_PREFIX}-python2")
+source=("http://ftp.gnome.org/pub/GNOME/sources/glib/${pkgver%.*}/glib-$pkgver.tar.xz"
+        0001-Use-CreateFile-on-Win32-to-make-sure-g_unlink-always.patch
+        0003-g_abort.all.patch
+        0004-glib-prefer-constructors-over-DllMain.patch
+        0005-glib-send-log-messages-to-correct-stdout-and-stderr.patch
+        0015-fix-stat.all.patch
+        0017-glib-use-gnu-print-scanf.patch
+        0021-use-64bit-stat-for-localfile-size-calc.all.patch
+        0023-print-in-binary-more-for-testing.all.patch
+        0024-return-actually-written-data-in-printf.all.patch
+        0001-gsocket-block-when-errno-says-it-will-block.patch
+        0027-no_sys_if_nametoindex.patch)
+md5sums=('89c4119e50e767d3532158605ee9121a'
+         '98c7778b5e8a30dbcdb86bcd15f9c11d'
+         '6eb9d56028ea3bbec3d053254a00a04b'
+         '46969e815f3ab19582ba33667a52048b'
+         '7b065f9bc154bf996523974a698b24de'
+         '963a72f6efcaa3405204b76b27b44645'
+         '29065eb21bc779787080f0529a6c5f96'
+         '952989e534235721d30b9ee3d89cc225'
+         '217a997ede1b93ac06f96ed869b74378'
+         '500f39baea98d98e4a2f877ad56f55a5'
+         'c8942cf5035f97ade5ab9c757a210f01'
+         'd06748f2891e1f4e6db5684d5935aefc')
+
+prepare() {
+  cd "$srcdir/glib-$pkgver"
+
+  patch -Np1 -i "$srcdir/0001-Use-CreateFile-on-Win32-to-make-sure-g_unlink-always.patch"
+  patch -Np1 -i "$srcdir/0003-g_abort.all.patch"
+  patch -Np1 -i "$srcdir/0004-glib-prefer-constructors-over-DllMain.patch"
+  patch -Np0 -i "$srcdir/0005-glib-send-log-messages-to-correct-stdout-and-stderr.patch"
+  patch -Np1 -i "$srcdir/0015-fix-stat.all.patch"
+  patch -Np1 -i "$srcdir/0017-glib-use-gnu-print-scanf.patch"
+  patch -Np1 -i "$srcdir/0021-use-64bit-stat-for-localfile-size-calc.all.patch"
+  patch -Np1 -i "$srcdir/0023-print-in-binary-more-for-testing.all.patch"
+  patch -Np1 -i "$srcdir/0024-return-actually-written-data-in-printf.all.patch"
+  patch -Np1 -i "$srcdir/0001-gsocket-block-when-errno-says-it-will-block.patch"
+  patch -Np1 -i "$srcdir/0027-no_sys_if_nametoindex.patch"
+
+  NOCONFIGURE=1 ./autogen.sh
+}
+
+build()
+{
+  cd "$srcdir/glib-$pkgver"
+
+  export MSYS2_ARG_CONV_EXCL="-//OASIS//DTD"
+  msg "Build shared version"
+  mkdir $srcdir/build-${CARCH}-shared && cd $srcdir/build-${CARCH}-shared
+  ../glib-$pkgver/configure \
+    --prefix=${MINGW_PREFIX} \
+    --build=${MINGW_CHOST} \
+    --host=${MINGW_CHOST} \
+    --target=${MINGW_CHOST} \
+    --disable-static --enable-shared \
+    --disable-libelf \
+    --with-python=${MINGW_PREFIX}/bin/python.exe \
+    --with-threads=posix \
+    --with-xml-catalog=${MINGW_PREFIX}/etc/xml/catalog
+  make
+
+  msg "Build static version"
+  mkdir $srcdir/build-${CARCH}-static && cd $srcdir/build-${CARCH}-static
+  ../glib-$pkgver/configure \
+    --prefix=${MINGW_PREFIX} \
+    --build=${MINGW_CHOST} \
+    --host=${MINGW_CHOST} \
+    --target=${MINGW_CHOST} \
+    --disable-shared --enable-static \
+    --disable-libelf \
+    --with-python=${MINGW_PREFIX}/bin/python.exe \
+    --with-threads=posix \
+    --with-xml-catalog=${MINGW_PREFIX}/etc/xml/catalog
+  make
+}
+
+package() {
+  cd "$srcdir/build-${CARCH}-static"
+  make DESTDIR="$pkgdir/static" install
+
+  cd "$srcdir/build-${CARCH}-shared"
+  make DESTDIR="$pkgdir" install
+
+  mv "$pkgdir/static/${MINGW_PREFIX}/lib/"*.a "$pkgdir/${MINGW_PREFIX}/lib/"
+
+  rm -rf "${pkgdir}/static"
+
+  rm -f "${pkgdir}${MINGW_PREFIX}"/lib/charset.alias
+  #rm -rf "${pkgdir}${MINGW_PREFIX}"/{share/{gtk-doc,man,bash-completion,gdb},lib/charset.alias,etc}
+  rm "${pkgdir}${MINGW_PREFIX}/lib/"*.def
+
+  #rm -f "${pkgdir}${MINGW_PREFIX}/bin/gdbus-codegen"
+  #rm -rf "${pkgdir}${MINGW_PREFIX}/lib/gdbus-2.0"
+
+  install -Dm644 "${srcdir}/glib-${pkgver}/COPYING" "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/COPYING"
+}

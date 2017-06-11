@@ -1,0 +1,36 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname=opencore-amr
+
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=0.1.3
+pkgrel=2
+pkgdesc="Open source implementation of the Adaptive Multi Rate (AMR) speech codec (mingw-w64)"
+arch=('any')
+url="http://opencore-amr.sourceforge.net/"
+license=("LGPL")
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc" "${MINGW_PACKAGE_PREFIX}-pkg-config" "${MINGW_PACKAGE_PREFIX}-ncurses" "nasm")
+options=('strip' 'staticlibs')
+source=("http://downloads.sourceforge.net/${_realname}/${_realname}-${pkgver}.tar.gz")
+md5sums=('09d2c5dfb43a9f6e9fec8b1ae678e725')
+
+prepare() {
+  cd "${srcdir}/${_realname}-${pkgver}"
+}
+
+build() {
+  mkdir -p "${srcdir}/build-${MINGW_CHOST}"
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  ../${_realname}-${pkgver}/configure \
+    --prefix=${MINGW_PREFIX} \
+    --build=${MINGW_CHOST} \
+    --host=${MINGW_CHOST} \
+    --target=${MINGW_CHOST} \
+    --disable-static
+  make
+}
+
+package() {
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  make DESTDIR="${pkgdir}" install
+}

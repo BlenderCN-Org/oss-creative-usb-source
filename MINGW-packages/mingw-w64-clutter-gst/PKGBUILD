@@ -1,0 +1,55 @@
+# Maintainer: Lubosz Sarnecki <lubosz@gmail.com>
+
+_realname=clutter-gst
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=2.0.12
+pkgrel=1
+pkgdesc="A GStreamer integration library for Clutter. (mingw-w64)"
+arch=('any')
+url="http://clutter-project.org/"
+license=("LGPL")
+makedepends=('automake' 'libtool' 'intltool' 'itstool' 'gtk-doc' 'gnome-doc-utils' 'yelp-tools')
+depends=("${MINGW_PACKAGE_PREFIX}-gobject-introspection"
+        "${MINGW_PACKAGE_PREFIX}-clutter"
+        "${MINGW_PACKAGE_PREFIX}-gstreamer"
+        )
+options=(!libtool strip staticlibs)
+
+source=(http://download.gnome.org/sources/${_realname}/${pkgver:0:3}/${_realname}-$pkgver.tar.xz
+        #"git://git.gnome.org/$_realname#tag=${pkgver}"
+        #"git://git.gnome.org/$_realname"
+        "0001-msys2-fix-gir-scanner.patch"
+        #"0001-msys2-fix-gir-build-on-master.patch"
+        )
+md5sums=('3e845093843166001e65e1e4971c1588'
+         'db504782f9b1e796d7faaa65ee376cac')
+
+prepare() {
+  cd ${_realname}-$pkgver
+  patch -p1 -i ${srcdir}/0001-msys2-fix-gir-scanner.patch
+  #git am ../0001-msys2-fix-gir-build-on-master.patch
+  #NOCONFIGURE=1 ./autogen.sh
+  autoreconf -fvi
+}
+
+build() {
+  [[ -d "${srcdir}/build-${MINGW_CHOST}" ]] && rm -rf "${srcdir}/build-${MINGW_CHOST}"
+  mkdir ${srcdir}/build-${MINGW_CHOST}
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  ../${_realname}-$pkgver/configure \
+    --prefix=${MINGW_PREFIX} \
+    --build=${MINGW_CHOST} \
+    --host=${MINGW_CHOST} \
+    --disable-static \
+    --enable-shared \
+    --enable-silent-rules \
+    --disable-gtk-doc
+  make
+}
+
+package() {
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  make -j1 DESTDIR="$pkgdir" install
+
+  rm -f ${pkgdir}${MINGW_PREFIX}/lib/gstreamer*/*.a
+}

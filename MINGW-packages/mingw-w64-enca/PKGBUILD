@@ -1,0 +1,46 @@
+# Maintainer: Alexey Pavlov <Alexpux@gmail.com>
+
+_realname=enca
+pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
+pkgver=1.16
+pkgrel=1
+pkgdesc="Charset analyser and converter (mingw-w64)"
+arch=('any')
+url="http://cihar.com/software/enca/"
+options=('strip' 'staticlibs')
+license=('GPL')
+depends=("${MINGW_PACKAGE_PREFIX}-recode")
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc")
+source=("http://dl.cihar.com/enca/enca-${pkgver}.tar.xz"
+        'configure.patch'
+        'noconfigure-autogen.patch')
+md5sums=('0a1483530b1fdb9e2a54786489ee0b69'
+         '6a574580b934844b92304780273060b9'
+         '8dcd63a420b40a615a3ac63b29b5ae98')
+
+prepare() {
+  cd "${srcdir}/enca-${pkgver}"
+
+  patch -Np1 -i "${srcdir}/configure.patch"
+  patch -Np1 -i "${srcdir}/noconfigure-autogen.patch"
+  NOCONFIGURE=1 ./autogen.sh
+}
+
+build() {
+  mkdir -p ${srcdir}/build-${MINGW_CHOST} && cd ${srcdir}/build-${MINGW_CHOST}
+
+  ${srcdir}/enca-${pkgver}/configure \
+    --prefix=${MINGW_PREFIX} \
+    --build=${MINGW_CHOST} \
+    --host=${MINGW_CHOST} \
+    --libexecdir=${MINGW_PREFIX}/lib \
+    --mandir=${MINGW_PREFIX}/share/man \
+    --with-librecode=${MINGW_PREFIX} \
+    --enable-external
+  make
+}
+
+package() {
+  cd ${srcdir}/build-${MINGW_CHOST}
+  make DESTDIR="${pkgdir}" install
+}

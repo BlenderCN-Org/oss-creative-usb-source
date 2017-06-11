@@ -1,0 +1,87 @@
+# Maintainer: Alexey Pavlov <Alexpux@gmail.com>
+
+_realname=openssl
+pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
+pkgver=1.0.2
+pkgrel=1
+arch=('any')
+pkgdesc="The Open Source toolkit for Secure Sockets Layer and Transport Layer Security (mingw-w64)"
+depends=("${MINGW_PACKAGE_PREFIX}-gcc-libs" "${MINGW_PACKAGE_PREFIX}-zlib")
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc")
+options=('strip' '!buildflags' 'staticlibs')
+license=('BSD')
+url="http://www.openssl.org"
+noextract=(${_realname}-${pkgver}.tar.gz)
+source=(http://www.openssl.org/source/${_realname}-$pkgver.tar.gz{,.asc}
+        'openssl-1.0.0a-ldflags.patch'
+        'openssl-1.0.0d-windres.patch'
+        'openssl-1.0.1-parallel-build.patch'
+        'openssl-1.0.1-x32.patch'
+        'openssl-0.9.6-x509.patch'
+        'openssl-1.0.1i-relocation.patch')
+md5sums=('38373013fc85c790aabf8837969c5eba'
+         'SKIP'
+         '9e0abad8dd17079815d9e92345c5adcb'
+         '835a78dbe9c8690dbdd9190aaf5432e7'
+         '12b97a21380bd471d0c9705e7dc8a23b'
+         'f10e6de3515a15128faae808287a8c84'
+         'cae4eea6db48a254653fd1903cfabd15'
+         'd8ed0865f35216a5e420e37d7a4e2515')
+
+prepare() {
+  cd $startdir/
+  # Clean up old sources so re-patching doesn't fail.
+  [ -d $srcdir/${_realname}-$pkgver ] && rm -rf $srcdir/${_realname}-$pkgver
+  tar -xzvf ${_realname}-${pkgver}.tar.gz -C $srcdir
+  cd $srcdir/${_realname}-$pkgver
+
+  patch -p1 -i ${srcdir}/openssl-1.0.0a-ldflags.patch
+  patch -p1 -i ${srcdir}/openssl-1.0.0d-windres.patch
+  patch -p1 -i ${srcdir}/openssl-1.0.1-parallel-build.patch
+  patch -p1 -i ${srcdir}/openssl-1.0.1-x32.patch
+  patch -p1 -i ${srcdir}/openssl-0.9.6-x509.patch
+  patch -p1 -i ${srcdir}/openssl-1.0.1i-relocation.patch
+
+  # No support for out-of-source builds
+  mkdir -p $srcdir/build-${CARCH}
+  cp -a ${srcdir}/${_realname}-${pkgver}/* ${srcdir}/build-${CARCH}
+
+  # Use mingw cflags instead of hardcoded ones
+  sed -i -e '/^"mingw"/ s/-fomit-frame-pointer -O3 -march=i486 -Wall/-O2 -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions --param=ssp-buffer-size=4/' ${srcdir}/build-${CARCH}/Configure
+
+}
+
+build()
+{
+  cd "${srcdir}/build-${CARCH}"
+
+  _mingw=mingw
+  if $(echo ${CARCH} | grep -q x86_64); then
+    _mingw=mingw64
+  fi
+  cd "$srcdir/build-${CARCH}"
+  export MSYS2_ARG_CONV_EXCL="--prefix="
+  ./Configure \
+    --prefix=${MINGW_PREFIX} \
+    ${_mingw} \
+    shared \
+    zlib-dynamic \
+    enable-camellia \
+    enable-idea \
+    enable-mdc2 \
+    enable-tlsext \
+    enable-rfc3779
+  make ZLIB_INCLUDE=-"I${MINGW_PREFIX}/include" depend all -j1
+}
+
+package() {
+  cd "$srcdir/build-${CARCH}"
+  make -j1 INSTALL_PREFIX="$pkgdir" MANDIR=${MINGW_PREFIX}/share/man MANSUFFIX=ssl install
+  chmod -R 755 "${pkgdir}${MINGW_PREFIX}"/bin
+  chmod -R 644 "${pkgdir}${MINGW_PREFIX}"/lib
+  chmod -R 755 "${pkgdir}${MINGW_PREFIX}"/lib/engines
+
+  install -m644 ms/applink.c "${pkgdir}${MINGW_PREFIX}"/include/openssl/
+  rm -rf "${pkgdir}${MINGW_PREFIX}"/bin/c_rehash
+  rm -rf "${pkgdir}${MINGW_PREFIX}"/{ssl/misc,ssl/man}
+}

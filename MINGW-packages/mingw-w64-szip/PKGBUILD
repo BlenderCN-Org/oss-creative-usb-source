@@ -1,0 +1,56 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+# Contributor: Xin Sun <sun.simpson@gmail.com>
+
+_realname=szip
+
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=2.1
+pkgrel=1
+pkgdesc="Extended-Rice lossless compression algorithm implementation"
+arch=('any')
+url="http://www.hdfgroup.org/doc_resource/SZIP/"
+source=(
+  "http://www.hdfgroup.org/ftp/lib-external/szip/${pkgver}/src/szip-${pkgver}.tar.gz"
+  "szip-hdf5.patch"
+  "szip-default-import-suffix.patch"
+  "szip-fix-install-docs.patch"
+  "szip-fix-cmake-macros.patch"
+  )
+md5sums=('902f831bcefb69c6b635374424acbead'
+         '2ac1108913387e1f7b4749a18cc353a3'
+         '574aff51b619b306fc8cac05a600d89b'
+         '76a3e15ff8e765292b94548e12d38943'
+         '805f0c7e6bdbe6bc04c27d074c0a75e4')
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc" "${MINGW_PACKAGE_PREFIX}-cmake")
+options=('staticlibs' 'strip')
+
+prepare() {
+  cd ${srcdir}/${_realname}-${pkgver}
+  patch -p0 -i ${srcdir}/szip-hdf5.patch
+  patch -p1 -i ${srcdir}/szip-default-import-suffix.patch
+  patch -p1 -i ${srcdir}/szip-fix-install-docs.patch
+  patch -p1 -i ${srcdir}/szip-fix-cmake-macros.patch
+
+  # rename X.dll to X-0.dll
+  echo "IF (BUILD_SHARED_LIBS)" >> CMakeLists.txt
+  echo "SET_TARGET_PROPERTIES (\${SZIP_LIB_TARGET} PROPERTIES SUFFIX -0.dll)">> CMakeLists.txt
+  echo "ENDIF ()" >> CMakeLists.txt
+}
+
+build() {
+  [[ -d ${srcdir}/build-${MINGW_CHOST} ]] && rm -rf ${srcdir}/build-${MINGW_CHOST}
+  mkdir -p ${srcdir}/build-${MINGW_CHOST} && cd ${srcdir}/build-${MINGW_CHOST}
+  ${MINGW_PREFIX}/bin/cmake.exe \
+    -G"MSYS Makefiles" \
+    -DCMAKE_INSTALL_PREFIX:PATH=${pkgdir}${MINGW_PREFIX} \
+    -DBUILD_SHARED_LIBS=ON \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_SKIP_RPATH=ON \
+    ../${_realname}-${pkgver}
+  make
+}
+
+package() {
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  make -j1 install
+}

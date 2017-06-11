@@ -1,0 +1,67 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname=readline
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+_basever=6.2
+_patchlevel=005
+pkgver=$_basever.$_patchlevel
+pkgrel=3
+pkgdesc="MinGW port of readline for editing typed command lines (mingw-w64)"
+arch=('any')
+depends=("${MINGW_PACKAGE_PREFIX}-gcc-libs"
+         #"${MINGW_PACKAGE_PREFIX}-ncurses"
+         #"${MINGW_PACKAGE_PREFIX}-pdcurses"
+         "${MINGW_PACKAGE_PREFIX}-termcap"
+         )
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc")
+options=('staticlibs' 'strip')
+license=('GPL')
+url="http://cnswww.cns.cwru.edu/php/chet/readline/rltop.html"
+source=("http://ftp.gnu.org/gnu/${_realname}/${_realname}-${_basever}.tar.gz"{,.sig})
+if [ $_patchlevel -gt 00 ]; then
+    for (( p=1; p<=$((10#${_patchlevel})); p++ )); do
+        source=(${source[@]} http://ftp.gnu.org/gnu/${_realname}/${_realname}-$_basever-patches/readline${_basever//./}-$(printf "%03d" $p){,.sig})
+    done
+fi
+
+md5sums=('67948acb2ca081f23359d0256e9a271c'
+         'SKIP'
+         '83287d52a482f790dfb30ec0a8746669'
+         'SKIP'
+         '0665020ea118e8434bd145fb71f452cc'
+         'SKIP'
+         'c9d5d79718856e711667dede87cb7622'
+         'SKIP'
+         'c08e787f50579ce301075c523fa660a4'
+         'SKIP'
+         'd20eb0134cc3ff8956c218f0df8e1be1'
+         'SKIP')
+
+prepare() {
+  cd "${srcdir}/readline-${_basever}"
+
+  for (( p=1; p<=$((10#${_patchlevel})); p++ )); do
+    msg "applying patch readline${_basever//./}-$(printf "%03d" $p)"
+    patch -Np0 -i $srcdir/readline${_basever//./}-$(printf "%03d" $p)
+  done
+
+  # Remove RPATH from shared objects (FS#14366)
+  sed -i 's|-Wl,-rpath,$(libdir) ||g' support/shobj-conf
+}
+
+build() {
+  mkdir -p ${srcdir}/build-${MINGW_CHOST} && cd ${srcdir}/build-${MINGW_CHOST}
+  ../${_realname}-${_basever}/configure \
+    --prefix=${MINGW_PREFIX} \
+    --host=${MINGW_CHOST} \
+    --target=${MINGW_CHOST} \
+    --build=${MINGW_CHOST} \
+    --enable-shared \
+    --without-curses
+  make
+}
+
+package() {
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  make install DESTDIR="${pkgdir}"
+}

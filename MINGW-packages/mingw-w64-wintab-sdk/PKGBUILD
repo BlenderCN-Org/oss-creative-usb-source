@@ -1,0 +1,21 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname=wintab-sdk
+
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=1.4
+pkgrel=1
+pkgdesc="Wintab Interface Specification (mingw-w64)"
+arch=('any')
+url="http://www.wacomeng.com/windows/docs/Wintab_v140.htm"
+license=("custom")
+options=('strip' 'staticlibs')
+source=('pktdef.h' 'wintab.h')
+md5sums=('8f0a5795e40e6d35a82a04c1c485c1cc'
+         'a1439a2bdb964e92368f064cbc889e72')
+
+package() {
+  mkdir -p ${pkgdir}${MINGW_PREFIX}/include
+  install -Dm644 ${srcdir}/pktdef.h ${pkgdir}${MINGW_PREFIX}/include
+  install -Dm644 ${srcdir}/wintab.h ${pkgdir}${MINGW_PREFIX}/include
+}

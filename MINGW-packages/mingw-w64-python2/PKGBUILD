@@ -1,0 +1,420 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+# Contributor: Ray Donnelly <mingw.android@gmail.com>
+# Contributor: Saul Ibarra Corretge <saghul@gmail.com>
+
+_realname=python2
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=2.7.9
+pkgrel=2
+_pybasever=2.7
+pkgdesc="A high-level scripting language (mingw-w64)"
+arch=('any')
+license=('PSF')
+url="http://www.python.org/"
+depends=("${MINGW_PACKAGE_PREFIX}-gcc-libs"
+         "${MINGW_PACKAGE_PREFIX}-expat"
+         "${MINGW_PACKAGE_PREFIX}-bzip2"
+         "${MINGW_PACKAGE_PREFIX}-gdbm"
+         "${MINGW_PACKAGE_PREFIX}-libffi"
+         "${MINGW_PACKAGE_PREFIX}-ncurses"
+         "${MINGW_PACKAGE_PREFIX}-openssl"
+         "${MINGW_PACKAGE_PREFIX}-readline"
+         "${MINGW_PACKAGE_PREFIX}-tcl"
+         "${MINGW_PACKAGE_PREFIX}-tk"
+         "${MINGW_PACKAGE_PREFIX}-zlib"
+        )
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc" "${MINGW_PACKAGE_PREFIX}-pkg-config")
+options=('!makeflags' 'staticlibs' 'strip' '!debug')
+source=("http://www.python.org/ftp/python/${pkgver%rc?}/Python-${pkgver}.tar.xz"
+        0000-make-_sysconfigdata.py-relocatable.patch
+        0100-MINGW-BASE-use-NT-thread-model.patch
+        0110-MINGW-translate-gcc-internal-defines-to-python-platf.patch
+        0120-MINGW-use-header-in-lowercase.patch
+        0130-MINGW-configure-MACHDEP-and-platform-for-build.patch
+        0140-MINGW-preset-configure-defaults.patch
+        0150-MINGW-configure-largefile-support-for-windows-builds.patch
+        0160-MINGW-add-wincrypt.h-in-Python-random.c.patch
+        0180-MINGW-init-system-calls.patch
+        0190-MINGW-detect-REPARSE_DATA_BUFFER.patch
+        0200-MINGW-build-in-windows-modules-winreg.patch
+        0210-MINGW-determine-if-pwdmodule-should-be-used.patch
+        0220-MINGW-default-sys.path-calculations-for-windows-plat.patch
+        0230-MINGW-AC_LIBOBJ-replacement-of-fileblocks.patch
+        0250-MINGW-compiler-customize-mingw-cygwin-compilers.patch
+        0270-CYGWIN-issue13756-Python-make-fail-on-cygwin.patch
+        0290-issue6672-v2-Add-Mingw-recognition-to-pyport.h-to-al.patch
+        0300-MINGW-configure-for-shared-build.patch
+        0310-MINGW-dynamic-loading-support.patch
+        0320-MINGW-implement-exec-prefix.patch
+        0330-MINGW-ignore-main-program-for-frozen-scripts.patch
+        0340-MINGW-setup-exclude-termios-module.patch
+        0350-MINGW-setup-_multiprocessing-module.patch
+        0360-MINGW-setup-select-module.patch
+        0370-MINGW-setup-_ctypes-module-with-system-libffi.patch
+        0380-MINGW-defect-winsock2-and-setup-_socket-module.patch
+        0390-MINGW-exclude-unix-only-modules.patch
+        0400-MINGW-setup-msvcrt-module.patch
+        0410-MINGW-build-extensions-with-GCC.patch
+        0420-MINGW-use-Mingw32CCompiler-as-default-compiler-for-m.patch
+        0430-MINGW-find-import-library.patch
+        0440-MINGW-setup-_ssl-module.patch
+        0460-MINGW-generalization-of-posix-build-in-sysconfig.py.patch
+        0462-MINGW-support-stdcall-without-underscore.patch
+        0480-MINGW-generalization-of-posix-build-in-distutils-sys.patch
+        0490-MINGW-customize-site.patch
+        0500-add-python-config-sh.patch
+        0510-cross-darwin-feature.patch
+        0520-py3k-mingw-ntthreads-vs-pthreads.patch
+        0530-mingw-system-libffi.patch
+        0540-mingw-semicolon-DELIM.patch
+        0550-mingw-regen-use-stddef_h.patch
+        0560-mingw-use-posix-getpath.patch
+        0565-mingw-add-ModuleFileName-dir-to-PATH.patch
+        0570-mingw-add-BUILDIN_WIN32_MODULEs-time-msvcrt.patch
+        0580-mingw32-test-REPARSE_DATA_BUFFER.patch
+        0590-mingw-INSTALL_SHARED-LDLIBRARY-LIBPL.patch
+        0600-msys-mingw-prefer-unix-sep-if-MSYSTEM.patch
+        0610-msys-cygwin-semi-native-build-sysconfig.patch
+        0620-mingw-sysconfig-like-posix.patch
+        0630-mingw-_winapi_as_builtin_for_Popen_in_cygwinccompiler.patch
+        0640-mingw-x86_64-size_t-format-specifier-pid_t.patch
+        0650-cross-dont-add-multiarch-paths-if-cross-compiling.patch
+        0660-mingw-use-backslashes-in-compileall-py.patch
+        0670-msys-convert_path-fix-and-root-hack.patch
+        0690-allow-static-tcltk.patch
+        0710-CROSS-properly-detect-WINDOW-_flags-for-different-nc.patch
+        0720-mingw-pdcurses_ISPAD.patch
+        0740-grammar-fixes.patch
+        0750-Add-interp-Python-DESTSHARED-to-PYTHONPATH-b4-pybuilddir-txt-dir.patch
+        0760-msys-monkeypatch-os-system-via-sh-exe.patch
+        0770-msys-replace-slashes-used-in-io-redirection.patch
+        0790-mingw-add-_exec_prefix-for-tcltk-dlls.patch
+        0800-mingw-install-layout-as-posix.patch
+        0820-mingw-reorder-bininstall-ln-symlink-creation.patch
+        0830-add-build-sysroot-config-option.patch
+        0840-add-builddir-to-library_dirs.patch
+        0850-cross-PYTHON_FOR_BUILD-gteq-276-and-fullpath-it.patch
+        0855-mingw-fix-ssl-dont-use-enum_certificates.patch
+        0860-mingw-build-optimized-ext.patch
+        0870-mingw-add-LIBPL-to-library-dirs.patch
+        0910-fix-using-dllhandle-and-winver-mingw.patch
+        1000-dont-link-with-gettext.patch
+        1010-ctypes-python-dll.patch
+        1020-gdbm-module-includes.patch
+        1030-use-gnu_printf-in-format.patch
+        1040-install-msilib.patch)
+
+
+prepare() {
+  cd "${srcdir}/Python-${pkgver}"
+
+  # these are created by patches
+  rm -f Misc/config_mingw Misc/cross_mingw32 Misc/python-config.sh.in Misc/cross_mingw32 Misc/python-config-u.sh.in Python/fileblocks.c
+
+  plain "Apply Ray Donnelly's relocatability enabling patch"
+  patch -Np1 -i "${srcdir}"/0000-make-_sysconfigdata.py-relocatable.patch
+
+  plain "Apply Roumen Petrov's core patches (15)"
+  patch -p1 -i "${srcdir}"/0100-MINGW-BASE-use-NT-thread-model.patch
+  patch -p1 -i "${srcdir}"/0110-MINGW-translate-gcc-internal-defines-to-python-platf.patch
+  patch -p1 -i "${srcdir}"/0120-MINGW-use-header-in-lowercase.patch
+  patch -p1 -i "${srcdir}"/0130-MINGW-configure-MACHDEP-and-platform-for-build.patch
+  patch -p1 -i "${srcdir}"/0140-MINGW-preset-configure-defaults.patch
+  patch -p1 -i "${srcdir}"/0150-MINGW-configure-largefile-support-for-windows-builds.patch
+  patch -p1 -i "${srcdir}"/0160-MINGW-add-wincrypt.h-in-Python-random.c.patch
+  patch -p1 -i "${srcdir}"/0180-MINGW-init-system-calls.patch
+  patch -p1 -i "${srcdir}"/0190-MINGW-detect-REPARSE_DATA_BUFFER.patch
+  patch -p1 -i "${srcdir}"/0200-MINGW-build-in-windows-modules-winreg.patch
+  patch -p1 -i "${srcdir}"/0210-MINGW-determine-if-pwdmodule-should-be-used.patch
+  patch -p1 -i "${srcdir}"/0220-MINGW-default-sys.path-calculations-for-windows-plat.patch
+  patch -p1 -i "${srcdir}"/0230-MINGW-AC_LIBOBJ-replacement-of-fileblocks.patch
+
+  plain "Apply Roumen Petrov's compiler patch (2)"
+  patch -p1 -i "${srcdir}"/0250-MINGW-compiler-customize-mingw-cygwin-compilers.patch
+
+  plain "Apply Roumen Petrov's extensions patches (21)"
+  patch -p1 -i "${srcdir}"/0270-CYGWIN-issue13756-Python-make-fail-on-cygwin.patch
+  patch -p1 -i "${srcdir}"/0290-issue6672-v2-Add-Mingw-recognition-to-pyport.h-to-al.patch
+  patch -p1 -i "${srcdir}"/0300-MINGW-configure-for-shared-build.patch
+  patch -p1 -i "${srcdir}"/0310-MINGW-dynamic-loading-support.patch
+  patch -p1 -i "${srcdir}"/0320-MINGW-implement-exec-prefix.patch
+  patch -p1 -i "${srcdir}"/0330-MINGW-ignore-main-program-for-frozen-scripts.patch
+  patch -p1 -i "${srcdir}"/0340-MINGW-setup-exclude-termios-module.patch
+  patch -p1 -i "${srcdir}"/0350-MINGW-setup-_multiprocessing-module.patch
+  patch -p1 -i "${srcdir}"/0360-MINGW-setup-select-module.patch
+  patch -p1 -i "${srcdir}"/0370-MINGW-setup-_ctypes-module-with-system-libffi.patch
+  patch -p1 -i "${srcdir}"/0380-MINGW-defect-winsock2-and-setup-_socket-module.patch
+  patch -p1 -i "${srcdir}"/0390-MINGW-exclude-unix-only-modules.patch
+  patch -p1 -i "${srcdir}"/0400-MINGW-setup-msvcrt-module.patch
+  patch -p1 -i "${srcdir}"/0410-MINGW-build-extensions-with-GCC.patch
+  patch -p1 -i "${srcdir}"/0420-MINGW-use-Mingw32CCompiler-as-default-compiler-for-m.patch
+  patch -p1 -i "${srcdir}"/0430-MINGW-find-import-library.patch
+  patch -p1 -i "${srcdir}"/0440-MINGW-setup-_ssl-module.patch
+  patch -p1 -i "${srcdir}"/0460-MINGW-generalization-of-posix-build-in-sysconfig.py.patch
+  patch -p1 -i "${srcdir}"/0462-MINGW-support-stdcall-without-underscore.patch
+  patch -p1 -i "${srcdir}"/0480-MINGW-generalization-of-posix-build-in-distutils-sys.patch
+  patch -p1 -i "${srcdir}"/0490-MINGW-customize-site.patch
+
+  plain "Apply Ray Donnelly's general/cross patches (32)"
+  patch -p1 -i "${srcdir}"/0500-add-python-config-sh.patch
+  patch -p1 -i "${srcdir}"/0510-cross-darwin-feature.patch
+  patch -p1 -i "${srcdir}"/0520-py3k-mingw-ntthreads-vs-pthreads.patch
+  patch -p1 -i "${srcdir}"/0530-mingw-system-libffi.patch
+  patch -p1 -i "${srcdir}"/0540-mingw-semicolon-DELIM.patch
+  patch -p1 -i "${srcdir}"/0550-mingw-regen-use-stddef_h.patch
+  patch -p1 -i "${srcdir}"/0560-mingw-use-posix-getpath.patch
+  patch -p1 -i "${srcdir}"/0565-mingw-add-ModuleFileName-dir-to-PATH.patch
+  patch -p1 -i "${srcdir}"/0570-mingw-add-BUILDIN_WIN32_MODULEs-time-msvcrt.patch
+  patch -p1 -i "${srcdir}"/0580-mingw32-test-REPARSE_DATA_BUFFER.patch
+  patch -p1 -i "${srcdir}"/0590-mingw-INSTALL_SHARED-LDLIBRARY-LIBPL.patch
+  patch -p1 -i "${srcdir}"/0600-msys-mingw-prefer-unix-sep-if-MSYSTEM.patch
+  patch -p1 -i "${srcdir}"/0610-msys-cygwin-semi-native-build-sysconfig.patch
+  patch -p1 -i "${srcdir}"/0620-mingw-sysconfig-like-posix.patch
+  patch -p1 -i "${srcdir}"/0630-mingw-_winapi_as_builtin_for_Popen_in_cygwinccompiler.patch
+  patch -p1 -i "${srcdir}"/0640-mingw-x86_64-size_t-format-specifier-pid_t.patch
+  patch -p1 -i "${srcdir}"/0650-cross-dont-add-multiarch-paths-if-cross-compiling.patch
+  patch -p1 -i "${srcdir}"/0660-mingw-use-backslashes-in-compileall-py.patch
+  patch -p1 -i "${srcdir}"/0670-msys-convert_path-fix-and-root-hack.patch
+  patch -p1 -i "${srcdir}"/0690-allow-static-tcltk.patch
+  patch -p1 -i "${srcdir}"/0710-CROSS-properly-detect-WINDOW-_flags-for-different-nc.patch
+  patch -p1 -i "${srcdir}"/0720-mingw-pdcurses_ISPAD.patch
+  patch -p1 -i "${srcdir}"/0740-grammar-fixes.patch
+  patch -p1 -i "${srcdir}"/0750-Add-interp-Python-DESTSHARED-to-PYTHONPATH-b4-pybuilddir-txt-dir.patch
+  patch -p1 -i "${srcdir}"/0760-msys-monkeypatch-os-system-via-sh-exe.patch
+  patch -p1 -i "${srcdir}"/0770-msys-replace-slashes-used-in-io-redirection.patch
+  patch -p1 -i "${srcdir}"/0790-mingw-add-_exec_prefix-for-tcltk-dlls.patch
+  patch -p1 -i "${srcdir}"/0800-mingw-install-layout-as-posix.patch
+  patch -p1 -i "${srcdir}"/0820-mingw-reorder-bininstall-ln-symlink-creation.patch
+  patch -p1 -i "${srcdir}"/0830-add-build-sysroot-config-option.patch
+  patch -p1 -i "${srcdir}"/0840-add-builddir-to-library_dirs.patch
+  patch -p1 -i "${srcdir}"/0850-cross-PYTHON_FOR_BUILD-gteq-276-and-fullpath-it.patch
+  patch -p1 -i "${srcdir}"/0855-mingw-fix-ssl-dont-use-enum_certificates.patch
+  patch -p1 -i "${srcdir}"/0860-mingw-build-optimized-ext.patch
+  patch -p1 -i "${srcdir}"/0870-mingw-add-LIBPL-to-library-dirs.patch
+  patch -p1 -i "${srcdir}"/0910-fix-using-dllhandle-and-winver-mingw.patch
+
+  plain "Apply Alexey Pavlov's mingw-w64 patches (2)"
+  patch -p1 -i "${srcdir}"/1000-dont-link-with-gettext.patch
+  patch -p1 -i "${srcdir}"/1010-ctypes-python-dll.patch
+  patch -p1 -i "${srcdir}"/1020-gdbm-module-includes.patch
+  patch -p1 -i "${srcdir}"/1030-use-gnu_printf-in-format.patch
+  patch -p1 -i "${srcdir}"/1040-install-msilib.patch
+
+  autoreconf -vfi
+
+  # Temporary workaround for FS#22322
+  # See http://bugs.python.org/issue10835 for upstream report
+  #sed -i "/progname =/s/python/python${_pybasever}/" Python/pythonrun.c
+
+  # Enable built-in SQLite module to load extensions (fix FS#22122)
+  sed -i "/SQLITE_OMIT_LOAD_EXTENSION/d" setup.py
+
+  # FS#23997
+  sed -i -e "s|^#.* /usr/local/bin/python|#!/usr/bin/env python2|" Lib/cgi.py
+
+  sed -i "s/python2.3/python2/g" Lib/distutils/tests/test_build_scripts.py \
+  Lib/distutils/tests/test_install_scripts.py Tools/scripts/gprof2html.py
+
+  touch Include/graminit.h
+  touch Python/graminit.c
+  touch Parser/Python.asdl
+  touch Parser/asdl.py
+  touch Parser/asdl_c.py
+  touch Include/Python-ast.h
+  touch Python/Python-ast.c
+  echo \"\" > Parser/pgen.stamp
+
+  # Ensure that we are using the system copy of various libraries (expat, zlib and libffi),
+  # rather than copies shipped in the tarball
+  rm -r Modules/expat
+  rm -r Modules/zlib
+  rm -r Modules/_ctypes/{darwin,libffi}*
+}
+
+build() {
+  pushd ${MINGW_PREFIX} > /dev/null
+  export PREFIX_WIN=`pwd -W`
+  popd > /dev/null
+
+  CFLAGS+=" -fwrapv -D__USE_MINGW_ANSI_STDIO=1 "
+  CXXFLAGS+=" -fwrapv -D__USE_MINGW_ANSI_STDIO=1 "
+  CPPFLAGS+=" -I${PREFIX_WIN}/include/ncursesw "
+
+  if check_option "strip" "y"; then
+    LDFLAGS+=" -s "
+  fi
+  if check_option "debug" "n"; then
+    CFLAGS+=" -DNDEBUG "
+    CXXFLAGS+=" -DNDEBUG "
+  else
+    plain " -DDEBUG -DPy_DEBUG -D_DEBUG does not work unfortunately .."
+    #    CFLAGS+=" -DDEBUG -DPy_DEBUG -D_DEBUG "
+    #    CXXFLAGS+=" -DDEBUG -DPy_DEBUG -D_DEBUG "
+    CFLAGS+=" -O0 -ggdb"
+    CXXFLAGS+=" -O0 -ggdb"
+  fi
+
+  LIBFFI_INC=`${MINGW_PREFIX}/bin/pkg-config libffi --cflags-only-I | sed "s|\-I||g"`
+  pushd ${LIBFFI_INC} > /dev/null
+  export LIBFFI_INCLUDEDIR=`pwd -W`
+  popd > /dev/null
+
+  # Workaround for conftest error on 64-bit builds
+  export ac_cv_working_tzset=no
+
+  mkdir -p "${srcdir}/build-${CARCH}" && cd "${srcdir}/build-${CARCH}"
+  MSYSTEM=MINGW ../Python-${pkgver}/configure \
+    --prefix=${MINGW_PREFIX} \
+    --host=${MINGW_CHOST} \
+    --build=${MINGW_CHOST} \
+    --enable-shared \
+    --with-threads \
+    --with-system-expat \
+    --with-system-ffi \
+    OPT=""
+    #--with-dbmliborder='gdbm:ndbm'
+  make
+}
+
+check() {
+  cd "${srcdir}/build-${CARCH}"
+  make test
+}
+
+package() {
+  cd "${srcdir}/build-${CARCH}"
+  MSYSTEM=MINGW \
+  MSYS2_ARG_CONV_EXCL="--prefix=;--install-scripts=;--install-platlib=" \
+  make install DESTDIR="$pkgdir"
+
+  mv "${pkgdir}${MINGW_PREFIX}"/bin/smtpd.py "${pkgdir}${MINGW_PREFIX}"/lib/python${_pybasever}/
+
+  # Copy python import library to $prefix/lib because some programs can't find it in other locations
+  cp -f "${pkgdir}${MINGW_PREFIX}"/lib/python${_pybasever}/config/libpython${_pybasever}.dll.a "${pkgdir}${MINGW_PREFIX}"/lib/libpython${_pybasever}.dll.a
+
+  # some useful "stuff"
+  install -dm755 "${pkgdir}${MINGW_PREFIX}"/lib/python${_pybasever}/Tools/{i18n,scripts}
+  install -m755 "${srcdir}/Python-${pkgver}"/Tools/i18n/{msgfmt,pygettext}.py "${pkgdir}${MINGW_PREFIX}"/lib/python${_pybasever}/Tools/i18n/
+  install -m755 "${srcdir}/Python-${pkgver}"/Tools/scripts/{README,*py} "${pkgdir}${MINGW_PREFIX}"/lib/python${_pybasever}/Tools/scripts/
+
+  # clean up #!s
+  find "${pkgdir}${MINGW_PREFIX}"/lib/python${_pybasever}/ -name '*.py' | \
+    xargs sed -i "s|#[ ]*![ ]*/usr/bin/env python$|#!/usr/bin/env python2|"
+
+  # clean-up reference to build directory
+  sed -i "s#${srcdir}/Python-${pkgver}:##" "${pkgdir}${MINGW_PREFIX}"/lib/python${_pybasever}/config/Makefile
+
+  for fscripts in 2to3 idle pydoc; do
+    sed -e "s|${MINGW_PREFIX}/bin/python${_pybasever}.exe|/usr/bin/env python${_pybasever}.exe|g" -i "${pkgdir}${MINGW_PREFIX}"/bin/$fscripts
+  done
+
+  sed -i "s|#!${pkgdir}${MINGW_PREFIX}/bin/python${_pybasever}.exe|#!/usr/bin/env python${_pybasever}.exe|" "${pkgdir}${MINGW_PREFIX}"/bin/python${_pybasever}-config
+  sed -i "s|#!${pkgdir}${MINGW_PREFIX}/bin/python${_pybasever}.exe|#!/usr/bin/env python${_pybasever}.exe|" "${pkgdir}${MINGW_PREFIX}"/bin/python2-config
+  sed -i "s|#!${pkgdir}${MINGW_PREFIX}/bin/python${_pybasever}.exe|#!/usr/bin/env python${_pybasever}.exe|" "${pkgdir}${MINGW_PREFIX}"/bin/python-config
+
+  # fix permissons
+  find ${pkgdir}${MINGW_PREFIX} -type f \( -name "*.dll" -o -name "*.exe" \) | xargs chmod 0755
+
+  # Fix up two instances of MSYS2 paths in python-config.sh in-case the final consumer of the results are native executables.
+  sed -i "s|${MINGW_PREFIX}|${PREFIX_WIN}|" "${pkgdir}${MINGW_PREFIX}"/bin/python-config.sh
+
+  # replace paths in sysconfig
+  sed -i "s|${pkgdir}${MINGW_PREFIX}|${MINGW_PREFIX}|g" \
+    "${pkgdir}${MINGW_PREFIX}"/lib/python${_pybasever}/_sysconfigdata.py \
+    "${pkgdir}${MINGW_PREFIX}"/lib/python${_pybasever}/smtpd.py
+
+  # Create python executable with windows subsystem
+  cp -f "${pkgdir}${MINGW_PREFIX}"/bin/python2.exe "${pkgdir}${MINGW_PREFIX}"/bin/python2w.exe
+  ${MINGW_PREFIX}/bin/objcopy --subsystem windows "${pkgdir}${MINGW_PREFIX}"/bin/python2w.exe
+
+  # Add a wrapper script to force -i when invoking python. Please don't move this into a patch as
+  # hopefully one day we won't need this hack (when we replace mintty with a real console).
+  _exename="python2"
+  mv "${pkgdir}"${MINGW_PREFIX}/bin/${_exename}.exe "${pkgdir}"${MINGW_PREFIX}/bin/${_exename}_exe
+  echo "#!/usr/bin/env bash"                                           > "${pkgdir}"${MINGW_PREFIX}/bin/${_exename}
+  echo "if [ \$# -eq 0 ]; then"                                       >> "${pkgdir}"${MINGW_PREFIX}/bin/${_exename}
+  echo '  "$( dirname ${BASH_SOURCE[0]} )/'${_exename}'.exe" -i "$@"' >> "${pkgdir}"${MINGW_PREFIX}/bin/${_exename}
+  echo "else"                                                         >> "${pkgdir}"${MINGW_PREFIX}/bin/${_exename}
+  echo '  "$( dirname ${BASH_SOURCE[0]} )/'${_exename}'.exe" "$@"'    >> "${pkgdir}"${MINGW_PREFIX}/bin/${_exename}
+  echo "fi"                                                           >> "${pkgdir}"${MINGW_PREFIX}/bin/${_exename}
+  mv "${pkgdir}"${MINGW_PREFIX}/bin/${_exename}_exe "${pkgdir}"${MINGW_PREFIX}/bin/${_exename}.exe
+}
+
+sha1sums=('3172f6e957713c2d9fca462cc16068222fd1b9d3'
+          '5e0546d246c18881c448a077c3b605d5db505114'
+          '34a627481caea8690c2cf6e6d409e2d449d133fb'
+          'c936fbd986a2cc126174e45de8b100e24824b905'
+          'a5aa0daff5a85c661467b635e4e70bbef0a82046'
+          'e9fb36ee9c03e982a8dfcd2890945512fe9392ca'
+          'ddcd2893c5113acc02233ea50b5c115defbfcfb9'
+          '6bc0d42ea3c961139b91ad89ecd5f64d4d03c99c'
+          '99b81757f9acbfe730ccf16e42166ff4a52b9562'
+          'b7e9a776fce256ead7ad38ebaedea4a95aa0934f'
+          '825456668c8ebeec0e9ac65f8752b2d5c0fc4819'
+          '669a483e3665b6a8fa6b5f1bcbe9e27f6fd29d05'
+          '50bb5036f3475662a463d8833bfd8f3f93c2dd23'
+          '46e5bbecfcc3892a7934fca42ab2e3950c00da2a'
+          '518a3d1c0365a3ba7356d095245dc732aed40067'
+          'ade1e6db5a2643e97fb987946f60f15791f707f3'
+          'f782384a8c094010f075aadbc16859c70ecd5e26'
+          'c33113fd39b70c328a5b606ca3e2d837b51c4ffd'
+          '0a351b3d9fddc302838aa489577dc5db54ceb608'
+          'a664e8bf904feb18a124f7376283c9e4ae29885e'
+          '7ad242e0fd33d2aef1d94af44560ee488dedc87a'
+          'c858d5fefb300b55d35ec160f2815b165553d2b6'
+          'b6e127499ed0d67e61431dfea23fb49606522d2c'
+          '4f1a99fcb31af079a32496151cee3ce566c3e581'
+          '15b62ec9b9b8a9ac58a933e034b562271c226a0b'
+          '2b550ba8b31cc54639847c087a24681431a920d4'
+          'b67f7b820b3414219ec1ca07397a35f4d2914854'
+          '7d7800323249e64451d9e0c5ff7c9546d0e27cf5'
+          '07c3d42b9c7e79d0e621ae6d9dbe8cdf9c2801f0'
+          '2d4c42ffbfc02f777379555b752d69dffcc350f0'
+          '50662bcffc5fe85dea72e9e75b5921370ba3cbb2'
+          'be2c7aa1ebdb9838b1121527959e92af8fde84f1'
+          '12341e177b655c08a6dc83b840d0433770c55164'
+          '7ff38d3d506064e98aa79b75e7ed64b9e74b3f80'
+          'f6abdb937ca40c984d365a317ccde70d1b72a0e5'
+          '21391c4509a149c710f780c4ab7d1d3aa4b26dbb'
+          'f7e5501502ee0e0ef1b86c6cc8a4405ec4842dca'
+          '2a5aa64eee5c62ffbd0995205ad1e3efb8eb6644'
+          '124f3bb723bf6b3a035245499fc25d1ef8dae360'
+          '38505f10c495c1b79342aaeeb0d538b73df52c12'
+          '6b9e0da25a098c19336c59445745b0d99795edb2'
+          'cab956b0b6239ff6fda55a28341c563e05e78236'
+          '62ba10c3d6e51c1bfdbd1885f6fec51831928924'
+          'db205a1b6a0cb517afa9715c01310fb1c981e5df'
+          'ab13f486c932081e69ba6ccc7c4417c0d56a5c9d'
+          'b2da571659276b3d7bf6d5988ee0716869aa4155'
+          'df8a5da8b88dbcbff2919ce5ae5027a654bcfb31'
+          '3dadc13c916ef6447006e8a544ba5eafb5494fca'
+          'b5b94446419382b32d32807825a6e34cc0fb98d6'
+          'aa234ba54760de5820934322cb67b574bb1384c5'
+          '681c4ebe82c5e63ea635e9d0dbf5c3fa37c71e64'
+          'd9720baf25659ede48353b0d47b7486339c0efb7'
+          '867eaf7fa58b5cd6886cf360a95ca70dd7a775f4'
+          '0cd680615f0ce39097f9db34355ce3aa10ed0b81'
+          '7c56c69327997605ee64fcef3df8ce0628c16d6f'
+          '6ab80243af6c3ffcfd61b6bc4c35978cf608bb43'
+          '6e2f74d3b7719a350c1b7d816016875e0fcead12'
+          'eb7fe4fbe2fd15d2efa742caf8bface48f686201'
+          '943fbc541c3f7d70fe87b44e3f8b6d83c7ae3e97'
+          '2149347d7d55ea4f228eb5ddc443cea51e040bc6'
+          'ca0b23e312694347e3a1a10b38fb31bd724d1ac2'
+          '12ef984034b57e3e6f2e5c71ad9cabfbae8bc0ba'
+          'd18dbfa0bebf7286b04b3ddc7e8ad472ee668fcd'
+          'a46b32b514715fafcd1c95055d225ea913fa64a6'
+          '23c0bcdb082006d6bde3eb9fc72044272c7a08f3'
+          'fbefe2d0d2d4c9f995c9c49a66c93071587b7045'
+          '15e055c4cce32a0c1940953062fd2db7c22364c4'
+          'f0f5efb98c610d0caf3ccbf0850460af49f92c96'
+          '78b039f8ab595750b2f7aee3e2fc6d7a466a5c9c'
+          'aa295dd8c4f60b70c61753fc4be9c8ff50101577'
+          'de01d87f5070992f305d5375da1deb69f80ea8bb'
+          '6cef2b44a41279c0344cbb9f3486cfc0831026ae'
+          '0de22d55a78fad4755e2d4950db9a49a48a50ad2'
+          'd332da5a091d54445e1a83075a6ea8069031c995'
+          'bc7209fd529f03d384f00be22835615a2843a7fa'
+          '06ebbcf50d6d30780f47a0d3425f956b2eb8e847'
+          '9042c4902ff03ecc12e0b41059aaebd6ad409009'
+          'dc6aa85fa4dc68a6809c1321e4a28a360a242f39')

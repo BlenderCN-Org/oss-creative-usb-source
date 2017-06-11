@@ -1,0 +1,42 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname=gsettings-desktop-schemas
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=3.14.0
+pkgrel=1
+arch=('any')
+url="http://live.gnome.org/"
+pkgdesc="Shared GSettings schemas for the desktop (mingw-w64)"
+depends=("${MINGW_PACKAGE_PREFIX}-glib2")
+makedepends=("${MINGW_PACKAGE_PREFIX}-gobject-introspection" "intltool")
+license=('GPL')
+options=('strip' 'staticlibs')
+install=schemas-${CARCH}.install
+source=("http://ftp.gnome.org/pub/GNOME/sources/${_realname}/${pkgver%.*}/${_realname}-$pkgver.tar.xz")
+md5sums=('14df59945fc9027b303ecfa75200a0c9')
+
+prepare() {
+  cd "$srcdir/${_realname}-$pkgver"
+  autoreconf -fi
+}
+
+build()
+{
+  rm -rf $srcdir/build-${MINGW_CHOST}
+  mkdir $srcdir/build-${MINGW_CHOST}
+  cd $srcdir/build-${MINGW_CHOST}
+  ../${_realname}-$pkgver/configure \
+      --prefix=${MINGW_PREFIX} \
+      --build=${MINGW_CHOST} \
+      --host=${MINGW_CHOST} \
+      --target=${MINGW_CHOST} \
+      --disable-schemas-compile \
+      --enable-introspection
+  make
+}
+
+package() {
+  cd "$srcdir/build-${MINGW_CHOST}"
+  make DESTDIR="$pkgdir" install
+  mv ${pkgdir}${MINGW_PREFIX}/share/pkgconfig ${pkgdir}${MINGW_PREFIX}/lib/
+}

@@ -1,0 +1,19 @@
+--- hdf5-1.8.12/CMakeLists.txt.orig	2013-11-21 23:14:04.000000000 +0800
++++ hdf5-1.8.12/CMakeLists.txt	2014-04-30 09:31:00.933628200 +0800
+@@ -157,13 +157,13 @@
+   set (HDF5_INSTALL_INCLUDE_DIR include)
+ endif (NOT HDF5_INSTALL_INCLUDE_DIR)
+ if (NOT HDF5_INSTALL_DATA_DIR)
+-  if (NOT WIN32)
++  if (NOT WIN32 OR MINGW)
+     set (HDF5_INSTALL_DATA_DIR share)
+     set (HDF5_INSTALL_CMAKE_DIR share/cmake)
+-  else (NOT WIN32)
++  else (NOT WIN32 OR MINGW)
+     set (HDF5_INSTALL_DATA_DIR ".")
+     set (HDF5_INSTALL_CMAKE_DIR cmake)
+-  endif (NOT WIN32)
++  endif (NOT WIN32 OR MINGW)
+ endif (NOT HDF5_INSTALL_DATA_DIR)
+ 
+ #-----------------------------------------------------------------------------

@@ -1,0 +1,39 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname=glm
+
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=0.9.5.4
+pkgrel=1
+pkgdesc="C++ mathematics library for 3D software based on the OpenGL Shading Language (GLSL) specification (mingw-w64)"
+arch=('any')
+url='http://glm.g-truc.net'
+license=('MIT')
+depends=("")
+source=("http://sourceforge.net/projects/ogl-math/files/glm-$pkgver/glm-$pkgver.zip")
+md5sums=('fab76fc982b256b46208e5c750ed456a')
+
+build() {
+  mkdir $srcdir/build-${MINGW_CHOST}
+  cd "$srcdir/build-${MINGW_CHOST}"
+  ${MINGW_PREFIX}/bin/cmake.exe \
+    -G"MSYS Makefiles" \
+    -DCMAKE_INSTALL_PREFIX:PATH=${pkgdir}${MINGW_PREFIX} \
+    -DGLM_TEST_ENABLE=ON \
+    ../${_realname}
+  make
+}
+
+package() {
+  cd "$srcdir/build-${MINGW_CHOST}"
+  make install
+  mkdir -p ${pkgdir}${MINGW_PREFIX}/share/doc
+  cp -r $srcdir/${_realname}/doc ${pkgdir}${MINGW_PREFIX}/share/doc/glm
+  rm -f ${pkgdir}${MINGW_PREFIX}/include/glm/CMakeLists.txt
+  find ${pkgdir}${MINGW_PREFIX} -type f -exec chmod 644 {} \;
+  find ${pkgdir}${MINGW_PREFIX} -type d -exec chmod 755 {} \;
+
+  install -Dm644 $srcdir/${_realname}/util/FindGLM.cmake ${pkgdir}${MINGW_PREFIX}/share/cmake-3.0/Modules/FindGLM.cmake
+  install -Dm644 $srcdir/${_realname}/copying.txt ${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE
+}
+

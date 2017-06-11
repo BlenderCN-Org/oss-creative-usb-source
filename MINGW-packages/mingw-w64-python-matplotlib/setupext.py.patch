@@ -1,0 +1,226 @@
+--- matplotlib-1.4.1/setupext.py.orig	2014-10-18 22:26:22.000000000 +0400
++++ matplotlib-1.4.1/setupext.py	2014-10-19 17:02:34.889800000 +0400
+@@ -15,7 +15,7 @@
+ 
+ 
+ PY3 = (sys.version_info[0] >= 3)
+-
++MSYS = "MSYSTEM" in os.environ
+ 
+ try:
+     from subprocess import check_output
+@@ -43,9 +43,16 @@
+         return output
+ 
+ 
+-if sys.platform != 'win32':
++if sys.platform != 'win32' or MSYS:
+     if sys.version_info[0] < 3:
+-        from commands import getstatusoutput
++        def getstatusoutput(cmd):
++            """Return (status, output) of executing cmd in a shell."""
++            pipe = os.popen(cmd, 'r')
++            text = pipe.read()
++            sts = pipe.close()
++            if sts is None: sts = 0
++            if text[-1:] == '\n': text = text[:-1]
++            return sts, text
+     else:
+         from subprocess import getstatusoutput
+ 
+@@ -120,9 +127,10 @@
+     Returns `True` if `filename` can be found in one of the
+     directories in `include_dirs`.
+     """
+-    if sys.platform == 'win32':
++    if sys.platform == 'win32' and not MSYS:
+         include_dirs += os.environ.get('INCLUDE', '.').split(';')
+     for dir in include_dirs:
++        dir = os.popen(' '.join(['cygpath', '-w', dir])).readline().strip()
+         if os.path.exists(os.path.join(dir, filename)):
+             return True
+     return False
+@@ -227,6 +235,7 @@
+     """
+     ext = DelayedExtension(name, files, *args, **kwargs)
+     for dir in get_base_dirs():
++        dir = os.popen(' '.join(['cygpath', '-w', dir])).readline().strip()
+         include_dir = os.path.join(dir, 'include')
+         if os.path.exists(include_dir):
+             ext.include_dirs.append(include_dir)
+@@ -235,7 +244,6 @@
+             if os.path.exists(lib_dir):
+                 ext.library_dirs.append(lib_dir)
+     ext.include_dirs.append('.')
+-
+     return ext
+ 
+ 
+@@ -247,11 +255,11 @@
+         """
+         Determines whether pkg-config exists on this machine.
+         """
+-        if sys.platform == 'win32':
++        if sys.platform == 'win32' and not MSYS:
+             self.has_pkgconfig = False
+         else:
+             self.set_pkgconfig_path()
+-            status, output = getstatusoutput("pkg-config --help")
++            status, output = getstatusoutput('sh -c "pkg-config --help"')
+             self.has_pkgconfig = (status == 0)
+             if not self.has_pkgconfig:
+                 print("IMPORTANT WARNING:")
+@@ -292,7 +300,7 @@
+             command = "{0} --libs --cflags ".format(executable)
+ 
+             try:
+-                output = check_output(command, shell=True,
++                output = check_output('sh -c "%s"' % command, shell=True,
+                                       stderr=subprocess.STDOUT)
+             except subprocess.CalledProcessError:
+                 pass
+@@ -302,11 +310,16 @@
+                 for token in output.split():
+                     attr = flag_map.get(token[:2])
+                     if attr is not None:
+-                        getattr(ext, attr).insert(0, token[2:])
+-
++                        if attr.endswith('dirs'):
++                            dir = os.popen(' '.join(['cygpath', '-w', token[2:]])).readline().strip()
++                            getattr(ext, attr).insert(0, dir)
++                        else:
++                            getattr(ext, attr).insert(0, token[2:])
++        
+         if use_defaults:
+             basedirs = get_base_dirs()
+             for base in basedirs:
++                base = os.popen(' '.join(['cygpath', '-w', base])).readline().strip()
+                 for include in default_include_dirs:
+                     dir = os.path.join(base, include)
+                     if os.path.exists(dir):
+@@ -328,7 +341,7 @@
+             return None
+ 
+         status, output = getstatusoutput(
+-            "pkg-config %s --modversion" % (package))
++            'sh -c "pkg-config %s --modversion"' % (package))
+         if status == 0:
+             return output
+         return None
+@@ -941,11 +954,11 @@
+     name = "freetype"
+ 
+     def check(self):
+-        if sys.platform == 'win32':
++        if sys.platform == 'win32' and not MSYS:
+             check_include_file(get_include_dirs(), 'ft2build.h', 'freetype')
+             return 'Using unknown version found on system.'
+ 
+-        status, output = getstatusoutput("freetype-config --ftversion")
++        status, output = getstatusoutput('sh -c "freetype-config --ftversion"')
+         if status == 0:
+             version = output
+         else:
+@@ -967,6 +980,7 @@
+             return version
+         # Return the first version found in the include dirs.
+         for include_dir in ext.include_dirs:
++            include_dir = os.popen(' '.join(['cygpath', '-w', include_dir])).readline().strip()
+             header_fname = os.path.join(include_dir, 'freetype.h')
+             if os.path.exists(header_fname):
+                 major, minor, patch = 0, 0, 0
+@@ -1014,11 +1028,11 @@
+     name = "png"
+ 
+     def check(self):
+-        if sys.platform == 'win32':
++        if sys.platform == 'win32' and not MSYS:
+             check_include_file(get_include_dirs(), 'png.h', 'png')
+             return 'Using unknown version found on system.'
+ 
+-        status, output = getstatusoutput("libpng-config --version")
++        status, output = getstatusoutput('sh -c "libpng-config --version"')
+         if status == 0:
+             version = output
+         else:
+@@ -1452,7 +1466,7 @@
+             p = subprocess.Popen(
+                 '. %s ; eval echo ${%s}' % (file, varname),
+                 shell=True,
+-                executable="/bin/sh",
++                executable="sh",
+                 stdout=subprocess.PIPE)
+             result = p.communicate()[0]
+             return result.decode('ascii')
+@@ -1524,7 +1538,7 @@
+         return tcl_lib, tcl_inc, 'tcl', tk_lib, tk_inc, 'tk'
+ 
+     def add_flags(self, ext):
+-        if sys.platform == 'win32':
++        if sys.platform == 'win32' and not MSYS:
+             major, minor1, minor2, s, tmp = sys.version_info
+             if sys.version_info[0:2] < (3, 4):
+                 ext.include_dirs.extend(['win32_static/include/tcl85'])
+@@ -1660,7 +1674,7 @@
+         return ext
+ 
+     def add_flags(self, ext):
+-        if sys.platform == 'win32':
++        if sys.platform == 'win32' and not MSYS:
+             def getoutput(s):
+                 ret = os.popen(s).read().strip()
+                 return ret
+@@ -1715,7 +1729,7 @@
+                 'm' in ext.libraries):
+                 ext.libraries.remove('m')
+ 
+-        elif sys.platform != 'win32':
++        elif sys.platform != 'win32' or MSYS:
+             pkg_config.setup_extension(ext, 'pygtk-2.0')
+             pkg_config.setup_extension(ext, 'gtk+-2.0')
+ 
+@@ -2091,7 +2105,7 @@
+ 
+     def check(self):
+         try:
+-            output = check_output('dvipng -version', shell=True,
++            output = check_output('sh -c "dvipng -version"', shell=True,
+                                   stderr=subprocess.STDOUT)
+             return "version %s" % output.splitlines()[1].decode().split()[-1]
+         except (IndexError, ValueError, subprocess.CalledProcessError):
+@@ -2104,7 +2118,7 @@
+ 
+     def check(self):
+         try:
+-            if sys.platform == 'win32':
++            if sys.platform == 'win32' and not MSYS:
+                 command = 'gswin32c --version'
+                 try:
+                     output = check_output(command, shell=True,
+@@ -2114,7 +2128,7 @@
+                     output = check_output(command, shell=True,
+                                           stderr=subprocess.STDOUT)
+             else:
+-                command = 'gs --version'
++                command = 'sh -c "gs --version"'
+                 output = check_output(command, shell=True,
+                                       stderr=subprocess.STDOUT)
+             return "version %s" % output.decode()[:-1]
+@@ -2128,7 +2142,7 @@
+ 
+     def check(self):
+         try:
+-            output = check_output('latex -version', shell=True,
++            output = check_output('sh -c "latex -version"', shell=True,
+                                   stderr=subprocess.STDOUT)
+             line = output.splitlines()[0].decode()
+             pattern = '(3\.1\d+)|(MiKTeX \d+.\d+)'
+@@ -2144,7 +2158,7 @@
+ 
+     def check(self):
+         try:
+-            output = check_output('pdftops -v', shell=True,
++            output = check_output('sh -c "pdftops -v"', shell=True,
+                                   stderr=subprocess.STDOUT)
+             for line in output.splitlines():
+                 line = line.decode()

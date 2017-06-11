@@ -1,0 +1,48 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname=pycairo
+
+pkgname="${MINGW_PACKAGE_PREFIX}-python3-cairo-git"
+provides=("${MINGW_PACKAGE_PREFIX}-python3-cairo")
+conflicts=("${MINGW_PACKAGE_PREFIX}-python3-cairo")
+pkgver=1.10.1.34.5a45b0b
+pkgrel=1
+pkgdesc="Python 3 bindings for the cairo graphics library (mingw-w64)"
+url="http://www.cairographics.org/pycairo"
+arch=('any')
+license=('LGPL' 'MPL')
+depends=("${MINGW_PACKAGE_PREFIX}-python3" "${MINGW_PACKAGE_PREFIX}-cairo")
+makedepends=('git')
+source=("git://git.cairographics.org/git/pycairo"
+        0001-msys2-port-to-subprocess.check_output.patch
+        0003-fix-PyVarObject_HEAD_INIT-problem.patch)
+md5sums=('SKIP'
+         'a1fa7198fb4d78c6d87b453eccdb6f07'
+         '65f3d3e1375f86e80a19d23874c8b05b')
+
+pkgver() {
+  cd $_realname
+  PREFIX="pycairo_version        = '"
+  ver=$(grep "$PREFIX" setup.py | sed "s/$PREFIX//" | sed "s/'//")
+  revision=$(git rev-list --count HEAD)
+  hash=$(git log --pretty=format:'%h' -n 1)
+  echo $ver.$revision.$hash
+}
+
+prepare() {
+  cd ${_realname}
+  git am ${srcdir}/0001-msys2-port-to-subprocess.check_output.patch
+  git am ${srcdir}/0003-fix-PyVarObject_HEAD_INIT-problem.patch
+}
+
+build() {
+  cd $_realname
+  MSYS2_ARG_CONV_EXCL="--prefix=;--install-scripts=;--install-platlib=" \
+    ${MINGW_PREFIX}/bin/python3 setup.py build
+}
+
+package() {
+  cd $_realname
+  MSYS2_ARG_CONV_EXCL="--prefix=;--install-scripts=;--install-platlib=" \
+    ${MINGW_PREFIX}/bin/python3 setup.py --prefix=${MINGW_PREFIX} --root="$pkgdir" install --root=$pkgdir/
+}

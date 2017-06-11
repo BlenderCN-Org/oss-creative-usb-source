@@ -1,0 +1,93 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname=openshadinglanguage
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=1.5.12
+pkgrel=1
+pkgdesc="Advanced shading language for production GI renderers (mingw-w64)"
+arch=('any')
+url="https://github.com/imageworks/OpenShadingLanguage/"
+license=("custom")
+depends=("${MINGW_PACKAGE_PREFIX}-boost"
+        "${MINGW_PACKAGE_PREFIX}-libpng"
+        "${MINGW_PACKAGE_PREFIX}-glew"
+        "${MINGW_PACKAGE_PREFIX}-libtiff"
+        "${MINGW_PACKAGE_PREFIX}-openimageio"
+        "${MINGW_PACKAGE_PREFIX}-freetype"
+        "${MINGW_PACKAGE_PREFIX}-intel-tbb"
+        "${MINGW_PACKAGE_PREFIX}-ilmbase"
+        "${MINGW_PACKAGE_PREFIX}-openexr"
+        )
+makedepends=("${MINGW_PACKAGE_PREFIX}-cmake"
+             "${MINGW_PACKAGE_PREFIX}-clang"
+             "${MINGW_PACKAGE_PREFIX}-gcc"
+             "${MINGW_PACKAGE_PREFIX}-python2"
+             "${MINGW_PACKAGE_PREFIX}-pkg-config")
+source=(https://github.com/imageworks/OpenShadingLanguage/archive/Release-${pkgver}.tar.gz
+        0001-mingw-w64-fix.patch
+        0002-dont-add-flex-include-dir.patch
+        0003-fix-OIIO-windows.patch
+        0005-Fix-cast-from-void-ptr.patch
+        0006-Fix-weird-array-out-of-bounds-error.patch
+        0007-Fix-bad-casts-with-intptr_t.patch
+        0008-Install-dlls.patch)
+md5sums=('484752a0f97df55962c3a667075deddc'
+         'c225e66cd0a59a674b331b26374ba082'
+         '78526dd22cea1d42238609a9cdfef816'
+         '9c73b150c2696024a44397ef94584463'
+         '73851a8ec414f099fe1195ea18d756f9'
+         '33d03ef6eb6433c0df111098a6c7b177'
+         '85ed91acdd3bd974a18b8d1c9ae3e79b'
+         '7816fd1cd6d2fcbb2547384aa14c7760')
+
+prepare() {
+  cd ${srcdir}/OpenShadingLanguage-Release-$pkgver
+  patch -p1 -i ${srcdir}/0001-mingw-w64-fix.patch
+  patch -p1 -i ${srcdir}/0002-dont-add-flex-include-dir.patch
+  patch -p1 -i ${srcdir}/0003-fix-OIIO-windows.patch
+  patch -p1 -i ${srcdir}/0005-Fix-cast-from-void-ptr.patch
+  patch -p1 -i ${srcdir}/0006-Fix-weird-array-out-of-bounds-error.patch
+  patch -p1 -i ${srcdir}/0007-Fix-bad-casts-with-intptr_t.patch
+  patch -p1 -i ${srcdir}/0008-Install-dlls.patch
+}
+
+build() {
+  export OPENIMAGEIOHOME=${MINGW_PREFIX}
+  export LLVM_DIRECTORY=${MINGW_PREFIX}
+  local _extra_libs=$(${MINGW_PREFIX}/bin/llvm-config --system-libs)
+  CFLAGS+=" -std=c++11 -D_USE_MATH_DEFINES"
+  CXXFLAGS+=" -std=c++11 -DTINYFORMAT_ALLOW_WCHAR_STRINGS -D_USE_MATH_DEFINES"
+
+  [[ -d build-${MINGW_CHOST} ]] && rm -r build-${MINGW_CHOST}
+  mkdir build-${MINGW_CHOST} && cd build-${MINGW_CHOST}
+
+  ${MINGW_PREFIX}/bin/cmake.exe \
+    -G"MSYS Makefiles" \
+    -DCMAKE_INSTALL_PREFIX:PATH=${pkgdir}${MINGW_PREFIX} \
+    -DILMBASE_CUSTOM=True \
+    -DILMBASE_CUSTOM_INCLUDE_DIR=${MINGW_PREFIX}/include \
+    -DILMBASE_CUSTOM_LIB_DIR=${MINGW_PREFIX}/lib \
+    -DILMBASE_CUSTOM_LIBRARIES="Half Iex Imath IlmThread" \
+    -DEXTRA_OSLEXEC_LIBRARIES="${_extra_libs}" \
+    -DLLVM_STATIC=1 \
+    ../OpenShadingLanguage-Release-$pkgver
+
+    #-DCMAKE_CXX_FLAGS="-DTINYFORMAT_ALLOW_WCHAR_STRINGS"
+    #-DVERBOSE=1
+
+  # $PWD/src/liboslcomp PATH addition needed for running oslc.exe during the build (for liboslcomp.dll)
+  # ${MINGW_PREFIX}/bin PATH addition needed for finding libboost_system-mt.dll when running oslc.exe.
+  PATH=$PWD/src/liboslcomp:${MINGW_PREFIX}/bin:"${PATH}" make #VERBOSE=1
+}
+
+package() {
+  cd ${srcdir}//build-${MINGW_CHOST}
+
+  make install
+
+  mkdir -p "${pkgdir}${MINGW_PREFIX}"/share/OSL/
+  mkdir -p "${pkgdir}${MINGW_PREFIX}"/share/licenses/${_realname}
+  mv "${pkgdir}${MINGW_PREFIX}"/LICENSE "${pkgdir}${MINGW_PREFIX}"/share/licenses/${_realname} # TODO: Tell upstream about this shit
+  mv "${pkgdir}${MINGW_PREFIX}"/{CHANGES,README.md,INSTALL} "${pkgdir}${MINGW_PREFIX}"/share/OSL/
+  mv "${pkgdir}${MINGW_PREFIX}"/doc "${pkgdir}${MINGW_PREFIX}"/share/OSL/doc
+}

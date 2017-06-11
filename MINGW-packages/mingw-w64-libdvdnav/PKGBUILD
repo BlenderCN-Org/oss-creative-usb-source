@@ -1,0 +1,40 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname=libdvdnav
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=5.0.1
+pkgrel=1
+pkgdesc="The library for xine-dvdnav plugin (mingw-w64)"
+arch=('any')
+url="http://dvdnav.mplayerhq.hu/"
+license=("GPL")
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc" "${MINGW_PACKAGE_PREFIX}-pkg-config" "git")
+depends=("${MINGW_PACKAGE_PREFIX}-libdvdread")
+options=('staticlibs' 'strip')
+source=("${_realname}-${pkgver}"::"git://git.videolan.org/libdvdnav.git#tag=$pkgver"
+        #"http://dvdnav.mplayerhq.hu/releases/${_realname}-${pkgver}.tar.xz"
+        001-no-undefined.patch)
+sha256sums=('SKIP'
+            '95a36364e015ef0a1e765d167c69e1bcb643bbcc0e9036ae0bc0b54145c07190')
+
+prepare() {
+  cd ${srcdir}/${_realname}-${pkgver}
+  patch -p1 -i ${srcdir}/001-no-undefined.patch
+  autoreconf -fvi
+}
+
+build() {
+  cd "${srcdir}/${_realname}-$pkgver"
+  ./configure \
+    --prefix=${MINGW_PREFIX} \
+    --build=${MINGW_CHOST} \
+    --host=${MINGW_CHOST} \
+    --enable-shared \
+    --enable-static
+  make
+}
+
+package() {
+  cd "${srcdir}/${_realname}-$pkgver"
+  make DESTDIR="$pkgdir" install
+}

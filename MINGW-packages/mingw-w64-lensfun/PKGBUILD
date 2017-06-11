@@ -1,0 +1,55 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname=lensfun
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=0.3.0
+pkgrel=1
+pkgdesc="Database of photographic lenses and a library that allows advanced access to the database (mingw-w64)"
+arch=('any')
+url="http://lensfun.sourceforge.net"
+license=("LGPL3")
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc" "${MINGW_PACKAGE_PREFIX}-pkg-config" "${MINGW_PACKAGE_PREFIX}-python2")
+depends=("${MINGW_PACKAGE_PREFIX}-glib2"
+         "${MINGW_PACKAGE_PREFIX}-libpng"
+         "${MINGW_PACKAGE_PREFIX}-libsystre"
+         "${MINGW_PACKAGE_PREFIX}-zlib")
+options=('staticlibs' 'strip')
+source=(http://sourceforge.net/projects/lensfun/files/${pkgver}/${_realname}-${pkgver}.tar.bz2
+        cmake-mingw.patch)
+md5sums=('c553cb37f1b781d1af05787beacf0193'
+         'aedb52587330ebbcd48525b3c6f006d4')
+
+prepare(){
+  cd "$srcdir/${_realname}-$pkgver"
+
+  patch -p1 -i "${srcdir}/cmake-mingw.patch"
+}
+
+build() {
+  mkdir $srcdir/build-${MINGW_CHOST}
+  cd $srcdir/build-${MINGW_CHOST}
+
+  [[ $CARCH == x86_64 ]] && ENABLESSE2="-DBUILD_FOR_SSE2=ON"
+  ${MINGW_PREFIX}/bin/cmake \
+    -G"MSYS Makefiles" \
+    -DCMAKE_INSTALL_PREFIX:PATH=${pkgdir}${MINGW_PREFIX} \
+    -DBUILD_STATIC=OFF \
+    -DBUILD_AUXFUN=ON \
+    -DBUILD_TESTS=OFF \
+    -DBUILD_FOR_SSE=ON \
+    $ENABLESSE2 \
+    ../${_realname}-${pkgver}
+
+  make #VERBOSE=1
+}
+
+package() {
+  cd "$srcdir/build-${MINGW_CHOST}"
+  make install
+
+  pushd ${pkgdir}${MINGW_PREFIX} > /dev/null
+  export PREFIX_WIN=`pwd -W`
+  popd > /dev/null
+
+  sed -i "s|${PREFIX_WIN}|${MINGW_PREFIX}|g" ${pkgdir}${MINGW_PREFIX}/lib/pkgconfig/lensfun.pc
+}

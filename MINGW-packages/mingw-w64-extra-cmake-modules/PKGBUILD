@@ -1,0 +1,44 @@
+# $Id$
+# Maintainer (ArchLinux): Andrea Scarpino <andrea@archlinux.org>
+# Maintainer (MSYS2): Ray Donnelly <mingw.android@gmail.com>
+
+_realname=extra-cmake-modules
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=1.5.0
+_pkgver=5.5.0
+pkgrel=1
+pkgdesc='Extra CMake modules (mingw-w64)'
+arch=('any')
+url='https://projects.kde.org/projects/kdesupport/extra-cmake-modules'
+license=('LGPL')
+depends=("${MINGW_PACKAGE_PREFIX}-cmake")
+# makedepends=('python-sphinx') # qt5-tools for QtHelp pages
+source=("http://download.kde.org/stable/frameworks/${_pkgver%.*}/${_realname}-${pkgver}.tar.xz"
+        "set-AUTOSTATICPLUGINS.patch")
+md5sums=('2967e1ac220cf9b3a52cd19ec2a608df'
+         '0d249754247382f3b8dda80d6833aac4')
+
+prepare() {
+  mkdir -p build-${CARCH}
+
+  # Apply patches
+  cd "${srcdir}"/${_realname}-${pkgver}
+  patch -p1 -i "${srcdir}"/set-AUTOSTATICPLUGINS.patch
+}
+
+build() {
+  cd build-${CARCH}
+  MSYS2_ARG_CONV_EXCL=-DCMAKE_INSTALL_PREFIX= \
+    cmake ../${_realname}-${pkgver} \
+      -DCMAKE_INSTALL_PREFIX=${MINGW_PREFIX} \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DBUILD_HTML_DOCS=OFF \
+      -G'MSYS Makefiles'
+  make
+}
+
+package() {
+  cd build-${CARCH}
+  make DESTDIR="${pkgdir}" install
+}
+

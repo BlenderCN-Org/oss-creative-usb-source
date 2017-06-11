@@ -1,0 +1,48 @@
+# Maintainer: Ray Donnelly <mingw.android@gmail.com>
+
+_realname=atom-shell
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}-git"
+pkgver=r2873.1a80bc7
+pkgrel=1
+pkgdesc='Cross-platform desktop application shell (mingw-w64)'
+source=("${_realname}-${CARCH}"::"git://github.com/atom/atom-shell.git#branch=master"
+        "0001-python-python2.patch"
+        "0002-Add-ninja-option.patch")
+arch=('any')
+url='https://atom.io'
+license=('MIT')
+options=()
+shasums=('SKIP')
+makedepends=("${MINGW_PACKAGE_PREFIX}-ninja"
+             "${MINGW_PACKAGE_PREFIX}-python2"
+             "git")
+
+pkgver() {
+  cd "$srcdir"/${_realname}-${CARCH}
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd "$srcdir"/${_realname}-${CARCH}
+  git am "$srcdir"/0001-python-python2.patch
+  git am "$srcdir"/0002-Add-ninja-option.patch
+}
+
+build() {
+  cd "$srcdir"/${_realname}-${CARCH}
+  export GYP_GENERATORS=ninja
+# Downloads atl, directxsdk, vs2012_crt.
+  ./script/bootstrap.py
+  mkdir -p out/Release
+  ./script/build.py \
+    --ninja ${MINGW_PREFIX}/bin/ninja.exe \
+    --configuration Release
+}
+
+package() {
+  echo "NYI"
+}
+
+md5sums=('SKIP'
+         'da295e232eea4219fd026a7f400e8158'
+         '41cc04603347974168369f16181293ab')

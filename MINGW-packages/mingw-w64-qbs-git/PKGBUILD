@@ -1,0 +1,111 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+# Maintainer: Ray Donnelly <mingw.android@gmail.com>
+
+# Preamble: Because qt5 has:
+# qt5/mkspecs/features/win32/windows.prf:10: !contains(QMAKE_DEFAULT_LIBDIRS, $$QT.core.libs):
+# qt5/mkspecs/features/win32/windows.prf:10:     QMAKE_LIBS += -L$$QT.core.libs
+# and:
+# qtbase/qmake/generators/win32/mingw_make.cpp
+# << var("QMAKE_LIBS").replace(QRegExp("(\\slib|^lib)")," -l") << ' '
+# << var("QMAKE_LIBS_PRIVATE").replace(QRegExp("(\\slib|^lib)")," -l") << endl;
+# (or even..):
+# qtbase/qmake/generators/unix/unixmake2.cpp
+# t << "LIBS          = $(SUBLIBS) " << var("QMAKE_LIBS") << " " << var("QMAKE_LIBS_PRIVATE") << endl;
+# .. we end up with "-LC:/msys64/mingw64/lib" appearing before the project's
+# libdirs, which means an existing libqbscore1.dll.a in C:/msys64/mingw64/lib
+# will get used instead of the one we're building and you'll get link errors
+# or binary incompat. issues. Really, Qt shouldn't be adding this folder as
+# the linker already looks in its libdir - last - anyway.
+# Fixing this in qt5/mkspecs/features/win32/windows.prf may make sense?
+
+_realname=qbs
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}-git"
+pkgver=.2347.be93bcd
+pkgrel=1
+pkgdesc='Qt Build Suite'
+url='http://qt-project.org'
+arch=('any')
+depends=("${MINGW_PACKAGE_PREFIX}-qt5")
+makedepends=('git')
+options=('docs' 'staticlibs') # '!strip' 'debug')
+provides=("${MINGW_PACKAGE_PREFIX}-qbs")
+conflicts=("${MINGW_PACKAGE_PREFIX}-qbs")
+QBS_GIT_BRANCH=1.3
+source=("git://gitorious.org/qt-labs/qbs.git#branch=$QBS_GIT_BRANCH"
+        "manifest"
+        # 1.3 branch
+        "0001-add-hostosinfo.h-to-installed-headers.1.3.patch"
+        "0002-WIP-Xcode-generator.1.3.patch"
+        "0003-add-generator-header-installs.1.3.patch"
+        "0004-Use-.dll.a-instead-of-.a-for-mingw-import-libraries.1.3.patch"
+        "0005-setup-toolchains-Pretend-msys-is-mingw.1.3.patch"
+        # master branch
+        "0001-WIP-Xcode-generator.master.patch"
+        "0002-add-generator-header-installs.master.patch"
+        "0003-Use-.dll.a-instead-of-.a-for-mingw-import-libraries.master.patch"
+        "0004-setup-toolchains-Pretend-msys-is-mingw.master.patch")
+sha256sums=('SKIP'
+            '838098b25a8044176b3139b4003594570c62a8d64f5470fbbd769f3bf44e0855'
+            '42033f1988db6645e5997f97eda72d52df2b2f310f332854c400ed0da79b7d3f'
+            'a7176a9cf66121ac71b09b02964aa17b9560fcd641d5f88c08b468d5c311ceb4'
+            'b34a0482b4a3079304287f640b3b4594dcc6495fac39509c2e53b4b545c1b6ff'
+            '7ffc116e0cb5cdd977697d356e7168abda929441c995168d065289fed573b1b4'
+            'cb432f700586ba3d4ae7d45b5d958755ff2654d4e80ad0e2dcee6dfec8661fbb'
+            'b8fad922fdbc506b959ab1512bddbe642a40a4e87361bcfda6ce2df4d2b03ffb'
+            '61980a2b2f4ab3d472764955bc167f009a549a2bf283704f5041fe40747bcc86'
+            '0b1960d1866926318a41f23d288cae501cbdf203eb4b77e7b8809f1c85f93d2b'
+            '453051b6e8a666055032df78db403e2f6f66b9b9e51ae60c127b3a5c9b5b7599')
+
+pkgver() {
+  cd "$srcdir"/$_realname
+  printf "%s.%s.%s" "$_ver_base" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd "$srcdir"/$_realname
+  if [ "${QBS_GIT_BRANCH}" = "master" ]; then
+    git am "${srcdir}"/0001-WIP-Xcode-generator.master.patch
+    git am "${srcdir}"/0002-add-generator-header-installs.master.patch
+    git am "${srcdir}"/0003-Use-.dll.a-instead-of-.a-for-mingw-import-libraries.master.patch
+    git am "${srcdir}"/0004-setup-toolchains-Pretend-msys-is-mingw.master.patch
+  elif [ "${QBS_GIT_BRANCH}" = "1.3" ]; then
+    git am "${srcdir}"/0001-add-hostosinfo.h-to-installed-headers.1.3.patch
+    git am "${srcdir}"/0002-WIP-Xcode-generator.1.3.patch
+    git am "${srcdir}"/0003-add-generator-header-installs.1.3.patch
+    git am "${srcdir}"/0004-Use-.dll.a-instead-of-.a-for-mingw-import-libraries.1.3.patch
+    git am "${srcdir}"/0005-setup-toolchains-Pretend-msys-is-mingw.1.3.patch
+  fi
+}
+
+build() {
+local _config
+if check_option "debug" "n"; then
+  _config="release"
+else
+  _config="debug"
+fi
+  cd "$srcdir"/$_realname
+  [ -d build-${CARCH} ] && rm -rf build-${CARCH}
+  mkdir build-${CARCH}
+  cd build-${CARCH}
+  ${MINGW_PREFIX}/bin/qmake.exe ../qbs.pro \
+    CONFIG+=${_config} \
+    CONFIG+=qbs_enable_project_file_updates
+  # Because xcodeprojectgenerator has a build order problem.
+  make -j1
+  make docs
+}
+
+package() {
+  cd ${srcdir}/${_realname}/build-${CARCH}
+  make INSTALL_ROOT=${pkgdir}${MINGW_PREFIX} install
+  make INSTALL_ROOT=${pkgdir}${MINGW_PREFIX} install_docs
+
+  rm -f ${pkgdir}${MINGW_PREFIX}/lib/*.dll
+
+  for file in qbs-setup-madde-platforms qbs-setup-qt; do
+    cp ${srcdir}/manifest ${pkgdir}${MINGW_PREFIX}/bin/${file}.exe.manifest
+  done
+}
+
+# E:/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/4.9.1/collect2.exe -plugin E:/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/4.9.1/liblto_plugin-0.dll -plugin-opt=E:/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/4.9.1/lto-wrapper.exe -plugin-opt=-fresolution=E:\msys64\tmp\ccK0UDoh.res -plugin-opt=-pass-through=-lmingwthrd -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lmoldname -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lpthread -plugin-opt=-pass-through=-ladvapi32 -plugin-opt=-pass-through=-lshell32 -plugin-opt=-pass-through=-luser32 -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-lmingwthrd -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lmoldname -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -m i386pep -Bdynamic -o ../../../bin/qbs-config-ui.exe E:/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/4.9.1/../../../../x86_64-w64-mingw32/lib/../lib/crt2.o E:/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/4.9.1/../../../../x86_64-w64-mingw32/lib/../lib/crtbegin.o -LE:/msys64/mingw64/lib -LE:/m2/repo/mingw-w64-qbs-git/src/qbs/build-x86_64/src/app/config-ui/../../../lib -LE:/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/4.9.1 -LE:/msys64/mingw64/bin/../lib/gcc -LE:/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/4.9.1/../../../../x86_64-w64-mingw32/lib/../lib -LE:/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/4.9.1/../../../../lib -LE:/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/4.9.1/../../../../x86_64-w64-mingw32/lib -LE:/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/4.9.1/../../.. -s -subsystem windows release/consolelogger.o release/coloredoutput.o release/qbssettings.o release/commandlineparser.o release/main.o release/mainwindow.o release/settingsmodel.o release/moc_mainwindow.o release/moc_settingsmodel.o -lglu32 -lopengl32 -lgdi32 -luser32 -lmingw32 -lqtmain -lqbscore1 -lQt5Widgets -lQt5Gui -lQt5Xml -lQt5Script -lQt5Core -lstdc++ -lmingwthrd -lmingw32 -lgcc_s -lgcc -lmoldname -lmingwex -lmsvcrt -lpthread -ladvapi32 -lshell32 -luser32 -lkernel32 -lmingwthrd -lmingw32 -lgcc_s -lgcc -lmoldname -lmingwex -lmsvcrt E:/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/4.9.1/../../../../x86_64-w64-mingw32/lib/../lib/crtend.o --verbose

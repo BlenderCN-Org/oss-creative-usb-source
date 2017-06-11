@@ -1,0 +1,21 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname=poppler-data
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=0.4.7
+pkgrel=1
+pkgdesc="Encoding data for the poppler PDF rendering library"
+arch=('any')
+license=('custom' 'GPL2')
+url="http://poppler.freedesktop.org/"
+source=(http://poppler.freedesktop.org/${_realname}-${pkgver}.tar.gz)
+md5sums=('636a8f2b9f6df9e7ced8ec0946961eaf')
+
+package() {
+  cd "${srcdir}/${_realname}-${pkgver}"
+  make prefix=${MINGW_PREFIX} DESTDIR="${pkgdir}" install
+
+  install -m755 -d "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}"
+  install -m644 COPYING COPYING.adobe \
+    "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/"
+}

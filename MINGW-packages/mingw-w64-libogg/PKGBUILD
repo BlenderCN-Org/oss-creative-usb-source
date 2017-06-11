@@ -1,0 +1,36 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname=libogg
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=1.3.2
+pkgrel=1
+pkgdesc="Ogg bitstream and framing library (mingw-w64)"
+arch=('any')
+url="http://xiph.org"
+license=('BSD')
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc")
+options=('staticlibs' 'strip')
+source=(http://downloads.xiph.org/releases/ogg/${_realname}-${pkgver}.tar.gz)
+md5sums=('b72e1a1dbadff3248e4ed62a4177e937')
+
+prepare() {
+  cd ${srcdir}/libogg-${pkgver}
+}
+
+build() {
+  mkdir -p ${srcdir}/build-${MINGW_CHOST}
+  cd ${srcdir}/build-${MINGW_CHOST}
+  ${srcdir}/libogg-${pkgver}/configure \
+    --enable-shared \
+    --enable-static \
+    --prefix=${MINGW_PREFIX} \
+    --build=${MINGW_CHOST} \
+    --host=${MINGW_CHOST} \
+    --target=${MINGW_CHOST}
+  make
+}
+
+package() {
+  cd ${srcdir}/build-${MINGW_CHOST}
+  make DESTDIR="$pkgdir" install
+}

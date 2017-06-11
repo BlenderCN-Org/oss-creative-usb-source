@@ -1,0 +1,57 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname=libtiff
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=4.0.3
+pkgrel=4
+pkgdesc="Library for manipulation of TIFF images (mingw-w64)"
+arch=('any')
+url="http://www.remotesensing.org/libtiff"
+license=("custom")
+depends=("${MINGW_PACKAGE_PREFIX}-gcc-libs"
+         "${MINGW_PACKAGE_PREFIX}-jbigkit"
+         "${MINGW_PACKAGE_PREFIX}-libjpeg-turbo"
+         "${MINGW_PACKAGE_PREFIX}-xz"
+         "${MINGW_PACKAGE_PREFIX}-zlib")
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc")
+options=('staticlibs' 'strip')
+source=("ftp://ftp.remotesensing.org/pub/libtiff/tiff-${pkgver}.tar.gz"
+        libtiff-bogus-test.patch)
+md5sums=('051c1068e6a0627f461948c365290410'
+         'c4ba78d0e21be4b881f1c272e8db45d2')
+
+prepare() {
+  cd tiff-${pkgver}
+  patch -p1 -i ${srcdir}/libtiff-bogus-test.patch
+}
+
+build() {
+  cd "${srcdir}/tiff-${pkgver}"
+  export CFLAGS+=" -fno-strict-aliasing"
+  export CXXFLAGS+=" -fno-strict-aliasing"
+
+  mkdir -p ${srcdir}/build-${CARCH} && cd ${srcdir}/build-${CARCH}
+  ../tiff-${pkgver}/configure \
+    --prefix=${MINGW_PREFIX} \
+    --build=${MINGW_CHOST} \
+    --host=${MINGW_CHOST} \
+    --target=${MINGW_CHOST} \
+    --enable-static \
+    --enable-shared \
+    --without-x
+  make
+}
+
+check() {
+  cd "${srcdir}/build-${CARCH}"
+  make check
+}
+
+package() {
+  cd "${srcdir}/build-${CARCH}"
+  make DESTDIR="${pkgdir}" install
+
+  #rm -rf "${pkgdir}${MINGW_PREFIX}/share"
+  cp ${srcdir}/tiff-${pkgver}/libtiff/{tiffiop,tif_dir}.h ${pkgdir}${MINGW_PREFIX}/include/
+  cp libtiff/tif_config.h ${pkgdir}${MINGW_PREFIX}/include/
+}

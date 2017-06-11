@@ -1,0 +1,55 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname=ncurses
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+_base_ver=5.9
+_date_rev=20150110
+pkgver=${_base_ver}.${_date_rev}
+pkgrel=1
+pkgdesc="System V Release 4.0 curses emulation library"
+arch=('any')
+depends=("${MINGW_PACKAGE_PREFIX}-libgnurx")
+makedepends=("${MINGW_PACKAGE_PREFIX}-libgnurx" "${MINGW_PACKAGE_PREFIX}-gcc")
+#groups=("${MINGW_PACKAGE_PREFIX}")
+url="http://www.gnu.org/software/ncurses/"
+license=('MIT')
+options=('staticlibs' 'strip')
+source=("${_realname}-${pkgver}.tar.gz"::http://invisible-island.net/datafiles/current/${_realname}.tar.gz)
+md5sums=('30d78068f8cd0911575ec1cfec682d42')
+
+build() {
+  mkdir -p build-${MINGW_CHOST}
+  cd build-${MINGW_CHOST}
+
+  ../$_realname-${_base_ver}-${_date_rev}/configure \
+    --prefix=${MINGW_PREFIX} \
+    --mandir=${MINGW_PREFIX}/share/man \
+    --build=${MINGW_CHOST} \
+    --host=${MINGW_CHOST} \
+    --target=${MINGW_CHOST} \
+    --without-ada \
+    --with-cxx \
+    --without-shared \
+    --without-pthread \
+    --enable-pc-files \
+    --disable-rpath \
+    --enable-colorfgbg \
+    --disable-symlinks \
+    --enable-warnings \
+    --enable-assertions \
+    --disable-home-terminfo \
+    --enable-database \
+    --enable-sp-funcs \
+    --enable-term-driver \
+    --enable-interop \
+    --enable-widec
+
+  make
+}
+
+package() {
+  cd ${srcdir}/build-${MINGW_CHOST}
+  make DESTDIR=${pkgdir} install
+  cp -r ${pkgdir}${MINGW_PREFIX}/include/ncursesw ${pkgdir}${MINGW_PREFIX}/include/ncurses
+  cp ${pkgdir}${MINGW_PREFIX}/lib/libncursesw.a ${pkgdir}${MINGW_PREFIX}/lib/libncurses.a
+}

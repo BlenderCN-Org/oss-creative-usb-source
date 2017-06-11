@@ -1,0 +1,61 @@
+# Maintainer: Ray Donnelly <mingw.android@gmail.com>
+
+_realname=librocket
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}-git"
+pkgver=r494.761d05a
+pkgrel=1
+pkgdesc="The HTML/CSS User Interface Library (mingw-w64)"
+arch=('any')
+url="http://http://librocket.com/"
+license=("MIT")
+provides=("${MINGW_PACKAGE_PREFIX}-${_realname}")
+conflicts=("${MINGW_PACKAGE_PREFIX}-${_realname}")
+depends=("${MINGW_PACKAGE_PREFIX}-freetype"
+         "${MINGW_PACKAGE_PREFIX}-python2"
+         "${MINGW_PACKAGE_PREFIX}-boost")
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc"
+             "${MINGW_PACKAGE_PREFIX}-cmake"
+             "make" "git")
+
+options=('staticlibs' 'strip')
+
+source=("${_realname}"::"git+https://github.com/libRocket/libRocket.git"
+        "001-dll-exports.patch"
+        "002-fix-cast-errors.patch")
+
+md5sums=('SKIP'
+         'e36e68efc51581353795088d33c7d6e3'
+         'c1f3a4decff61fc117197a5287f7f870')
+
+pkgver() {
+  cd "$srcdir/$_realname"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd "$srcdir/$_realname"
+  patch -p1 -i ${srcdir}/001-dll-exports.patch
+  patch -p1 -i "$srcdir"/002-fix-cast-errors.patch
+}
+
+build() {
+  [ -d build-${CARCH} ] && rm -rf build-${CARCH}
+  mkdir -p "${srcdir}/build-${CARCH}"
+  cd "${srcdir}/build-${CARCH}"
+
+  ${MINGW_PREFIX}/bin/cmake \
+    -G"MSYS Makefiles" \
+    -DCMAKE_INSTALL_PREFIX=${pkgdir}${MINGW_PREFIX} \
+    -DBUILD_PYTHON_BINDINGS=ON \
+    -DBUILD_SHARED_LIBS=ON \
+    -DPYTHON_EXECUTABLE=${MINGW_PREFIX}/bin/python2.exe \
+    -DBUILD_SAMPLES=ON \
+    -DCMAKE_GNUtoMS=0 \
+    ../$_realname/Build
+  make
+}
+
+package() {
+  cd "${srcdir}/build-${CARCH}"
+  make install
+}

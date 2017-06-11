@@ -1,0 +1,48 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+# Contributor: AlexWMF <alexxwmf@gmail.com>
+
+_realname=liblastfm
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=1.0.9
+pkgrel=1
+pkgdesc="A Qt C++ library for the Last.fm webservices http://www.last.fm"
+arch=('any')
+license=('Boost')
+url="http://www.rasterbar.com/products/libtorrent"
+depends=("${MINGW_PACKAGE_PREFIX}-qt5"
+        "${MINGW_PACKAGE_PREFIX}-fftw"
+        "${MINGW_PACKAGE_PREFIX}-libsamplerate")
+
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc"
+            "${MINGW_PACKAGE_PREFIX}-cmake")
+
+options=(!strip staticlibs !buildflags)
+
+source=(${_realname}-${pkgver}.tar.gz::"https://github.com/lastfm/liblastfm/archive/${pkgver}.tar.gz"
+        versioned-dlls-mingw.patch)
+md5sums=('8748f423f66f2fbc38c39f9153d01a71'
+         'dd9996ec2896883acef6b90d8cd22302')
+
+prepare() {
+    cd ${srcdir}/${_realname}-${pkgver}
+    patch -p0 -i ${srcdir}/versioned-dlls-mingw.patch
+}
+
+build() {
+  mkdir ${srcdir}/build-${MINGW_CHOST}
+  cd ${srcdir}/build-${MINGW_CHOST}
+
+  ${MINGW_PREFIX}/bin/cmake \
+    -G"MSYS Makefiles" \
+    -DCMAKE_INSTALL_PREFIX=${pkgdir}${MINGW_PREFIX} \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DBUILD_TESTS=False \
+    ${srcdir}/${_realname}-${pkgver}/
+
+  make ${MAKEFLAGS} # VERBOSE=1
+}
+
+package() {
+  cd ${srcdir}/build-${MINGW_CHOST}
+  make -j1 install
+}
