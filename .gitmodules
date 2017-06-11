@@ -1,6 +1,3 @@
-[submodule "membrane"]
-	path = membrane
-	url = https://github.com/rorywalsh/cabbage.git
 [submodule "gimp"]
 	path = gimp
 	url = https://github.com/GNOME/gimp.git
@@ -25,3 +22,6 @@
 [submodule "csound"]
 	path = csound
 	url = https://github.com/csound/csound.git
+[submodule "membrane"]
+	path = membrane
+	url = https://github.com/rorywalsh/cabbage.git
