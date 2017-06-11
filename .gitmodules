@@ -16,3 +16,6 @@
 [submodule "scribus"]
 	path = scribus
 	url = https://github.com/scribusproject/scribus.git
+[submodule "swatchbooker"]
+	path = swatchbooker
+	url = https://github.com/olivierberten/SwatchBooker.git
