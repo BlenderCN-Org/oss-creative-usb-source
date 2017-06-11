@@ -25,3 +25,6 @@
 [submodule "membrane"]
 	path = membrane
 	url = https://github.com/rorywalsh/cabbage.git
+[submodule "natron"]
+	path = natron
+	url = https://github.com/MrKepzie/Natron
