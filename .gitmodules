@@ -22,3 +22,6 @@
 [submodule "juce"]
 	path = juce
 	url = https://github.com/WeAreROLI/JUCE.git
+[submodule "juced"]
+	path = juced
+	url = https://github.com/kunitoki/juced.git
