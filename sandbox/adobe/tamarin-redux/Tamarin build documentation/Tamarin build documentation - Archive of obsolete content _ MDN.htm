@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html dir="ltr" class="redesign " data-ffo-opensanslight="true" data-ffo-opensans="true" lang="en-US"><head prefix="og: http://ogp.me/ns#">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <script src="Tamarin%20build%20documentation%20-%20Archive%20of%20obsolete%20content%20_%20MDN_files/analytics.js" async=""></script><script>(function(d) { d.className = d.className.replace(/\bno-js/, ''); })(document.documentElement);</script>
+  
+    
+  
+
+  
+  <title>Tamarin build documentation - Archive of obsolete content | MDN</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="index, follow">
+  <link rel="home" href="https://developer.mozilla.org/en-US/">
+  <link rel="copyright" href="#copyright">
+
+  
+    
+    
+    <link href="Tamarin%20build%20documentation%20-%20Archive%20of%20obsolete%20content%20_%20MDN_files/mdn.css" rel="stylesheet" type="text/css">
+
+    
+  
+    <link href="Tamarin%20build%20documentation%20-%20Archive%20of%20obsolete%20content%20_%20MDN_files/wiki.css" rel="stylesheet" type="text/css">
+
+    
+      
+        <link rel="stylesheet" type="text/css" href="Tamarin%20build%20documentation%20-%20Archive%20of%20obsolete%20content%20_%20MDN_files/Archivestyles.css">
+      
+    
+
+
+  <!-- common social tags -->
+  
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://developer.cdn.mozilla.net/static/img/opengraph-logo.dc4e08e2f6af.png">
+  <meta property="og:site_name" content="Mozilla Developer Network">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:image" content="https://developer.cdn.mozilla.net/static/img/opengraph-logo.dc4e08e2f6af.png">
+  <meta name="twitter:site" content="@MozDevNet">
+  <meta name="twitter:creator" content="@MozDevNet">
+
+  <link rel="search" type="application/opensearchdescription+xml" href="https://developer.mozilla.org/en-US/search/xml" title="Mozilla Developer Network">
+
+  <!-- third-generation iPad with high-resolution Retina display: -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://developer.cdn.mozilla.net/static/img/favicon144.a6e4162070f4.png">
+  <!-- iPhone with high-resolution Retina display: -->
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://developer.cdn.mozilla.net/static/img/favicon114.0e9fabd44f85.png">
+  <!-- first- and second-generation iPad: -->
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://developer.cdn.mozilla.net/static/img/favicon72.8ff9d87c82a0.png">
+  <!-- non-Retina iPhone, iPod Touch, and Android 2.1+ devices: -->
+  <link rel="apple-touch-icon-precomposed" href="https://developer.cdn.mozilla.net/static/img/favicon57.a2490b9a2d76.png">
+  <!-- basic favicon -->
+  
+    
+  
+  <link rel="shortcut icon" href="https://developer.cdn.mozilla.net/static/img/favicon32.e02854fdcf73.png">
+  <!--[if IE]>
+  <meta http-equiv="imagetoolbar" content="no">
+  <script type="text/javascript" src="https://developer.cdn.mozilla.net/static/build/js/html5shiv.3948ccddab6f.js" charset="utf-8"></script>
+  <![endif]-->
+
+  
+  <link rel="alternate" type="application/json" href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Tamarin/Tamarin_Build_Documentation$json">
+  <link rel="canonical" href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Tamarin/Tamarin_Build_Documentation">
+
+  
+    
+      <link rel="alternate" hreflang="ja" href="https://developer.mozilla.org/ja/docs/Tamarin_Build_Documentation" title="Tamarin Build Documentation">
+    
+  
+
+  <!-- document-specific social tags -->
+  <meta property="og:title" content="Tamarin build documentation">
+  <meta property="og:url" content="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Tamarin/Tamarin_Build_Documentation">
+  <meta name="twitter:url" content="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Tamarin/Tamarin_Build_Documentation">
+  <meta name="twitter:title" content="Tamarin build documentation">
+  
+  <meta property="og:description" content="The following instructions are for obtaining and building the Tamarin Central source code. For instructions on Tamarin Tracing, please see Tamarin Tracing Build Documentation.">
+  <meta name="description" content="The following instructions are for obtaining and building the Tamarin Central source code. For instructions on Tamarin Tracing, please see Tamarin Tracing Build Documentation.">
+  <meta name="twitter:description" content="The following instructions are for obtaining and building the Tamarin Central source code. For instructions on Tamarin Tracing, please see Tamarin Tracing Build Documentation.">
+  
+
+
+  
+    
+
+<script type="text/javascript">
+
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-36116321-5', 'mozilla.org');
+    ga('set', 'anonymizeIp', true);
+
+    
+
+    // dimension9 == "Section editing"
+    
+        // dimension12 == 'Page Revision"
+        ga('set', 'dimension12', 558983);
+
+    (function() {
+        // http://cfsimplicity.com/61/removing-analytics-clutter-from-campaign-urls
+        var win = window;
+        var removeUtms = function(){
+            var location = win.location;
+            if (location.href.indexOf('utm') != -1 && win.history.replaceState) {
+                win.history.replaceState({}, '', location.pathname);
+            }
+        };
+
+        ga('send', 'pageview', {'hitCallback': removeUtms});
+    })();
+</script>
+
+  
+<script src="Tamarin%20build%20documentation%20-%20Archive%20of%20obsolete%20content%20_%20MDN_files/syntax-prism.js" data-manual="true" async=""></script></head>
+<body data-slug="Archive/Mozilla/Tamarin/Tamarin_Build_Documentation" contextmenu="edit-history-menu" data-search-url="" class="document zone ">
+
+  <script type="text/javascript">
+    (function(win) {
+        'use strict';
+
+        
+            (function(){
+  var FLAGS = {
+    'compat_api': false,'iperceptions': false,'kumaediting': false,'page_move': false,'registration_disabled': false,'search_suggestions': false,'section_edit': false,'spam_admin_override': false,'spam_checks_enabled': true,'spam_spammer_override': false,'spam_submissions_enabled': false,'spam_testing_mode': false,'wiki_samples': true,'wiki_spam_exempted': false,'wiki_spam_training': false
+    },
+    SWITCHES = {
+    'wiki_error_on_delete': false,'wiki_force_immediate_rendering': false,'enable_optimizely': false,'welcome_email': true,'application_ACAO': true,'store_revision_ips': true,'dumb_doc_urls': true
+    },
+    SAMPLES = {
+    
+    };
+  window.waffle = {
+    "flag_is_active": function waffle_flag(flag_name) {
+      
+      return !!FLAGS[flag_name];
+    },
+    "switch_is_active": function waffle_switch(switch_name) {
+      
+      return !!SWITCHES[switch_name];
+    },
+    "sample_is_active": function waffle_sample(sample_name) {
+      
+      return !!SAMPLES[sample_name];
+    },
+    "FLAGS": FLAGS,
+    "SWITCHES": SWITCHES,
+    "SAMPLES": SAMPLES
+  };
+})();
+
+        
+
+        // This needs to be set before ckeditor.js loads
+        window.CKEDITOR_BASEPATH = '/static/js/libs/ckeditor/build/ckeditor/';
+
+        // This represents the site configuration
+        win.mdn = {
+            // Properties and settings for CKEditor will go here
+            ckeditor: {},
+            // Feature test results and methods will be placed here
+            features: {},
+            // The path to static assets (images, CSS, JS) in MDN
+            staticPath: 'https://developer.cdn.mozilla.net/static/',
+            // Optimizely API
+            optimizely: win['optimizely'] || [],
+            // Site notifications
+            notifications: [
+                
+                
+            ],
+            
+            // Wiki-specific settings will be placed here
+            wiki: {
+                autosuggestTitleUrl: '/en-US/docs/get-documents'
+            },
+            // Assets that need to be dynamically injected
+            assets: {
+                css: {
+                    'editor-content': ['https://developer.cdn.mozilla.net/static/build/styles/editor-content.cdc2a41387bb.css',],
+                    'wiki-compat-tables': ['https://developer.cdn.mozilla.net/static/build/styles/wiki-compat-tables.f3a3bfce97a1.css',]
+                },
+                js: {
+                    'syntax-prism': ['https://developer.cdn.mozilla.net/static/build/js/syntax-prism.7a66ddfa68bf.js',],
+                    'wiki-compat-tables': ['https://developer.cdn.mozilla.net/static/build/js/wiki-compat-tables.14ce5dcb2c3d.js',]
+                }
+            }
+        };
+    })(this);
+</script>
+
+  
+
+  
+
+  <ul id="nav-access">
+    <li><a href="#document-main" id="skip-main">Skip to main content</a></li>
+    <li><a id="skip-language" href="#language">Select language</a></li>
+    
+      <li><a href="#q" id="skip-search">Skip to search</a></li>
+    
+  </ul>
+
+  <!-- Header -->
+  <header id="main-header"><div class="center">
+
+    <div id="tabzilla">
+        <a href="https://www.mozilla.org/" class="no-track">mozilla</a>
+    </div>
+
+    <div class="clear header-clear"></div>
+
+
+    <a href="https://developer.mozilla.org/en-US/" class="logo">Mozilla Developer Network</a>
+
+
+    <div id="nav-sec">
+        
+                  <ul>
+                  <li>
+
+    
+
+    <form>
+      <div class="oauth-login-container">
+          <div class="oauth-login-options" tabindex="0">
+              <span class="oauth-login-options-text">
+                Sign in
+              </span>
+              <span class="oauth-icon oauth-github" data-service="GitHub" data-href="/users/github/login/?next=%2Fen-US%2Fdocs%2FArchive%2FMozilla%2FTamarin%2FTamarin_Build_Documentation" title="GitHub"><i class="icon-github" aria-hidden="true"></i></span>
+          </div>
+          <div class="oauth-login-picker" aria-hidden="true">
+              <ul>
+                  <li>
+                    Sign in or create an account:<br>
+                    <a href="https://developer.mozilla.org/users/github/login/?next=%2Fen-US%2Fdocs%2FArchive%2FMozilla%2FTamarin%2FTamarin_Build_Documentation" class="login-link" data-service="GitHub"><i class="icon-github" aria-hidden="true"></i>GitHub</a>
+                  </li>
+                  <li class="wait-for-persona">
+                      Sign in: <a href="https://developer.mozilla.org/docs/MDN/Contribute/Persona_Sign_In_on_MDN"><i aria-hidden="true" title="Why is Persona sign in only?" class="icon-question-sign"></i></a><br>
+                      <a href="https://developer.mozilla.org/en-US/users/signin" class="login-link launch-persona-login" data-next="/en-US/docs/Archive/Mozilla/Tamarin/Tamarin_Build_Documentation" data-service="Persona"><i class="icon-user" aria-hidden="true"></i>Persona</a>
+                  </li>
+              </ul>
+              
+          </div>
+      </div>
+    </form>
+</li>
+                </ul>
+        
+    </div>
+
+    <nav id="main-nav" role="navigation"><ul><li><a href="https://developer.mozilla.org/en-US/docs/Web">Web Platform<i aria-hidden="true" class="icon-caret-down"></i></a>
+
+        <div class="submenu submenu-cols-2 js-submenu" id="nav-platform-submenu">
+          <div class="submenu-column">
+            <div class="title">Technologies</div>
+            <ul>
+              <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML">HTML</a></li>
+              <li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS">CSS</a></li>
+              <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript">JavaScript</a></li>
+              <li><a href="https://developer.mozilla.org/en-US/docs/Web/Guide/Graphics">Graphics</a></li>
+              <li><a href="https://developer.mozilla.org/en-US/docs/Web/API">APIs / DOM</a></li>
+              <li><a href="https://developer.mozilla.org/en-US/docs/Web/Apps">Apps</a></li>
+              <li><a href="https://developer.mozilla.org/en-US/docs/Web/MathML">MathML</a></li>
+            </ul>
+          </div><div class="submenu-column last">
+            <div class="title">References &amp; Guides</div>
+            <ul>
+              <li><a href="https://developer.mozilla.org/en-US/docs/Learn">Learn the Web</a></li>
+              <li><a href="https://developer.mozilla.org/en-US/docs/Web/Tutorials">Tutorials</a></li>
+              <li><a href="https://developer.mozilla.org/en-US/docs/Web/Reference">References</a></li>
+              <li><a href="https://developer.mozilla.org/en-US/docs/Web/Guide">Developer Guides</a></li>
+              <li><a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility">Accessibility</a></li>
+              <li><a href="https://developer.mozilla.org/en-US/docs/Web">...more docs</a></li>
+            </ul>
+          </div>
+        </div>
+      </li><li><a href="https://developer.mozilla.org/en-US/docs/Zones">Mozilla Docs<i aria-hidden="true" class="icon-caret-down"></i></a>
+
+        <div class="submenu js-submenu" id="nav-zones-submenu">
+          <div class="submenu-column">
+            <ul>
+              <li><a href="https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons">Add-ons</a></li>
+              <li><a href="https://developer.mozilla.org/en-US/docs/Mozilla/Firefox">Firefox</a></li>
+              <li><a href="https://developer.mozilla.org/en-US/docs/Mozilla/Marketplace">Firefox Marketplace</a></li>
+              <li><a href="https://developer.mozilla.org/en-US/docs/Mozilla/B2G_OS">B2G OS</a></li>
+              <li><a href="https://developer.mozilla.org/en-US/docs/Persona">Persona</a></li>
+            </ul>
+          </div>
+        </div>
+      </li><li><a href="https://developer.mozilla.org/en-US/docs/Tools">Developer Tools</a></li><li><a href="https://developer.mozilla.org/en-US/docs/MDN/Feedback">Feedback<i aria-hidden="true" class="icon-caret-down"></i></a>
+
+        <div class="submenu js-submenu" id="nav-contact-submenu">
+          <div class="submenu-column">
+            <ul>
+                <li><a href="https://support.mozilla.org/">Get Firefox help<i aria-hidden="true" class="icon-external-link"></i></a></li>
+                <li><a href="http://stackoverflow.com/">Get web development help<i aria-hidden="true" class="icon-external-link"></i></a></li>
+            </ul>
+            <ul>
+              <li><a href="https://developer.mozilla.org/en-US/docs/MDN/Community">Join the MDN community</a></li>
+              <li><a href="https://bugzilla.mozilla.org/form.doc">Report a content problem<i aria-hidden="true" class="icon-external-link"></i></a></li>
+              <li><a href="https://bugzilla.mozilla.org/form.mdn">Report a bug<i aria-hidden="true" class="icon-external-link"></i></a></li>
+            </ul>
+          </div>
+        </div>
+
+      </li><li class="nav-search-link"><a href="https://developer.mozilla.org/en-US/search" title="Search"><i aria-hidden="true" class="icon-search"></i></a></li><li class="main-nav-search"><form action="/en-US/search" method="get" role="search">
+        <div class="search-wrap">
+          <label for="main-q" class="offscreen">Search</label>
+          <input id="main-q" name="q" placeholder="Search" data-value="" type="search">
+          <span class="search-trigger"><i aria-hidden="true" class="icon-search"></i></span>&nbsp;
+          <button type="submit" class="offscreen">Search</button>
+        </div>
+      </form></li></ul></nav>
+  </div></header>
+
+  <!-- Content will go here -->
+  <main id="content"><div class="center clear">
+  
+
+  
+      
+        <div role="main" class="zone-article-header" id="document-main"><div class="center">
+          <!-- zone title -->
+          <div class="zone-title"><a href="https://developer.mozilla.org/en-US/docs/Archive">Archive of obsolete content</a></div>
+          <!-- zone image -->
+          <div class="zone-image"></div>
+        </div></div>
+      
+
+     <!-- end is_zone -->
+
+
+    <div class="wiki-main-content"><div class="center">
+      
+      <div class="article-meta">
+        <!-- action buttons -->
+        
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  <ul class="page-buttons" data-sticky="false">
+      
+      <li><button id="languages-menu" class="transparent" aria-haspopup="true" aria-owns="languages-menu-submenu" aria-expanded="false"><span>Languages</span><i aria-hidden="true" class="icon-language"></i></button>
+
+        <div class="submenu js-submenu" id="languages-menu-submenu">
+          <div class="submenu-column">
+            <ul id="translations">
+              
+                
+                  <li><bdi><a rel="internal" href="https://developer.mozilla.org/ja/docs/Tamarin_Build_Documentation" title="Tamarin Build Documentation">日本語 (ja)</a></bdi></li>
+                
+              
+
+              
+                <li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Tamarin/Tamarin_Build_Documentation$locales" rel="nofollow, noindex" id="translations-add">Add a translation</a></li>
+              
+            </ul>
+          </div>
+        </div>
+      </li>
+
+      <li class="page-buttons-edit"><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Tamarin/Tamarin_Build_Documentation$edit" class="button" data-optimizely-hook="button-edit-doc" id="edit-button">Edit<i aria-hidden="true" class="icon-pencil"></i></a></li>
+
+        
+
+        <li><button id="advanced-menu" class="only-icon" aria-haspopup="true" aria-owns="advanced-menu-submenu" aria-expanded="false"><span>Advanced</span><i aria-hidden="true" class="icon-cog"></i></button>
+        <div aria-hidden="true" style="z-index: 99998;" class="submenu js-submenu" id="advanced-menu-submenu">
+          <!-- this page -->
+          <div class="submenu-column">
+            <div class="title">Advanced</div>
+            <ul>
+                <li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Tamarin/Tamarin_Build_Documentation$history" rel="nofollow, noindex">History</a></li>
+                
+                
+                
+                
+
+
+                
+
+                
+                
+                
+                <li class="page-print"><a href="#" onclick="return window.print();">Print this article</a></li>
+            </ul>
+          </div>
+        <button type="button" class="submenu-close transparent"><span class="offscreen">Close submenu</span><i aria-hidden="true" class="icon-remove-sign"></i></button></div>
+  </li></ul>
+
+        <!-- crumbs -->
+        
+  <nav class="crumbs" role="navigation"><ol xmlns:v="http://rdf.data-vocabulary.org/#" aria-label="breadcrumbs">
+    <li typeof="v:Breadcrumb"><a href="https://developer.mozilla.org/en-US" rel="v:url" property="v:title">MDN</a></li>
+    
+      <li class="crumb" typeof="v:Breadcrumb"><a href="https://developer.mozilla.org/en-US/docs/Archive" rel="v:url" property="v:title">Archive of obsolete content</a></li>
+    
+      <li class="crumb" typeof="v:Breadcrumb"><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla" rel="v:url" property="v:title">Archived Mozilla and build documentation</a></li>
+    
+      <li class="crumb" typeof="v:Breadcrumb"><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Tamarin" rel="v:url" property="v:title">Tamarin</a></li>
+    
+    <li class="crumb" typeof="v:Breadcrumb" property="v:title">Tamarin build documentation</li>
+  </ol></nav>
+      </div>
+
+      <!-- heading -->
+      <div id="wiki-document-head" class="document-head">
+          <span class="from-search-previous-box">
+            <a class="button from-search-previous only-icon disabled" title="Previous Search Result" data-empty-title="No Previous Search Result"><i aria-hidden="true" class="icon-chevron-left"></i></a>
+          </span>
+          <span class="from-search-navigate-wrap">
+            <a href="#" class="from-search-navigate"><span class="from-search-navigate-up"><i aria-hidden="true" class="icon-double-angle-up"></i></span><span class="from-search-navigate-down"><i aria-hidden="true" class="icon-double-angle-down"></i></span></a>
+          </span>
+          <div class="from-search-toc submenu">
+            <span class="title">Your Search Results</span>
+            <ol></ol>
+          </div>
+          <span class="from-search-next-box">
+            <a class="button from-search-next only-icon disabled" title="Next Search Result" data-empty-title="No Previous Search Result"><i aria-hidden="true" class="icon-chevron-right"></i></a>
+          </span>
+
+        
+        <div class="contributor-avatars" data-all-text="see all contributors" data-alternate-message="hide contributors" data-has-hidden="1">
+            <ul>
+            
+                <li class="shown">
+                <a href="https://developer.mozilla.org/en-US/profiles/Sheppy" title="View profile: Sheppy">
+                <img alt="Sheppy" src="Tamarin%20build%20documentation%20-%20Archive%20of%20obsolete%20content%20_%20MDN_files/945076feb88f2d7003891ffbf06f32bf.jpg" class="avatar loaded" width="34" height="34"></a>
+                </li>
+            
+                <li class="shown">
+                <a href="https://developer.mozilla.org/en-US/profiles/Brbaker" title="View profile: Brbaker">
+                <img alt="Brbaker" src="Tamarin%20build%20documentation%20-%20Archive%20of%20obsolete%20content%20_%20MDN_files/0f6aa67e89e701d6555e2473bd93a4f9.png" class="avatar loaded" width="34" height="34"></a>
+                </li>
+            
+                <li class="shown">
+                <a href="https://developer.mozilla.org/en-US/profiles/fklockii" title="View profile: fklockii">
+                <img alt="fklockii" src="Tamarin%20build%20documentation%20-%20Archive%20of%20obsolete%20content%20_%20MDN_files/4d3d525a7f11b97206c6e4d7e8da4512.png" class="avatar loaded" width="34" height="34"></a>
+                </li>
+            
+                <li class="shown">
+                <a href="https://developer.mozilla.org/en-US/profiles/jsudduth" title="View profile: jsudduth">
+                <img alt="jsudduth" src="Tamarin%20build%20documentation%20-%20Archive%20of%20obsolete%20content%20_%20MDN_files/3af2f2d062052ee82badcc97764de67f.png" class="avatar loaded" width="34" height="34"></a>
+                </li>
+            
+                <li class="shown">
+                <a href="https://developer.mozilla.org/en-US/profiles/Gchaney" title="View profile: Gchaney">
+                <img alt="Gchaney" src="Tamarin%20build%20documentation%20-%20Archive%20of%20obsolete%20content%20_%20MDN_files/3df8a150ff358417588c55de90c6dfcd.png" class="avatar loaded" width="34" height="34"></a>
+                </li>
+            
+                <li class="shown">
+                <a href="https://developer.mozilla.org/en-US/profiles/Cpeyer" title="View profile: Cpeyer">
+                <img alt="Cpeyer" src="Tamarin%20build%20documentation%20-%20Archive%20of%20obsolete%20content%20_%20MDN_files/a352328f2dd67bed83d90fac6939edd2.png" class="avatar loaded" width="34" height="34"></a>
+                </li>
+            
+                <li class="hidden">
+                <a href="https://developer.mozilla.org/en-US/profiles/trbaker" title="View profile: trbaker">
+                <noscript data-width="34" data-height="34" data-class="avatar" data-alt="trbaker" data-src="https://secure.gravatar.com/avatar/d41d8cd98f00b204e9800998ecf8427e?s=34&amp;r=pg&amp;d=https%3A%2F%2Fdeveloper.cdn.mozilla.net%2Fmedia%2Fimg%2Favatar.png">trbaker</noscript></a>
+                </li>
+            
+                <li class="hidden">
+                <a href="https://developer.mozilla.org/en-US/profiles/wmaddox" title="View profile: wmaddox">
+                <noscript data-width="34" data-height="34" data-class="avatar" data-alt="wmaddox" data-src="https://secure.gravatar.com/avatar/117fcc6e9ede2be5abd0d9c31ccd746c?s=34&amp;r=pg&amp;d=https%3A%2F%2Fdeveloper.cdn.mozilla.net%2Fmedia%2Fimg%2Favatar.png">wmaddox</noscript></a>
+                </li>
+            
+                <li class="hidden">
+                <a href="https://developer.mozilla.org/en-US/profiles/dansmith" title="View profile: dansmith">
+                <noscript data-width="34" data-height="34" data-class="avatar" data-alt="dansmith" data-src="https://secure.gravatar.com/avatar/0e25f51b745acc295a3af60a5f0b1e60?s=34&amp;r=pg&amp;d=https%3A%2F%2Fdeveloper.cdn.mozilla.net%2Fmedia%2Fimg%2Favatar.png">dansmith</noscript></a>
+                </li>
+            
+                <li class="hidden">
+                <a href="https://developer.mozilla.org/en-US/profiles/rwebster" title="View profile: rwebster">
+                <noscript data-width="34" data-height="34" data-class="avatar" data-alt="rwebster" data-src="https://secure.gravatar.com/avatar/67a087202be38458bce1ac02f415082e?s=34&amp;r=pg&amp;d=https%3A%2F%2Fdeveloper.cdn.mozilla.net%2Fmedia%2Fimg%2Favatar.png">rwebster</noscript></a>
+                </li>
+            
+                <li class="hidden">
+                <a href="https://developer.mozilla.org/en-US/profiles/mmoreart@adobe.com" title="View profile: mmoreart@adobe.com">
+                <noscript data-width="34" data-height="34" data-class="avatar" data-alt="mmoreart@adobe.com" data-src="https://secure.gravatar.com/avatar/553b7d6883b8912e3769e5d774987f29?s=34&amp;r=pg&amp;d=https%3A%2F%2Fdeveloper.cdn.mozilla.net%2Fmedia%2Fimg%2Favatar.png">mmoreart@adobe.com</noscript></a>
+                </li>
+            
+                <li class="hidden">
+                <a href="https://developer.mozilla.org/en-US/profiles/Dschaffe" title="View profile: Dschaffe">
+                <noscript data-width="34" data-height="34" data-class="avatar" data-alt="Dschaffe" data-src="https://secure.gravatar.com/avatar/6e9b2a400f251a17ecd0a1386c52de18?s=34&amp;r=pg&amp;d=https%3A%2F%2Fdeveloper.cdn.mozilla.net%2Fmedia%2Fimg%2Favatar.png">Dschaffe</noscript></a>
+                </li>
+            
+                <li class="hidden">
+                <a href="https://developer.mozilla.org/en-US/profiles/Edwsmith" title="View profile: Edwsmith">
+                <noscript data-width="34" data-height="34" data-class="avatar" data-alt="Edwsmith" data-src="https://secure.gravatar.com/avatar/3f3577a440f54b74105f087ba89ea2aa?s=34&amp;r=pg&amp;d=https%3A%2F%2Fdeveloper.cdn.mozilla.net%2Fmedia%2Fimg%2Favatar.png">Edwsmith</noscript></a>
+                </li>
+            
+            </ul>
+        <button id="contributors-toggle" type="button" class="transparent" data-alternate-message="hide contributors">see all contributors</button></div>
+        
+
+        <h1>Tamarin build documentation</h1>
+
+      </div>
+      
+
+      <!-- start the main content container -->
+        <div id="wiki-column-container" class="wiki-right-present wiki-left-present">
+
+          <!-- content row with three strips -->
+          <div class="column-container column-container-reverse">
+
+            
+              <!-- TOC, approvals, etc -->
+              <div class="column-strip wiki-column" id="wiki-right">
+              
+              <!-- table of contents -->
+              <div style="width: 289px; max-height: 806px; top: 0px;" id="toc" class="toc toggleable fixed">
+                <a aria-haspopup="true" href="#toc" class="title toggler" data-open-icon="icon-plus" data-closed-icon="icon-minus">In This Article<i class="icon-minus"></i></a>
+                <ol class="toggle-container">
+                  <li><a href="#Tamarin_source_versions" rel="internal">Tamarin source versions</a></li><li><a href="#Supported_platforms" rel="internal">Supported platforms</a></li><li><a href="#Getting_the_Tamarin_source" rel="internal">Getting the Tamarin source</a></li><li><a href="#Building_Tamarin" rel="internal">Building Tamarin</a><code></code><code></code><ol><li><a href="#Cross-platform_build_%28general_instructions_-_non-android%29" rel="internal">Cross-platform build (general instructions - non-android)</a><code></code><code></code><code></code><code></code><code></code><code></code><ol><li><a href="#Additional_instructions_for_non-android_cross-platform_Tamarin-redux_build_on_OSX_10.6_%28Snow_Leopard%29" rel="internal">Additional instructions for non-android cross-platform Tamarin-redux build on OSX 10.6 (Snow Leopard)</a></li></ol></li><li><a href="#Building_Tamarin_for_Android_2.3.3_on_Mac" rel="internal">Building Tamarin for Android 2.3.3 on Mac</a><ol><li><a href="#Public_sdk.2Fndk_Setup" rel="internal">Public sdk/ndk Setup</a><code></code><code></code><code></code><code></code></li><li><a href="#Build_Tamarin_Release_Shell" rel="internal">Build Tamarin Release Shell</a><code></code></li></ol></li><li><a href="#Using_Cross-Platform_scripts_in_CYGWIN_on_Windows.3A" rel="internal">Using Cross-Platform scripts in CYGWIN on Windows:</a><code></code><code></code><code></code></li><li><a href="#Microsoft_Visual_Studio" rel="internal">Microsoft Visual Studio</a><code></code></li><li><a href="#Apple_XCode" rel="internal">Apple XCode</a><code></code></li><li><a href="#Eclipse_%28currently_Mac_only%29" rel="internal">Eclipse (currently Mac only)</a><ol><li><a href="#Preparing_your_Eclipse_workspace_and_perspective" rel="internal">Preparing your Eclipse workspace and perspective</a></li><li><a href="#Importing_the_project_into_Eclipse" rel="internal">Importing the project into Eclipse</a></li><li><a href="#Building_in_Eclipse" rel="internal">Building in Eclipse</a></li><li><a href="#Run.2FDebug_from_Eclipse" rel="internal">Run/Debug from Eclipse</a></li></ol></li><li><a href="#Linux_and_Unix" rel="internal">Linux and Unix</a></li></ol></li><li><a href="#Compiling_and_running_applications" rel="internal">Compiling and running applications</a><code></code><code></code><code></code><code></code><code></code><code></code><code></code><code></code><code></code><code></code><code></code><code></code><code></code></li><li><a href="#Running_Tamarin_Tests" rel="internal">Running Tamarin Tests</a></li><li><a href="#Building_Tamarin_Windows_Mobile_utilities" rel="internal">Building Tamarin Windows Mobile utilities</a></li><li><a href="#Tamarin_BuildBot" rel="internal">Tamarin BuildBot</a></li><li><a href="#Tamarin_BuildBot_TryServer" rel="internal">Tamarin BuildBot TryServer</a><ol><li><a href="#How_to" rel="internal">How to</a></li><li><a href="#TryServer_etiquette" rel="internal">TryServer etiquette</a></li></ol></li>
+                </ol>
+              </div>
+              
+              </div>
+            
+
+            
+            
+              
+            
+
+            <!-- center: main article content -->
+            <div id="wiki-content" class="column-half wiki-column text-content">
+
+              
+
+              
+
+              
+                
+                
+                
+              
+              
+
+              <!-- just the article content -->
+              <article id="wikiArticle">
+                
+                  
+                    <h2 id="Tamarin_source_versions">Tamarin source versions</h2>
+<p>The following instructions are for obtaining and building the Tamarin
+ Central source code. For instructions on Tamarin Tracing, please see <a href="https://developer.mozilla.org/en/Tamarin_Tracing_Build_Documentation" title="en/Tamarin_Tracing_Build_Documentation">Tamarin Tracing Build Documentation</a>.</p>
+<h2 id="Supported_platforms">Supported platforms</h2>
+<p>Tamarin currently supports the following operating systems and/or architectures.</p>
+<ul> <li>Windows 32 and 64 bit</li> <li>Mac OSX 10.4, 10.5 on PPC</li> <li>Mac OSX 10.5, 10.6 on Intel</li> <li>Linux 32 and 64 bit</li> <li>Solaris 10 on SPARC</li> <li>Android 2.2 on ARM</li> <li>Windows Mobile 6.5</li> <li>MIPS (Linux)</li> <li>SH4 (Linux)</li>
+</ul>
+<h2 id="Getting_the_Tamarin_source">Getting the Tamarin source</h2>
+<p>The Tamarin source resides in <a class="external external-icon" href="http://www.selenic.com/mercurial/wiki/">Mercurial</a> at <a class="external external-icon" href="http://hg.mozilla.org/tamarin-central">Tamarin Central</a>.&nbsp; Active development source resides at <a class="external external-icon" href="http://hg.mozilla.org/tamarin-redux" title="http://hg.mozilla.org/tamarin-redux">Tamarin Redux</a>.&nbsp;
+ In this document replace instances of tamarin-central with 
+tamarin-redux to operate in the redux repository.&nbsp; Use the 
+following command to create a copy of the Tamarin repository:</p>
+<pre class="eval line-numbers  language-html"><code class=" language-html">$ hg clone http://hg.mozilla.org/tamarin-central tamarin-central<span class="line-numbers-rows"><span></span></span></code></pre>
+<p>Tips for working with Mercurial can be found <a href="https://developer.mozilla.org/en/Mercurial_FAQ" title="en/Mercurial_FAQ">here.</a></p>
+<h2 id="Building_Tamarin">Building Tamarin</h2>
+<p>Building Tamarin will create all the libraries for the AVMPlus and 
+garbage collector (MMgc), and create a standalone executable (shell) for
+ executing files in the ABC file format. Running the shell without any 
+arguments will list the available options. Note that additional 
+command-line arguments are only available in the debug configuration.</p>
+<p>The <a href="https://developer.mozilla.org/en/Tamarin" title="en/Tamarin">Tamarin</a>
+ codebase contains a cross-platform build system for Mozilla developers.
+ The cross-platform build system is used for daily automated build 
+testing so it is the most reliable system.</p>
+<p>The Tamarin codebase has the ability to build additional code which supports debugging hooks. In the XCode project, this is the <code>Debug_Debugger</code> and <code>Release_Debugger</code>
+ configurations. The Flash Player builds Tamarin with the debugging 
+hooks off for codesize reasons, but the Mozilla client will build 
+Tamarin with the debugging hooks on.</p>
+<h3 id="Cross-platform_build_(general_instructions_-_non-android)">Cross-platform build (general instructions - non-android)</h3>
+<p><strong>Prerequisites:</strong> You need Python 2.5 or later and GNU <code>make</code> 3.81 or later. (<strong>GNU <code>make</code> 3.80 does not work.</strong> Nor does any other brand of <code>make</code>.)</p>
+<p>With the right prerequisites, use these commands to build Tamarin:</p>
+<pre class="eval line-numbers  language-html"><code class=" language-html">$ hg clone http://hg.mozilla.org/tamarin-redux/
+ $ cd tamarin-redux
+ $ mkdir objdir-release
+ $ cd objdir-release
+ $ python ../configure.py
+ $ make
+ ...
+ $ shell/avmshell
+ shell 1.0 build cyclone
+ ...<span class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>The AVMPlus executable is <code>avmshell</code>.</p>
+<p>Optional Flags:</p>
+<ul> <li><code>--enable-debugger</code> - Debugger build</li> <li><code>--enable-debug</code> - Debug build</li>
+</ul>
+<p>For verbose build of Tamarin, you can pass CPPFLAGS to make.</p>
+<pre class="eval line-numbers  language-html"><code class=" language-html">$ make CPPFLAGS=-DAVMPLUS_VERBOSE<span class="line-numbers-rows"><span></span></span></code></pre>
+<h4 id="Additional_instructions_for_non-android_cross-platform_Tamarin-redux_build_on_OSX_10.6_(Snow_Leopard)">Additional instructions for non-android cross-platform Tamarin-redux build on OSX 10.6 (Snow Leopard)</h4>
+<p>(To build Tamarin-central on Mac please see previous cross-platform instructions here: <a href="https://developer.mozilla.org/En/Tamarin/Tamarin_Build_Documentation?revision=21" title="https://developer.mozilla.org/index.php?title=En/Tamarin/Tamarin_Build_Documentation&amp;revision=21">https://developer.mozilla.org/index.php?title=En/Tamarin/Tamarin_Build_Documentation&amp;revision=21</a></p>
+<p>The bug when building on Snow Leopard (<a class="external link-https external-icon" href="https://bugzilla.mozilla.org/show_bug.cgi?id=537817" title="https://bugzilla.mozilla.org/show_bug.cgi?id=537817">Bug 537817</a>)
+ has been fixed in the Tamarin-redux repo. The work for that fix also 
+included some changes to the configure.py default behavior to decouple 
+the --target switch from sdk choice:&nbsp;</p>
+<ul> <li>There is a new switch, --mac-sdk, that selects the 10.4u, 10.5 
+or 10.6 sdk. Its options are '104u', '105' or '106' (Note: no '.')</li> <li>If you don't pass the --mac-sdk switch you will get no sdk in your build.</li> <li>If you pass '--mac-sdk=104u' you will also get gcc/g++ 4.0.</li> <li>If you pass '--mac-sdk=105' or '--mac-sdk=106' you will get the gcc/g++ default for the machine you're building on.</li>
+</ul>
+<p>Example call to build on an x86_64 machine with the 10.5 sdk:</p>
+<pre class="line-numbers  language-html"><code class=" language-html">$ ../configure.py --mac-sdk=105 --target=x86_64-darwin<span class="line-numbers-rows"><span></span></span></code></pre>
+<p>If ASC&nbsp;is not set, you will need to add ASC.jar to the utils directory in Tamarin-redux (<a class="external link-https external-icon" href="https://bugzilla.mozilla.org/show_bug.cgi?id=631641" title="https://bugzilla.mozilla.org/show_bug.cgi?id=631641">Bug 631641</a>).</p>
+<ul> <li>Download <a class="link-ftp external external-icon" href="ftp://ftp.mozilla.org/pub/js/tamarin/builds/asc/latest/asc.jar" title="ftp://ftp.mozilla.org/pub/js/tamarin/builds/asc/latest/asc.jar">ftp://ftp.mozilla.org/pub/js/tamarin/builds/asc/latest/asc.jar </a></li> <li>Put it in utils/</li>
+</ul>
+<p>&nbsp;</p>
+<h3 id="Building_Tamarin_for_Android_2.3.3_on_Mac">Building Tamarin for Android 2.3.3 on Mac</h3>
+<h4 id="Public_sdk.2Fndk_Setup">Public sdk/ndk Setup</h4>
+<p>To build Tamarin for Android you will need an sdk/ndk. The setup 
+procedure below creates an android sdk/ndk entirely from publicly 
+available sources. This sdk/ndk *must* be used if you've cloned tamarin 
+at changeset 5844:92ad3ca84a0b or later <strong>and</strong> will be using the cross-compile build method.</p>
+<p>Steps to create a public sdk/ndk tree on a Mac:</p>
+<p>- Create an sdk/ndk top folder under your main volume named /android-public.</p>
+<p>- Download the Android 2.3.3 Mac sdk zip file from <a class="external external-icon" href="http://developer.android.com/sdk/index.html" title="http://developer.android.com/sdk/index.html">http://developer.android.com/sdk/index.html</a>. Unzip to your sdk/ndk top folder.&nbsp;Make sure it's named 'android-sdk-mac_86'.</p>
+<p>- Download the r5b Mac ndk zip file from <a class="external external-icon" href="http://developer.android.com/sdk/ndk/index.html" title="http://developer.android.com/sdk/ndk/index.html">http://developer.android.com/sdk/ndk/index.html</a>. Unzip to your sdk/ndk top folder. Rename this folder to 'android-ndk'.</p>
+<p>- Run the Android SDK/AVD Manager at 
+/android-public/android-sdk-mac_86/tools/android and add Android SDK 
+Platform-tools (to get adb), SDK Platform Android 2.3.3, and API 10 
+(samples and docs are optional). If you have trouble starting the app 
+try this:</p>
+<p><code>$ export ANDROID_SWT=$ANDROID_BUILD_TOP/android-sdk-mac_86/tools/lib/x86_64</code></p>
+<p>where $ANDROID_BUILD_TOP is the full path to your sdk/ndk top folder</p>
+<p>- Get the openssl-0.9.8r.tar (openssl-1.0.0c.tar.gz won't work) openssl files from <a class="external external-icon" href="http://www.openssl.org/" title="http://www.openssl.org/">http://www.openssl.org</a>
+ (use the Source link on the left). Unzip the file and put the /openssl 
+main folder under your sdk/ndk top folder. Make sure its name is just 
+"openssl". &nbsp;Then build as follows:</p>
+<p>- Replace the Makefile in the main folder with the one attached to this page.</p>
+<p>- Change the variable ANDROID_DEVICE in the makefile (near line 65) to point to your sdk/ndk top folder.</p>
+<p>- Find the two instances of "android-ndk" and make sure they match your ndk's name (they should already).</p>
+<p>- In a terminal window change to your /openssl folder and run <code>make build_libs</code> to create the necessary '<code>libcrypto.a</code>' and '<code>libssl.a</code>' static libraries.</p>
+<p>Alternatively, run make, in which case the process will complete with errors when it tries to create the shared lib crt0.o:</p>
+<pre class="line-numbers  language-html"><code class=" language-html">$ 
+/android-public/android-ndk/toolchains/arm-eabi-4.4.0/prebuilt/darwin-x86/bin/../lib/gcc/arm-eabi/4.4.0/../../../../arm-eabi/bin/ld:
+ crt0.o: 
+No such file: No such file or directory collect2: ld returned 1 exit 
+status 
+make[2]: *** [link_app.] Error 1 
+make[1]: *** [openssl] Error 2 
+make: *** [build_apps] Error 1<span class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>You can ignore these errors. The necessary static files 'libcrypto.a'
+ and 'libssl.a' are made correctly and are present in the /openssl 
+folder. More information on why this happens on Mac OS is here: <a class="external external-icon" href="http://developer.apple.com/library/mac/#qa/qa2001/qa1118.html" title="http://developer.apple.com/library/mac/#qa/qa2001/qa1118.html">http://developer.apple.com/library/mac/#qa/qa2001/qa1118.html</a></p>
+<p>- Create a /frameworks/base/opengl/include/EGL folder under your 
+sdk/ndk top folder. Get the ersion 1.4 EGL header files (egl.h, eglext.h
+ and eglplatform.h) from <a class="external external-icon" href="http://www.khronos.org/registry/egl/" title="http://www.khronos.org/registry/egl/">http://www.khronos.org/registry/egl/</a> and save or copy them there.&nbsp;</p>
+<h4 id="Build_Tamarin_Release_Shell">Build Tamarin Release Shell</h4>
+<p>- Get tamarin-redux</p>
+<p>- Export the following variables into the environment</p>
+<p>&nbsp;</p>
+<pre class="line-numbers  language-html"><code class=" language-html">$ export ANDROID_TOOLCHAIN=&lt;full path to your android sdk/ndk top folder&gt;
+$ export ANDROID_NDK=$ANDROID_TOOLCHAIN/android-ndk
+$ export ANDROID_NDK_BIN=$ANDROID_NDK/toolchains/arm-linux-androideabi-4.4.3/prebuilt/darwin-x86/bin
+$ export ANDROID_SDK=$ANDROID_TOOLCHAIN/android-sdk-mac_86
+$ export PATH=$PATH:$ANDROID_SDK/platform-tools:$ANDROID_NDK_BIN<span class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<div>- Example commands to build Tamarin:&nbsp;</div>
+<pre class="line-numbers  language-html"><code class=" language-html">$ hg clone http://hg.mozilla.org/tamarin-redux  
+$ cd tamarin-redux  
+$ mkdir objdir-release  
+$ cd objdir-release  
+$ ../configure.py --arm-arch=armv7-a --target=arm-android  
+$ make<span class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>To make a debug shell use this command:</p>
+<p><code>../configure.py --enable-debug --arm-arch=armv7-a --target=arm-android</code></p>
+<p>&nbsp;</p>
+<h3 id="Using_Cross-Platform_scripts_in_CYGWIN_on_Windows.3A">Using Cross-Platform scripts in CYGWIN on Windows:</h3>
+<p><strong>Prerequisites: </strong>You need Python 2.5 or later and GNU <code>make</code> 3.81 or later. (<strong>GNU <code>make</code> 3.80 does not work.</strong> Nor does any other brand of <code>make</code>.)</p>
+<p><strong>Setup:</strong></p>
+<ul> <li>If you normally work in a cygwin mounted place (eg 
+/home/user/...) then you must cd around to the cygdrive path equivalent 
+(eg /cygdrive/c/cygwin/home/user/).</li> <li>Setup the shell environment with the following environment variables:</li>
+</ul>
+<pre class="line-numbers  language-html" style="margin-left: 40px;"><code class=" language-html"># NOTE: The INCLUDE, LIB and LIBPATH must contain windows path information and separator and not cygwin paths.
+VS_HOME_PATH="/cygdrive/c/Program Files/Microsoft Visual Studio 9.0"
+VS_HOME="c:\Program Files\Microsoft Visual Studio 9.0"
+
+export PATH="$VS_HOME_PATH/Common7/IDE:$VS_HOME_PATH/VC/bin:$VS_HOME_PATH/Common7/Tools:$VS_HOME_PATH/VC/VCPackages:$PATH"
+export INCLUDE="$VS_HOME\VC\atlmfc\include;$VS_HOME\VC\include;C:\Program Files\Microsoft SDKs\Windows\v6.0A\Include;"
+export LIB="$VS_HOME\VC\atlmfc\lib;$VS_HOME\VC\lib;C:\Program Files\Microsoft SDKs\Windows\v6.0A\Lib"
+export LIBPATH="$VS_HOME\VC\atlmfc\lib;$VS_HOME\VC\lib;C:\Program Files\Microsoft SDKs\Windows\v6.0A\Lib"<span class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>With the above setup you should now be able to build:</p>
+<pre class="line-numbers  language-html" style="margin-left: 40px;"><code class=" language-html">$ hg clone http://hg.mozilla.org/tamarin-central/
+$ cd tamarin-central
+$ mkdir objdir-release
+$ cd objdir-release
+$ python ../configure.py 
+$ make
+...
+$ shell/avmshell.exe
+shell 1.0 build cyclone
+...<span class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>&nbsp;</p>
+<h3 id="Microsoft_Visual_Studio">Microsoft Visual Studio</h3>
+<p>Visual Studio 2008 (VS2008) is the preferred Windows build 
+environment. Visual Studio 2003 and 2005 are no longer supported. To 
+build Tamarin:</p>
+<ol> <li>copy tamarin/platform/win32/armasm.rules to c:/Program Files/Microsoft Visual Studio 9.0/VC/VCProjectDefaults</li> <li>Build "builtin.h" following the instructions below in the section "Compiling and running applications"</li> <li>Do the same for shell_toplevel.h, starting in avmplus/shell, using the command "python shell_toplevel.py"</li> <li>open the Tamarin project file <a class="external external-icon" href="http://hg.mozilla.org/tamarin-central/?file/tip/platform/win32/avmplus2008.sln"><code>platform/win32/avmplus2008.sln</code></a>.</li> <li>Choose your desired configuration and target, and build.</li> <li>Note:
+ now that bug 478714 has been fixed, the name of the (shell) executable 
+will always be "avm.exe" no matter which build configuration you select.
+ The avm.exe file will be found in a directory reflecting your 
+configuration choice. For example, if you chose the win32 Debug_Debugger
+ configuration your build will be under 
+\tamarin-redux\platform\win32\obj_9\shell\Debug_Debugger by default. 
+Building the x64 Release_Debugger configuration will create avm.exe 
+under \tamarin-redux\platform\win32\x64\Release_Debugger. Note the 
+"\obj9" directory under \platform\win32 for the win32 builds and "\x64" 
+directory under \platform\win32 for 64-bit builds; this looks a little 
+odd but preserves previous behavior as much as possible to avoid initial
+ disruption from the shell rename fix.</li>
+</ol>
+<p>You must install VS2008 with x64 support to build the 64-bit configurations.&nbsp;</p>
+<p>If you installed the Windows Mobile 6 SDK, you can build for Windows Mobile (ARM) targets.</p>
+<h3 id="Apple_XCode">Apple XCode</h3>
+<p>The project files are designed for XCode 3.0. See <a class="external external-icon" href="http://hg.mozilla.org/tamarin-central/?file/tip/platform/mac/avmplus/avmplus.xcodeproj/"><code>platform/mac/avmplus/avmplus.xcodeproj/</code></a>. XCode 2.2, 2.3, and 2.4&nbsp;will not work.</p>
+<p>There are two targets in the XCode IDE, 'avm' for 32-bit builds and 
+'avm64' for 64-bit builds. There is also an aggregate target that will 
+build both targets. Note that, whereas before when you selected the 
+aggregate target you got a 'shell' 32-bit executable and a 'shell64' 
+64-bit executable in the same folder, now because of the fix to bug 
+478714 you will get an 'avm' executable in two separate folders, /Debug 
+and /Debug64 respectively.</p>
+<p>The command to build from the Terminal is:</p>
+<pre class="eval line-numbers  language-html"><code class=" language-html">$ cd tamarin-redux
+   $ xcodebuild ARCHS=ppc -project platform/mac/avmshell/avmshell.xcodeproj<span class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>For a debug build, add '-configuration Debug' (note the capital D and
+ no "="). Additional configurations are: Debug_Debugger, Release and 
+Release_Debugger.</p>
+<p>The resulting Debug executable for the command above would be built at /platform/mac/avmshell/build/Debug/avm.</p>
+<p>Intel Macs build correctly by setting ARCHS=i386.</p>
+<h3 id="Eclipse_(currently_Mac_only)">Eclipse (currently Mac only)</h3>
+<p>Eclipse (Galileo) / CDT (6.0) project for Tamarin (also works with Helios).</p>
+<p>The configurations in this initial version cover 32- and 64-bit 
+builds for Mac OS with the GCC 4.0 toolchain (installed with Xcode 3.x).</p>
+<h4 id="Preparing_your_Eclipse_workspace_and_perspective">Preparing your Eclipse workspace and perspective</h4>
+<ul> <li>Open the C/C++ perspective</li> <li>Open the 'C/C++ Projects' view (Window &gt;&gt; Show View &gt;&gt; C/C++ Projects)</li> <li>Add
+ view filter 'Non-C Elements' (In the top-right of the 'C/C++ Projects' 
+view, click the down-arrow, click 'Filters...', check 'Non-C elements')</li> <li>Increase
+ the threshold for 'editor scalability mode' to 20000 lines. As some 
+Tamarin source files have more than the Eclipse standard threshold of 
+5000, they do not appear as indexed. The threshold can be adjusted in 
+Eclipse preferences &gt;&gt; C/C++ &gt;&gt; Editor &gt;&gt; Scalability.</li> <li>*IMPORTANT*
+ &nbsp;Project-specific settings for the CDT Indexer do not appear to 
+work (it looks like a bug in Eclipse), so you have to set these 
+manually/globally. What we want is to have the indexer track the 
+currently selected build config (so the correct conditional compiles are
+ highlighted in the editor). To enable this go to Eclipse preferences 
+&gt;&gt; C/C++ &gt;&gt; Indexer, then select 'Use active build 
+configuration' in the 'Build configuration for the indexer' section.</li>
+</ul>
+<h4 id="Importing_the_project_into_Eclipse">Importing the project into Eclipse</h4>
+<ul> <li>File &gt;&gt; Import &gt;&gt; General &gt;&gt; Existing Projects into Workspace</li> <li>Click next</li> <li>The root directory should be the full path to your top-level tamarin-redux directory</li> <li>Ensure the 'avmshell-project' project is checked in the 'Projects' list</li> <li>Uncheck 'Copy projects into workspace'</li> <li>Click finish</li>
+</ul>
+<h4 id="Building_in_Eclipse">Building in Eclipse</h4>
+<p>8 build configurations are included for MacOS with the GCC 4.0 toolchain:</p>
+<ul> <li>Mac-32-Release</li> <li>Mac-64-Release</li> <li>Mac-32-Debug</li> <li>Mac-64-Debug</li> <li>Mac-32-Release-Debugger</li> <li>Mac-64-Release-Debugger</li> <li>Mac-32-Debug-Debugger</li> <li>Mac-64-Debug-Debugger</li>
+</ul>
+<p>The build location will be PROJECT_ROOT/BUILD_NAME/avm</p>
+<p>Note: As discussed above, the C++ indexer has been setup to track the
+ current build config, so the correct conditional compiles are 
+highlighted in the editor</p>
+<h4 id="Run.2FDebug_from_Eclipse">Run/Debug from Eclipse</h4>
+<p>For test purposes, a launch config (running the HelloWorld test from 
+esc) has been included for each of the build configs. All are available 
+from the Run menu.</p>
+<p>Note: if you receive an error when trying to run/debug a newly 
+imported project, try opening a file in the project first - Eclipse can 
+sometimes get confused as to what the 'current project' actually is. 
+Additional things to try are clicking on the project name then 
+refreshing it (File/Refresh or right-click/Refresh) and/or quitting and 
+restarting Eclipse.</p>
+<h3 id="Linux_and_Unix">Linux and Unix</h3>
+<p>Tamarin is tested on Linux but not on other Unix flavors. Nonetheless, it is possible to build Tamarin on Unix.&nbsp;</p>
+<p>Execute the following commands to build:</p>
+<pre class="eval line-numbers  language-html"><code class=" language-html">$ cd tamarin-central/platform/unix
+   $ make<span class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>The resulting executable "shell" is built in the current directory.</p>
+<h2 id="Compiling_and_running_applications">Compiling and running applications</h2>
+<p>Currently the only compiler for Tamarin is the Adobe ActionScript compiler. The source code for the ActionScript compiler, <code>asc</code>,
+ has been open sourced as part of Adobe Flex®. This compiler is written 
+in Java and will require the installation of a Java™ 1.4 or later JDK.</p>
+<p>A prototype self-hosting ECMAScript Edition 4 compiler, <code>esc</code>, is provided with Tamarin but it is not yet capable of bootstrapping itself or building applications. <code>esc</code> is under active development and will be able to generate Tamarin applications later this year.</p>
+<p>Use the following steps to build and install the ActionScript compiler.</p>
+<ol> <li>Download and build the asc source code using the subversion client</li>
+</ol>
+<pre class="eval line-numbers  language-html"><code class=" language-html">$ svn co http://opensource.adobe.com/svn/open...box/asc-redux/ asc
+ $ cd asc/build/java
+ $ ant
+ ...
+ jar:
+ [jar] Building jar asc\lib\asc.jar
+ $ cd ../..
+ $ java -jar lib/asc.jar   # shows usage<span class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>You may also download the latest asc.jar from <a class="link-ftp external external-icon" href="ftp://ftp.mozilla.org/pub/js/tamarin/builds/asc/latest/asc.jar" title="ftp://ftp.mozilla.org/pub/js/tamarin/builds/asc/latest/asc.jar">ftp://ftp.mozilla.org/pub/js/tamarin...latest/asc.jar</a> .</p>
+<p>You should now copy asc.jar into tamarin-central/utils.</p>
+<p><code>asc.jar</code> can be used to compile the <code>builtin.abc</code> file. The <code>builtin.abc</code> file provides internal information about the built-in classes (Object, Array, etc). This file is located in the <code>core</code>
+ directory; you shouldn't normally need to rebuild it, unless you edit 
+any of the ActionScript source for the built-in classes. To rebuild it, 
+use the <code>builtin.py</code> script:</p>
+<pre class="eval line-numbers  language-html"><code class=" language-html">$ cd tamarin-central/core
+ $ export ASC=../utils/asc.jar       # builtin.py uses this to find asc.jar
+ $ python builtin.py
+ building builtin.abc, builtin.cpp, builtin.h
+ builtin: 26795
+ Files: 6 Time: 1709ms<span class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>You can now use</p>
+<p><code>asc.jar</code> to compile applications.</p>
+<pre class="eval line-numbers  language-html"><code class=" language-html">$ cd tamarin-central
+ $ echo 'print("hello, world")' &gt; hello.as
+ $ java -jar ./utils/asc.jar -import ./core/builtin.abc hello.as
+ hello.abc, 86 bytes written<span class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>Use the AVMPlus standalone executable (<code>avmshell</code>) built previously to run the application:</p>
+<pre class="eval line-numbers  language-html"><code class=" language-html">$ avmshell hello.abc
+ hello, world<span class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>Use the <code>-help</code> options of <code>asc.jar</code> and <code>avmshell</code> for more details.</p>
+<h2 id="Running_Tamarin_Tests">Running Tamarin Tests</h2>
+<p>See&nbsp;<a href="https://developer.mozilla.org/En/Tamarin/Tamarin_Acceptance_Testing/Running_Tamarin_acceptance_tests" title="En/Tamarin/Tamarin Tests/Running Tamarin acceptance tests">Running Tamarin acceptance tests</a>&nbsp;and&nbsp;<a href="https://developer.mozilla.org/En/Tamarin/Tamarin_Acceptance_Testing/Running_Tamarin_performance_tests" title="En/Tamarin/Tamarin Tests/Running Tamarin performance tests">Running Tamarin performance tests</a></p>
+<h2 id="Building_Tamarin_Windows_Mobile_utilities">Building Tamarin Windows Mobile utilities</h2>
+<p>The Tamarin Windows Mobile utilities allows the existing acceptance 
+and performance testsuites to be run on a Windows Mobile device 
+connected to a Windows desktop machine by ActiveSync or Windows Mobile 
+Device Center (for Windows Vista and Windows 7).&nbsp;&nbsp;</p>
+<ol> <li>Setup and run ActiveSync or Windows Mobile Device Center.&nbsp;
+ You should be connected and able to see the devices file system in 
+Windows Explorer</li> <li>in tamarin repository go to the utils/wmremote directory,&nbsp; open the ceremoteshell2008.sln file in Visual Studio 2008</li> <li>Build all targets in Release mode (for more information see utils/wmremote/readme.txt)</li> <li>copy Release/avmremote.dll to the device in the \Windows directory</li> <li>export
+ AVM=Release/ceremoteshell.exe, the ceremoteshell.exe behaves as a proxy
+ copying and running abc files on the windows mobile device</li> <li>build a windows mobile tamarin shell,&nbsp; copy the shell to the windows mobile device in \Program Files\shell\avmshell.exe</li> <li>(optional)
+ Can sanity check the windows mobile shell is functioning by running 
+$AVM&nbsp;hello.abc (where hello.abc is a simple abc to print a string, 
+or can substitute with any test abc)</li> <li>Now any acceptance or 
+performance tests can be run as on desktop using 
+test/acceptance/runtests.py or tests/performance/runtests.py</li>
+</ol>
+<h2 id="Tamarin_BuildBot">Tamarin BuildBot</h2>
+<p>Adobe maintains a&nbsp;<a class="external external-icon" href="http://tamarin-builds.mozilla.org/tamarin-redux/" title="http://tamarin-builds.mozilla.org/tamarin-redux/">continuous build and test system</a> for Tamarin Redux, similar to TinderBox.</p>
+<h2 id="Tamarin_BuildBot_TryServer">Tamarin BuildBot TryServer</h2>
+<p>The TryServer/Sandbox is setup to allow users to push any code 
+changes that they would like to have tested in the automated build/test 
+process prior to actually pushing the changes. The Sandbox is setup so 
+that it is able to build and test branches that are based on either 
+tamarin-central or tamarin-tracing.</p>
+<p>Any comments, questions or problems can be directed to</p>
+<p><a class="link-mailto" href="mailto:actionscriptqe@adobe.com" title="mailto:actionscriptqe@adobe.com">ActionScript QE</a></p>
+<h3 id="How_to">How to</h3>
+<ol> <li>Setup a user repository with the source and patches that will be compiled. Documentation on how to setup a user repository <a href="https://developer.mozilla.org/En/Publishing_Mercurial_Clones" title="../../../../En/Publishing_Mercurial_Clones">http://developer.mozilla.org/En/Publishing_Mercurial_Clones</a>. Push any changes that you want to test into this repository.</li> <li>Request a build via the form at <a class="external external-icon" href="http://tamarin-builds.mozilla.org/build_trigger/requestbuild.cfm" title="http://tamarin-builds.mozilla.org/build_trigger/requestbuild.cfm">http://tamarin-builds.mozilla.org/build_trigger/requestbuild.cfm</a> <ul> <li><strong>User Email:</strong>
+ Your email address. An email with the build status will be sent to this
+ address when a builder completes whether it is passes or fails.</li> <li><strong>Mercurial Repository:</strong> Give the location of the repository that will be used for the build. NOTE: Only repositories hosted on <a class="external external-icon" href="http://hg.mozilla.org/">http://hg.mozilla.org/</a> are accepted.</li> <li><strong>Revision:</strong> Specify the revision number that will be built. Currently this only accepts the change number and not the hash.</li> <li><strong>Branch:</strong> Which branch of tamarin the repository is based on, Tamarin-Central or Tamarin-Tracing.</li> <li><strong>Description:</strong> Self explanatory</li> </ul> </li> <li>Check the status of the build @ <a class="external external-icon" href="http://tamarin-builds.mozilla.org/tamarin-redux/" title="http://tamarin-builds.mozilla.org/tamarin-redux/">http://tamarin-builds.mozilla.org/tamarin-redux/</a> , you can also see your build request in the queue at <a class="external external-icon" href="http://tamarin-builds.mozilla.org/build_trigger/requestbuild.cfm" title="http://tamarin-builds.mozilla.org/build_trigger/requestbuild.cfm">http://tamarin-builds.mozilla.org/build_trigger/requestbuild.cfm</a>.
+ If you no longer want you sandbox to build and it has not started yet, 
+you can delete the build request from the queue from the request page.</li>
+</ol>
+<h3 id="TryServer_etiquette">TryServer etiquette</h3>
+<p>The sandbox is not a good substitute for running the regression tests locally to catch obvious problems.</p>
+<p>This is a shared resource, each request takes approximately 2+ hours to run so please use wisely.</p>
+<p></p>
+                  
+                
+              </article>
+
+              
+
+                <!-- contributors -->
+                <div class="wiki-block contributors">
+                  <h2 class="offscreen">Document Tags and Contributors</h2>
+                  
+                  
+  <div class="tag-attach-list contributors-sub">
+    <i aria-hidden="true" class="icon-tags icon-fw"></i>
+    <strong>Tags:</strong>&nbsp;
+    <ul class="tags tags-small">
+      
+        <li><a href="https://developer.mozilla.org/en-US/docs/tag/Build%20documentation">Build documentation</a></li>
+      
+        <li><a href="https://developer.mozilla.org/en-US/docs/tag/Developing%20Mozilla">Developing Mozilla</a></li>
+      
+        <li><a href="https://developer.mozilla.org/en-US/docs/tag/Tamarin">Tamarin</a></li>
+      
+    </ul>
+  </div>
+
+
+                  
+                    <div class="contributors-sub">
+                      <i aria-hidden="true" class="icon-group icon-fw"></i>&nbsp;<strong>Contributors to this page:</strong> 
+        <a href="https://developer.mozilla.org/en-US/profiles/Sheppy">Sheppy</a>, 
+    
+        <a href="https://developer.mozilla.org/en-US/profiles/Brbaker">Brbaker</a>, 
+    
+        <a href="https://developer.mozilla.org/en-US/profiles/fklockii">fklockii</a>, 
+    
+        <a href="https://developer.mozilla.org/en-US/profiles/jsudduth">jsudduth</a>, 
+    
+        <a href="https://developer.mozilla.org/en-US/profiles/Gchaney">Gchaney</a>, 
+    
+        <a href="https://developer.mozilla.org/en-US/profiles/Cpeyer">Cpeyer</a>, 
+    
+        <a href="https://developer.mozilla.org/en-US/profiles/trbaker">trbaker</a>, 
+    
+        <a href="https://developer.mozilla.org/en-US/profiles/wmaddox">wmaddox</a>, 
+    
+        <a href="https://developer.mozilla.org/en-US/profiles/dansmith">dansmith</a>, 
+    
+        <a href="https://developer.mozilla.org/en-US/profiles/rwebster">rwebster</a>, 
+    
+        <a href="https://developer.mozilla.org/en-US/profiles/mmoreart@adobe.com">mmoreart@adobe.com</a>, 
+    
+        <a href="https://developer.mozilla.org/en-US/profiles/Dschaffe">Dschaffe</a>, 
+    
+        <a href="https://developer.mozilla.org/en-US/profiles/Edwsmith">Edwsmith</a>
+    
+                    </div>
+                  
+
+                  
+                    <div class="contributors-sub">
+                      <i aria-hidden="true" class="icon-clock-o icon-fw"></i>&nbsp;<strong>Last updated by:</strong>
+                      <a href="https://developer.mozilla.org/en-US/profiles/Sheppy">Sheppy</a>,
+                      <time datetime="2014-04-14T14:55:56-07:00">Apr 14, 2014, 2:55:56 PM</time>
+                    </div>
+                  
+                </div>
+              
+            </div>
+
+            
+              <!-- quick links and zone subnav strip -->
+              <div id="wiki-left" class="column-strip wiki-column">
+
+              
+
+                
+                  <!-- zone subnav -->
+                  
+  <nav class="zone-subnav-container" role="navigation">
+    <div class="subnav" id="Subnav">
+      
+<p></p><ol class="accordion"><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Sample_.htaccess_file">.htaccess ( hypertext access )</a></li><li data-closed="true" class="toggleable"><a aria-haspopup="true" class="toggler" href="https://developer.mozilla.org/en-US/docs/Archive/Add-ons"><i aria-hidden="true" class="icon-caret-right"></i>Add-ons</a><ol style="display: none;" class="toggle-container"><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Add-ons">Add-ons</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Add-ons/Interaction_between_privileged_and_non-privileged_pages">Interaction between privileged and non-privileged pages</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Add-ons/bookmarks.export">bookmarks.export()</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Add-ons/bookmarks.import">bookmarks.import()</a></li></ol></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/An_Interview_With_Douglas_Bowman_of_Wired_News">An Interview With Douglas Bowman of Wired News</a></li><li data-closed="true" class="toggleable"><a aria-haspopup="true" class="toggler" href="https://developer.mozilla.org/en-US/docs/Archive/Apps"><i aria-hidden="true" class="icon-caret-right"></i>Apps</a><ol style="display: none;" class="toggle-container"><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Apps">Apps</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Apps/Reference">App Development API Reference</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Apps/Design">Designing Open Web Apps</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Apps/Graphics_and_UX">Graphics and UX</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Apps/Architecture">Open web app architecture</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Apps/Tools_and_frameworks">Tools and frameworks</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Apps/App_validator">Validating web apps with the App Validator</a></li></ol></li><li data-closed="true" class="toggleable"><a aria-haspopup="true" class="toggler" href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla"><i aria-hidden="true" class="icon-caret-right"></i>Archived Mozilla and build documentation</a><ol style="display: none;" class="toggle-container"><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla">Archived Mozilla and build documentation</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/ActiveX_Control_for_Hosting_Netscape_Plug-ins_in_IE">ActiveX Control for Hosting Netscape Plug-ins in IE</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Adding_extensions_using_the_Windows_registry">Adding Extensions using the Windows Registry</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/SpiderMonkey">Archived SpiderMonkey docs</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Autodial_for_Windows_NT">Autodial for Windows NT</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Automated_testing_tips_and_tricks">Automated testing tips and tricks</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Automatic_Mozilla_Configurator">Automatic Mozilla Configurator</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Automatically_Handle_Failed_Asserts_in_Debug_Builds">Automatically Handle Failed Asserts in Debug Builds</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/BlackConnect">BlackConnect</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Blackwood">Blackwood</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Bonsai">Bonsai</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Bookmark_keywords">Bookmark Keywords</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Building_TransforMiiX_standalone">Building TransforMiiX standalone</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Chromeless">Chromeless</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Creating_a_Firefox_sidebar_extension">Creating a Firefox sidebar extension</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Creating_a_microsummary">Creating a Microsummary</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Creating_a_Mozilla_extension">Creating a Mozilla Extension</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Creating_a_release_tag">Creating a Release Tag</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Creating_a_sking_for_Firefox_Getting_Started">Creating a Skin for Firefox/Getting Started</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Creating_a_skin_for_Mozilla">Creating a Skin for Mozilla</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Creating_a_Skin_for_SeaMonkey_2.x">Creating a Skin for SeaMonkey 2.x</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Creating_a_hybrid_CD">Creating a hybrid CD</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Creating_regular_expressions_for_a_microsummary_generator">Creating regular expressions for a microsummary generator</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Dehydra">Dehydra</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Developing_New_Mozilla_Features">Developing New Mozilla Features</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Devmo_launch_roadmap">Devmo 1.0 Launch Roadmap</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Download_Manager_improvements_in_Firefox_3">Download Manager improvements in Firefox 3</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Download_Manager_preferences">Download Manager preferences</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Drag_and_drop">Drag and Drop</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Embedding_FAQ">Embedding FAQ</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Embedding_Mozilla_in_a_Java_Application_using_JavaXPCOM">Embedding Mozilla in a Java Application using JavaXPCOM</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Error_console">Error Console</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Exception_logging_in_JavaScript">Exception logging in JavaScript</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Project:Existing_Content">Existing Content</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Extension_Frequently_Asked_Questions">Extension Frequently Asked Questions</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Fighting_Junk_Mail_with_Netscape_7.1">Fighting Junk Mail with Netscape 7.1</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Firefox_Sync">Firefox Sync</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Force_RTL">Force RTL</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/GRE">GRE</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Gecko_Coding_Help_Wanted">Gecko Coding Help Wanted</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/HTTP_Class_Overview">HTTP Class Overview</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Project:Hacking_wiki">Hacking wiki</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Help_viewer">Help Viewer</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Helper_Apps">Helper Apps (and a bit of Save As)</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Hidden_prefs">Hidden prefs</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Nanojit_merging">How to Write and Land Nanojit Patches</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Introducing_the_Audio_API_Extension">Introducing the Audio API extension</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Java_in_Firefox_Extensions">Java in Firefox Extensions</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/JavaScript_crypto">JavaScript crypto</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Jetpack">Jetpack</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Litmus_tests">Litmus tests</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Makefile.mozextension.2">Makefile.mozextension.2</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Microsummary_topics">Microsummary topics</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Migrate_apps_from_Internet_Explorer_to_Mozilla">Migrate apps from Internet Explorer to Mozilla</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Monitoring_downloads">Monitoring downloads</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Mozilla_Application_Framework">Mozilla Application Framework</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Mozilla_crypto_FAQ">Mozilla Crypto FAQ</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Modules_and_Module_ownership">Mozilla Modules and Module Ownership</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/mozprocess">Mozprocess</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/mozprofile">Mozprofile</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/mozrunner">Mozrunner</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Namespace">Namespace</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Nanojit">Nanojit</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Project:New_Skin_Notes">New Skin Notes</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Plug-n-Hack">Plug-n-Hack</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Plugin_architecture">Plugin Architecture</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Porting_NSPR_to_Unix_Platforms">Porting NSPR to Unix Platforms</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Project:DevEdge">Priority Content</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Prism">Prism</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Proxy_UI">Proxy UI</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Remote_XUL">Remote XUL</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/SXSW_2007_presentations">SXSW 2007 presentations</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Space_Manager_Detailed_Design">Space Manager Detailed Design</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Space_Manager_High_Level_Design">Space Manager High Level Design</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Standalone_XPCOM">Standalone XPCOM</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Stress_testing">Stress testing</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Bundles">Structure of an installable bundle</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Supporting_private_browsing_mode">Supporting private browsing mode</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Table_Cellmap">Table Cellmap</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Table_Cellmap_-_Border_Collapse">Table Cellmap - Border Collapse</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Table_Layout_Regression_Tests">Table Layout Regression Tests</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Table_Layout_Strategy">Table Layout Strategy</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Tamarin">Tamarin</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/The_Download_Manager_schema">The Download Manager schema</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/The_new_nsString_class_implementation_%281999%29">The new nsString class implementation (1999)</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/TraceVis">TraceVis</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Treehydra">Treehydra</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/URIScheme">URIScheme</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/URIs_and_URLs">URIs and URLs</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Using_Monotone_with_Mozilla_CVS">Using Monotone With Mozilla CVS</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Using_SVK_with_Mozilla_CVS">Using SVK With Mozilla CVS</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Using_addresses_of_stack_variables_with_NSPR_threads_on_win16">Using addresses of stack variables with NSPR threads on win16</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Venkman">Venkman</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Video_presentations">Video presentations</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Why_embed_Gecko">Why Embed Gecko</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/XML_in_Mozilla">XML in Mozilla</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/XPInstall">XPInstall</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/XPJS_Components_Proposal">XPJS Components Proposal</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/XRE">XRE</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/XTech_2005_Presentations">XTech 2005 Presentations</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/XTech_2006_Presentations">XTech 2006 Presentations</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/XUL_Explorer">XUL Explorer</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/XULRunner">XULRunner</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/ant_script_to_assemble_an_extension">ant script to assemble an extension</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/callCalendarView">calICalendarView</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/callCalendarViewController">calICalendarViewController</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/callFileType">calIFileType</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla/xbDesignMode.js">xbDesignMode.js</a></li></ol></li><li data-closed="true" class="toggleable"><a aria-haspopup="true" class="toggler" href="https://developer.mozilla.org/en-US/docs/Archive/Web"><i aria-hidden="true" class="icon-caret-right"></i>Archived open Web documentation</a><ol style="display: none;" class="toggle-container"><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Web">Archived open Web documentation</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Web/Browser_Detection_and_Cross_Browser_Support">Browser Detection and Cross Browser Support</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Web/Browser_feature_detection">Browser Feature Detection</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Web/Displaying_notifications_%28deprecated%29">Displaying notifications (deprecated)</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Web/E4X">E4X</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Web/E4X_tutorial">E4X Tutorial</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Web/LiveConnect">LiveConnect</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Web/MSX_Emulator_%28jsMSX%29">MSX Emulator (jsMSX)</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Web/Old_Proxy_API">Old Proxy API</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Web/Properly_Using_CSS_and_JavaScript_in_XHTML_Documents_">Properly Using CSS and JavaScript in XHTML Documents</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Web/Scope_Cheatsheet">Scope Cheatsheet</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Web/Server-Side_JavaScript">Server-Side JavaScript</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Web/Sharp_variables_in_JavaScript">Sharp variables in JavaScript</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Web/Standards-Compliant_Authoring_Tools">Standards-Compliant Authoring Tools</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Web/Window.importDialog">Window.importDialog()</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Web/Writing_JavaScript_for_HTML">Writing JavaScript for XHTML</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Web/XForms">XForms</a></li></ol></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Case_Sensitivity_in_class_and_id_Names">Case Sensitivity in class and id Names</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Creating_a_status_bar_extention">Creating a status bar extension</a></li><li data-closed="true" class="toggleable"><a aria-haspopup="true" class="toggler" href="https://developer.mozilla.org/en-US/docs/Archive/Firefox_OS"><i aria-hidden="true" class="icon-caret-right"></i>Firefox OS</a><ol style="display: none;" class="toggle-container"><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Firefox_OS">Firefox OS</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Firefox_OS/API">API</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Firefox_OS/Automated_testing">Automated Testing of B2G OS</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Firefox_OS/Phone_guide">B2G OS phone guide</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Firefox_OS/Debugging">Debugging on Firefox OS</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Firefox_OS/Developing_Firefox_OS">Developing Firefox OS</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Firefox_OS/Firefox_OS_apps">Firefox OS apps</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Firefox_OS/Releases">Firefox OS developer release notes</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Firefox_OS/Introduction">Introduction to Firefox OS</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Firefox_OS/Platform">The B2G OS platform</a></li></ol></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla_Gecko_Compatibility_Handbook">Gecko Compatibility Handbook</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Getting_the_page_URL_in_NPAPI_plugin">Getting the page URL in NPAPI plugin</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Index">Index</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Inner-browsing_extending_the_browser_navigation_paradigm">Inner-browsing extending the browser navigation paradigm</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Install.js">Install.js</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/JXON">JXON</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/List_of_Former_Mozilla-Based_Applications">List of Former Mozilla-Based Applications</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/List_of_Mozilla-Based_Applications">List of Mozilla-Based Applications</a></li><li data-closed="true" class="toggleable"><a aria-haspopup="true" class="toggler" href="https://developer.mozilla.org/en-US/docs/Archive/Meta_docs"><i aria-hidden="true" class="icon-caret-right"></i>MDN "meta-documentation" archive</a><ol style="display: none;" class="toggle-container"><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Meta_docs">MDN "meta-documentation" archive</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Meta_docs/Article_page_layout_guide">Article page layout guide</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Meta_docs/Blog_posts_to_integrate_into_documentation">Blog posts to integrate into documentation</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Meta_docs/Current_events">Current events</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Meta_docs/Custom_classes">Custom CSS classes for MDN</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Meta_docs/MDC_design_document">Design Document</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Meta_docs/DevEdge">DevEdge</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Meta_docs/Documentation_process">Developer documentation process</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Meta_docs/Disambiguation">Disambiguation</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Meta_docs/Documentation_wishlist">Documentation Wishlist</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Meta_docs/Planning">Documentation planning and tracking</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Meta_docs/Editing_MDN_pages">Editing MDN pages</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Meta_docs/Examples">Examples</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Meta_docs/Existing_Content_DOM_in_Mozilla">Existing Content/DOM in Mozilla</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Meta_docs/External_redirects">External Redirects</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Meta_docs/Finding_the_right_place_to_document_bugs">Finding the right place to document bugs</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Meta_docs/Getting_started">Getting started as a new MDN contributor</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Meta_docs/Landing_page_layout_guide">Landing page layout guide</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Meta_docs/MDN_content_on_WebPlatform.org">MDN content on WebPlatform.org</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Meta_docs/MDN_page_layout_guide">MDN page layout guide</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Meta_docs/Subprojects">MDN subproject list</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Meta_docs/Needs_redirect">Needs Redirect</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Meta_docs/Page_types">Page types</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Meta_docs/RecRoom_plan">RecRoom documentation plan</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Meta_docs/Remove_in-content_iframes">Remove in-content iframes</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Meta_docs/Team_status_board">Team status board</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Meta_docs/Trello">Trello</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Meta_docs/Using_the_Mozilla_Developer_Center">Using the Mozilla Developer Center</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Meta_docs/Welcome">Welcome to the Mozilla Developer Network</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Meta_docs/Chrome_code">Writing chrome code documentation plan</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Meta_docs/Writing_content">Writing content</a></li></ol></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/MMgc">MMgc</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Makefile_-_.mk_files">Makefile - .mk files</a></li><li data-closed="true" class="toggleable"><a aria-haspopup="true" class="toggler" href="https://developer.mozilla.org/en-US/docs/Archive/Marketplace"><i aria-hidden="true" class="icon-caret-right"></i>Marketplace</a><ol style="display: none;" class="toggle-container"><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Marketplace">Marketplace</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Marketplace/API">API</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Marketplace/Monetization">Monetization</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Marketplace/Options">Options</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Marketplace/Publishing">Publishing</a></li></ol></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Mozilla_release_FAQ">Mozilla release FAQ</a></li><li data-closed="true" class="toggleable"><a aria-haspopup="true" class="toggler" href="https://developer.mozilla.org/en-US/docs/Archive/Newsgroup_summaries"><i aria-hidden="true" class="icon-caret-right"></i>Newsgroup summaries</a><ol style="display: none;" class="toggle-container"><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Newsgroup_summaries">Newsgroup summaries</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Newsgroup_summaries/Format">Format</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Newsgroup_summaries/Mozilla.dev.apps.firefox-2006-09-29">Mozilla.dev.apps.firefox-2006-09-29</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Newsgroup_summaries/Mozilla.dev.apps.firefox-2006-10-06">Mozilla.dev.apps.firefox-2006-10-06</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Newsgroup_summaries/mozilla-dev-accessibility">mozilla-dev-accessibility</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Newsgroup_summaries/mozilla-dev-apps-calendar">mozilla-dev-apps-calendar</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Newsgroup_summaries/mozilla-dev-apps-firefox">mozilla-dev-apps-firefox</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Newsgroup_summaries/mozilla-dev-apps-thunderbird">mozilla-dev-apps-thunderbird</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Newsgroup_summaries/mozilla-dev-builds">mozilla-dev-builds</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Newsgroup_summaries/mozilla-dev-embedding">mozilla-dev-embedding</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Newsgroup_summaries/mozilla-dev-extensions">mozilla-dev-extensions</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Newsgroup_summaries/mozilla-dev-i18n">mozilla-dev-i18n</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Newsgroup_summaries/mozilla-dev-l10n">mozilla-dev-l10n</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Newsgroup_summaries/mozilla-dev-planning">mozilla-dev-planning</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Newsgroup_summaries/mozilla-dev-platform">mozilla-dev-platform</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Newsgroup_summaries/mozilla-dev-quality">mozilla-dev-quality</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Newsgroup_summaries/mozilla-dev-security">mozilla-dev-security</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Newsgroup_summaries/mozilla-dev-tech-js-engine">mozilla-dev-tech-js-engine</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Newsgroup_summaries/mozilla-dev-tech-layout">mozilla-dev-tech-layout</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Newsgroup_summaries/mozilla-dev-tech-xpcom">mozilla-dev-tech-xpcom</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Newsgroup_summaries/mozilla-dev-tech-xul">mozilla-dev-tech-xul</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Newsgroup_summaries/mozilla.dev.apps.calendar">mozilla.dev.apps.calendar</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Newsgroup_summaries/mozilla.dev.tech.js-engine">mozilla.dev.tech.js-engine</a></li></ol></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/XPCOM-based_scripting_for_NPAPI_plugins">Obsolete: XPCOM-based scripting for NPAPI plugins</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Responsive_Web_design">Responsive Web design</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/SAX">SAX</a></li><li data-closed="true" class="toggleable"><a aria-haspopup="true" class="toggler" href="https://developer.mozilla.org/en-US/docs/Archive/Security"><i aria-hidden="true" class="icon-caret-right"></i>Security</a><ol style="display: none;" class="toggle-container"><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Security">Security</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Security/Digital_Signatures">Digital Signatures</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Security/Encryption_and_Decryption">Encryption and Decryption</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Security/Introduction_to_Public-Key_Cryptography">Introduction to Public-Key Cryptography</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Security/Introduction_to_SSL">Introduction to SSL</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Security/NSPR_engineering_guide">NSPR Release Engineering Guide</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Security/SSL_and_TLS">SSL and TLS</a></li></ol></li><li data-closed="true" class="toggleable"><a aria-haspopup="true" class="toggler" href="https://developer.mozilla.org/en-US/docs/Archive/Social_API"><i aria-hidden="true" class="icon-caret-right"></i>Social API</a><ol style="display: none;" class="toggle-container"><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Social_API">Social API</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Social_API/Bookmarks">Bookmarks</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Social_API/Criteria">Criteria</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Social_API/MozSocial">MozSocial</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Social_API/Service_worker_API_reference">Service worker API reference</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Social_API/Service_worker_port_API_reference">Service worker port API reference</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Social_API/Share">Share</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Social_API/Glossary">Social API glossary</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Social_API/Guide">Social API guide</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Social_API/Manifest">Social service installation</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Social_API/Status">Status</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Social_API/Widgets">Widgets</a></li></ol></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Solaris_10_build_prerequisites">Solaris 10 Build Prerequisites</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Sunbird_theme_tutorial">Sunbird Theme Tutorial</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Table_Reflow_Internals">Table Reflow Internals</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Tamarin_Tracing_Build_Documentation">Tamarin Tracing Build Documentation</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/The_Basics_of_Web_Services">The Basics of Web Services</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Using_IO_timeouts_and_interrupts_on_NT">Using IO Timeout And Interrupt On NT</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/Using_SSH_to_connect_to_CVS">Using SSH to connect to CVS</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/XQuery">XQuery</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/XUL_Booster">XUL Booster</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Archive/XUL_Parser_in_Python">XUL Parser in Python</a></li></ol><p></p>
+    </div>
+  </nav>&nbsp;
+                
+
+                
+
+                <!-- approvals -->
+                
+
+              
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div> <!-- ends "main-content" -->
+
+  <menu type="context" id="edit-history-menu">
+    <menuitem data-action="/en-US/docs/Archive/Mozilla/Tamarin/Tamarin_Build_Documentation$edit" label="Edit page"></menuitem>
+    <menuitem data-action="/en-US/docs/Archive/Mozilla/Tamarin/Tamarin_Build_Documentation$history" label="View page history"></menuitem>
+  </menu>
+
+  </div></main>
+
+  <!-- Footer -->
+  <footer><div class="center">
+    <div class="column-container">
+      <div class="column-main">
+        
+        <div class="contentinfo">
+          <p>© 2005-2016 Mozilla Developer Network and individual contributors.</p> <p>Content is available under <a href="https://developer.mozilla.org/en-US/docs/MDN/About#Copyrights_and_licenses">these licenses</a>.</p>
+          <ul>
+            <li><a href="https://developer.mozilla.org/docs/MDN/About">About MDN</a></li>
+            <li><a href="https://www.mozilla.org/about/legal/terms/mozilla">Terms</a></li>
+            <li><a href="https://www.mozilla.org/privacy/websites/">Privacy</a></li>
+            <li><a href="https://www.mozilla.org/privacy/websites/#cookies">Cookies</a></li>
+            <li><a href="https://github.com/mozilla/kuma">Contribute to the code</a></li>
+          </ul>
+        <p></p>
+        
+        </div>
+      </div>
+      <div class="column-strip">
+        
+          
+  
+    <form class="languages go" method="get" action="/en-US/docs/Web">
+      <label for="language">Other languages:</label>
+      <select id="language" class="wiki-l10n" name="next" dir="ltr">
+        <option value="/en-US/docs/Archive/Mozilla/Tamarin/Tamarin_Build_Documentation" selected="selected">
+          English (US)
+        </option>
+        
+          <option value="/ja/docs/Tamarin_Build_Documentation">
+            日本語
+          </option>
+      </select>
+      <noscript><button type="submit">Go</button></noscript>
+    </form>
+  
+
+        
+      </div>
+    </div>
+  </div></footer>
+
+  <!-- site js -->
+  
+    
+    <!--[if lte IE 8]><script type="text/javascript" src="https://developer.cdn.mozilla.net/static/build/js/selectivizr.091e18cf669b.js" charset="utf-8"></script><![endif]-->
+
+    <form id="_persona_login" method="post" action="/users/persona/signin" data-csrf-token-url="/users/persona/csrf" data-request="{&quot;siteName&quot;: &quot;Mozilla Developer Network&quot;, &quot;siteLogo&quot;: &quot;/static/img/opengraph-logo.png&quot;}" data-persona-script="https://login.persona.org/include.js">
+  <input name="csrfmiddlewaretoken" value="" id="_persona_csrf_token" type="hidden">
+  <input name="next" value="" id="_persona_next_url" type="hidden">
+  <input name="process" value="" id="_persona_process" type="hidden">
+  <input name="assertion" id="_persona_assertion" type="hidden">
+</form>
+
+
+    <script type="text/javascript" src="Tamarin%20build%20documentation%20-%20Archive%20of%20obsolete%20content%20_%20MDN_files/main.js" charset="utf-8"></script>
+
+      <script>
+        if(window.mdn && mdn.analytics) mdn.analytics.trackOutboundLinks();
+      </script>
+
+    
+    <script type="text/javascript" src="Tamarin%20build%20documentation%20-%20Archive%20of%20obsolete%20content%20_%20MDN_files/javascript.js"></script>
+  
+    <script async="" type="text/javascript" src="Tamarin%20build%20documentation%20-%20Archive%20of%20obsolete%20content%20_%20MDN_files/wiki.js" charset="utf-8"></script>
+
+
+  
+
+  <script async="" type="text/javascript" src="Tamarin%20build%20documentation%20-%20Archive%20of%20obsolete%20content%20_%20MDN_files/helpfulness.js" charset="utf-8"></script>
+
+  
+
+
+
+</body></html>
