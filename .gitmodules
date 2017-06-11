@@ -22,3 +22,6 @@
 [submodule "inkscape"]
 	path = inkscape
 	url = https://github.com/inkscape/inkscape.git
+[submodule "csound"]
+	path = csound
+	url = https://github.com/csound/csound.git
