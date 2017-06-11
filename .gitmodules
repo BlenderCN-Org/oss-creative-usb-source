@@ -22,3 +22,6 @@
 [submodule "juced"]
 	path = juced
 	url = https://github.com/kunitoki/juced.git
+[submodule "ardour"]
+	path = ardour
+	url = https://github.com/Ardour/ardour.git
