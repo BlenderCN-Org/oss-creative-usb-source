@@ -22,3 +22,6 @@
 [submodule "csound"]
 	path = csound
 	url = https://github.com/csound/csound.git
+[submodule "membrane"]
+	path = membrane
+	url = https://github.com/rorywalsh/cabbage.git
