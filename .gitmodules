@@ -4,9 +4,6 @@
 [submodule "gimp"]
 	path = gimp
 	url = https://github.com/GNOME/gimp.git
-[submodule "inkscape"]
-	path = inkscape
-	url = https://github.com/inkscape/inkscape.git
 [submodule "scribus"]
 	path = scribus
 	url = https://github.com/scribusproject/scribus.git
