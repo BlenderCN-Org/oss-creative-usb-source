@@ -28,3 +28,6 @@
 [submodule "natron"]
 	path = natron
 	url = https://github.com/MrKepzie/Natron
+[submodule "extempore"]
+	path = extempore
+	url = https://github.com/jdm7dv/extempore.git
