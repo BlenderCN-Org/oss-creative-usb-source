@@ -31,3 +31,6 @@
 [submodule "extempore"]
 	path = extempore
 	url = https://github.com/jdm7dv/extempore.git
+[submodule "opencollada"]
+	path = opencollada
+	url = https://github.com/jdm7dv/OpenCOLLADA.git
