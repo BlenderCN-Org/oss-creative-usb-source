@@ -34,3 +34,6 @@
 [submodule "opencollada"]
 	path = opencollada
 	url = https://github.com/jdm7dv/OpenCOLLADA.git
+[submodule "musescore"]
+	path = musescore
+	url = https://github.com/jdm7dv/MuseScore.git
