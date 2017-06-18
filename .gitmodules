@@ -37,3 +37,12 @@
 [submodule "musescore"]
 	path = musescore
 	url = https://github.com/jdm7dv/MuseScore.git
+[submodule "adobe/flex-sdk"]
+	path = adobe/flex-sdk
+	url = https://github.com/apache/flex-sdk.git
+[submodule "adobe/flex-falcon"]
+	path = adobe/flex-falcon
+	url = https://github.com/apache/flex-falcon.git
+[submodule "adobe/after effects/aaf"]
+	path = adobe/after effects/aaf
+	url = https://github.com/jdm7dv/aaf.git
